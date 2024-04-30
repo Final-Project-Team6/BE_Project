@@ -4,8 +4,6 @@ name: aptner server CI/CD
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 env:
   S3_BUCKET_NAME: aptdeploy
