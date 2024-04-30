@@ -1,0 +1,76 @@
+name: aptner server CI/CD
+
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  S3_BUCKET_NAME: aptdeploy
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./website
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+      
+    - name: Grant execute permission for gradlew
+      run: chmod +x /home/runner/work/BE_Project/BE_Project/aptner/gradlew
+
+    - name: Build with Gradle
+      run: |
+           cd aptner
+           /home/runner/work/BE_Project/BE_Project/aptner/gradlew clean build
+
+#디렉토리 생성
+    - name: Make Directory
+      run: mkdir -p deploy
+
+    - name: Copy appspec.yml to deploy
+      run: cp /home/runner/work/BE_Project/BE_Project/aptner/appspec.yml ./deploy
+
+    - name: Copy deploy.sh to deploy
+      run: cp /home/runner/work/BE_Project/BE_Project/aptner/deploy.sh ./deploy
+
+# Jar파일 복사
+    - name: Copy Jar
+      run: |
+           ls
+           cp /home/runner/work/BE_Project/BE_Project/aptner/build/libs/*.jar ./deploy
+
+    - name: Make zip file
+      run: zip -r ./aptnerapp.zip ./deploy
+      shell: bash
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-northeast-2
+
+    - name: Upload to S3
+      run: aws s3 cp --region ap-northeast-2 ./aptnerapp.zip s3://$S3_BUCKET_NAME/
+
+# Deploy
+    - name: Deploy
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run:
+        aws deploy create-deployment
+        --application-name aptner
+        --deployment-group-name aptnergr
+        --file-exists-behavior OVERWRITE
+        --s3-location bucket=aptdeploy,bundleType=zip,key=aptnerapp.zip
+        --region ap-northeast-2
