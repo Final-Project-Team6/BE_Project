@@ -1,13 +1,10 @@
 package com.fastcampus.aptner.member.domain;
 
 
-import com.fastcampus.aptner.common.BaseTimeEntity;
+import com.fastcampus.aptner.global.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

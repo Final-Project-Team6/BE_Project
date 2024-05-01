@@ -1,4 +1,4 @@
-package com.fastcampus.aptner.common;
+package com.fastcampus.aptner.global.common;
 
 import jakarta.persistence.*;
 import lombok.Getter;
