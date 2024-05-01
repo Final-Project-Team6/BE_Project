@@ -11,6 +11,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @ToString(exclude = "memberRoleList")
 @Builder
 @Entity
@@ -33,6 +34,7 @@ public class Member extends BaseTimeEntity {
     private Boolean socialLogin;
 
     @ElementCollection(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
     @Builder.Default
     private List<MemberRole> memberRoleList = new ArrayList<>();
 
