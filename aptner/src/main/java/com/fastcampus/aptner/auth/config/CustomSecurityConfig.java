@@ -1,11 +1,14 @@
 package com.fastcampus.aptner.auth.config;
 
+import com.fastcampus.aptner.member.security.handler.APILoginFailHandler;
+import com.fastcampus.aptner.member.security.handler.APILoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,13 +26,23 @@ public class CustomSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-                authorizationManagerRequestMatcherRegistry.anyRequest().permitAll());
-
+        // cors 설정
         http.cors(httpSecurityCorsConfigurer ->
                 httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()));
 
+        // session 비활성화
+        http.sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.NEVER));
+
+        // csrf 비활성화
         http.csrf(AbstractHttpConfigurer::disable);
+
+        // 폼 로그인 설정
+        http.formLogin(form -> {
+            form.loginPage("/api/member/login");
+            form.successHandler(new APILoginSuccessHandler());
+            form.failureHandler(new APILoginFailHandler());
+        });
 
         return http.build();
     }
