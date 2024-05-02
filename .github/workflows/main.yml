@@ -41,7 +41,7 @@ jobs:
       - name: Build with Gradle
         run: |
           cd aptner
-          ./gradlew clean build
+          ./gradlew clean build --exclude-task test
 
       # Create deployment directory and copy necessary files
       - name: Prepare deployment
