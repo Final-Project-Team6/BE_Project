@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: aptner
+
+# springdocs
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /swagger.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /api-docs
