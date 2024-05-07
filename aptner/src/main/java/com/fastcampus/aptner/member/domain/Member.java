@@ -1,69 +1,77 @@
 package com.fastcampus.aptner.member.domain;
 
 
-import com.fastcampus.aptner.global.common.BaseTimeEntity;
+import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
+import com.fastcampus.aptner.member.dto.request.JoinMemberRequest;
+import com.fastcampus.aptner.member.dto.request.UpdateMemberDetailsRequest;
+import com.fastcampus.aptner.member.service.CryptPasswordService;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(exclude = "memberRoleList")
-@Builder
+@ToString
+@Table(name = "members_tb")
 @Entity
 public class Member extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id", nullable = false)
+    private Long id; // 회원 고유 번호
 
-    private String email;
+    @Column(nullable = false, length = 20)
+    private String username; // 회원 아이디
 
-    private String password;
+    @Column(nullable = false, length = 120) // 비밀번호 인코딩: BCrypt
+    private String password; // 회원 비밀번호
 
-    private String nickname;
+    @Column(nullable = false, length = 15)
+    private String nickname; // 회원 닉네임
 
-    private String content;
+    @Column(nullable = false, unique = true, length = 20)
+    private String fullName; // 회원 이름
 
-    private String phone;
+    @Column(nullable = false, length = 20)
+    private String phone; // 회원 전화번호
 
-    private Boolean socialLogin;
-
-    @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private List<MemberRole> memberRoleList = new ArrayList<>();
+    private MemberRole memberRole; // 회원 권한
 
-    public void addRole(MemberRole memberRole) {
-        memberRoleList.add(memberRole);
-    }
-
-    public void clearRole() {
-        memberRoleList.clear();
-    }
-
-    public void changePassword(String password) {
+    @Builder
+    public Member(String username, String password, String nickname, String fullName, String phone, MemberRole memberRole) {
+        this.username = username;
         this.password = password;
-    }
-
-    public void changeNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public void changeContent(String content) {
-        this.content = content;
-    }
-
-    public void changePhone(String phone) {
+        this.fullName = fullName;
         this.phone = phone;
+        this.memberRole = memberRole;
     }
 
-    public void changeSocialLogin(Boolean socialLogin) {
-        this.socialLogin = socialLogin;
+    public static Member from(JoinMemberRequest request, String encryptPassword) {
+        return Member.builder()
+                .username(request.getUsername())
+                .password(encryptPassword)
+                .nickname(request.getNickname())
+                .fullName(request.getFullName())
+                .phone(request.getPhone())
+                .memberRole(MemberRole.RESIDENT)
+                .build();
     }
+
+
+    public void changePassword(String enterPassword, CryptPasswordService cryptPasswordService) {
+        this.password = cryptPasswordService.encryptPassword(enterPassword);
+    }
+
+    public Member updateDetailsMember(UpdateMemberDetailsRequest response) {
+        if (response.getNickname() != null) {
+            this.nickname = response.getNickname();
+        }
+        return this;
+    }
+
 
 }
