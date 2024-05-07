@@ -2,7 +2,8 @@ package com.fastcampus.aptner.member.domain;
 
 
 import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
-import com.fastcampus.aptner.member.dto.response.UpdateMemberDetailsResponse;
+import com.fastcampus.aptner.member.dto.request.JoinMemberRequest;
+import com.fastcampus.aptner.member.dto.request.UpdateMemberDetailsRequest;
 import com.fastcampus.aptner.member.service.CryptPasswordService;
 import jakarta.persistence.*;
 import lombok.*;
@@ -49,11 +50,23 @@ public class Member extends BaseTimeEntity {
         this.memberRole = memberRole;
     }
 
+    public static Member from(JoinMemberRequest request, String encryptPassword) {
+        return Member.builder()
+                .username(request.getUsername())
+                .password(encryptPassword)
+                .nickname(request.getNickname())
+                .fullName(request.getFullName())
+                .phone(request.getPhone())
+                .memberRole(MemberRole.RESIDENT)
+                .build();
+    }
+
+
     public void changePassword(String enterPassword, CryptPasswordService cryptPasswordService) {
         this.password = cryptPasswordService.encryptPassword(enterPassword);
     }
 
-    public Member updateDetailsMember(UpdateMemberDetailsResponse response) {
+    public Member updateDetailsMember(UpdateMemberDetailsRequest response) {
         if (response.getNickname() != null) {
             this.nickname = response.getNickname();
         }
