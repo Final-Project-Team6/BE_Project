@@ -1,4 +1,4 @@
-package com.fastcampus.aptner.global.common;
+package com.fastcampus.aptner.global.handler.common;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -15,20 +15,21 @@ import java.time.format.DateTimeFormatter;
 public class BaseTimeEntity {
 
     @CreatedDate
-    @Column(updatable = false)
+    @Column(nullable = false, updatable = false)
     private String createdAt;
 
     @LastModifiedDate
+    @Column(nullable = false)
     private String modifiedAt;
 
     @PrePersist
-    public void onPrePersist(){
+    public void onPrePersist() {
         this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
         this.modifiedAt = this.createdAt;
     }
 
     @PreUpdate
-    public void onPreUpdate(){
+    public void onPreUpdate() {
         this.modifiedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
     }
 }
