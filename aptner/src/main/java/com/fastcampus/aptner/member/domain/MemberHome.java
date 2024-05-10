@@ -1,6 +1,6 @@
 package com.fastcampus.aptner.member.domain;
 
-import com.fastcampus.aptner.member.domain.Member;
+import com.fastcampus.aptner.apartment.domain.Home;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,17 +8,18 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
-@Table(name = "memberRole")
+@Table(name = "member_home")
 @Entity
-public class MemberRole {
-    
+public class MemberHome {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "memberRole_id", nullable = false, updatable = false)
-    private Long memberRoleId;
+    @Column(name = "member_home_id")
+    private Long memberHomeId;
 
-    @Enumerated(EnumType.STRING)
-    private RoleName roleName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "home_id")
+    private Home homeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
