@@ -2,24 +2,36 @@ package com.fastcampus.aptner.member.domain;
 
 
 import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
-import com.fastcampus.aptner.member.dto.request.JoinMemberRequest;
-import com.fastcampus.aptner.member.dto.request.UpdateMemberDetailsRequest;
-import com.fastcampus.aptner.member.service.CryptPasswordService;
+import com.fastcampus.aptner.jwt.domain.TokenStorage;
+import com.fastcampus.aptner.post.announcement.domain.Announcement;
+import com.fastcampus.aptner.post.communication.domain.Communication;
+import com.fastcampus.aptner.post.communication.domain.CommunicationComment;
+import com.fastcampus.aptner.post.communication.domain.CommunicationVote;
+import com.fastcampus.aptner.post.complaint.domain.Complaint;
+import com.fastcampus.aptner.post.complaint.domain.ComplaintComment;
+import com.fastcampus.aptner.post.information.domain.Information;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.antlr.v4.runtime.Token;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
-@Table(name = "members_tb")
+@Table(name = "member")
 @Entity
 public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id", nullable = false)
+    @Column(name = "member_id", nullable = false, updatable = false)
     private Long id; // 회원 고유 번호
 
     @Column(nullable = false, length = 20)
@@ -28,50 +40,72 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, length = 120) // 비밀번호 인코딩: BCrypt
     private String password; // 회원 비밀번호
 
-    @Column(nullable = false, length = 15)
+    @Column(nullable = false, length = 20)
+    private String phone; // 회원 휴대전화번호
+
+    @Column(nullable = false, length = 6)
+    private String birthFirst; // 회원 주민등록번호 앞자리
+
+    @Column(nullable = false, length = 16)
     private String nickname; // 회원 닉네임
 
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(nullable = false, unique = true, length = 16)
     private String fullName; // 회원 이름
 
-    @Column(nullable = false, length = 20)
-    private String phone; // 회원 전화번호
+    @Column(nullable = false, updatable = false)
+    private String gender; // 회원 성별(M, W)
 
+    @Column(nullable = false)
+    private LocalDateTime authenticatedAt; // 회원 인증일자
+
+    @Column(nullable = false)
+    private boolean authenticationStatus; // 회원 인증여부
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private MemberRole memberRole; // 회원 권한
+    private MemberStatus status; // 회원 상태여부
 
-    @Builder
-    public Member(String username, String password, String nickname, String fullName, String phone, MemberRole memberRole) {
-        this.username = username;
-        this.password = password;
-        this.nickname = nickname;
-        this.fullName = fullName;
-        this.phone = phone;
-        this.memberRole = memberRole;
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<MemberRole> memberRole = new ArrayList<>(); // TODO: 회원권환 매핑하기.
 
-    public static Member from(JoinMemberRequest request, String encryptPassword) {
-        return Member.builder()
-                .username(request.getUsername())
-                .password(encryptPassword)
-                .nickname(request.getNickname())
-                .fullName(request.getFullName())
-                .phone(request.getPhone())
-                .memberRole(MemberRole.RESIDENT)
-                .build();
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<MemberHome> memberHome = new ArrayList<>();  // TODO: 회원자택 중간 테이블 매핑하기.
 
+    @JsonIgnore
+    @OneToOne(mappedBy = "memberId")
+    private Subscription subscription; // TODO: 동의여부 매핑하기.
 
-    public void changePassword(String enterPassword, CryptPasswordService cryptPasswordService) {
-        this.password = cryptPasswordService.encryptPassword(enterPassword);
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<Announcement> announcement = new ArrayList<>(); // TODO: 공지사항 게시판 매핑하기.
 
-    public Member updateDetailsMember(UpdateMemberDetailsRequest response) {
-        if (response.getNickname() != null) {
-            this.nickname = response.getNickname();
-        }
-        return this;
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<Complaint> complaint = new ArrayList<>(); // TODO: 민원 게시판 매핑하기.
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<ComplaintComment> complaintComment = new ArrayList<>(); // TODO: 민원 댓글 매핑하기.
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<CommunicationComment> communicationComment = new ArrayList<>(); // TODO: 소통 댓글 매핑하기.
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<Communication> communication = new ArrayList<>(); // TODO: 소통 게시판 매핑하기.
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<Information> information = new ArrayList<>(); // TODO: 정보 게시판 매핑하기.
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<CommunicationVote> communicationVote = new ArrayList<>(); // TODO: 소통 투표 매핑하기.
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "memberId")
+    private TokenStorage tokenStorage; // TODO: 토큰 저장소 매핑하기.
 }
