@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 @Getter
 @EntityListeners(AuditingEntityListener.class)
@@ -16,20 +17,22 @@ public class BaseTimeEntity {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(nullable = false)
-    private String modifiedAt;
+    private LocalDateTime modifiedAt;
 
+    // TODO: Mysql TIMESTAMP 형식으로 저장하기 yyyy-mm-dd hh:mm:ss -> 2024-05-10 11:12:39
     @PrePersist
     public void onPrePersist() {
-        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
-        this.modifiedAt = this.createdAt;
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+        this.createdAt = now;
+        this.modifiedAt = now;
     }
 
     @PreUpdate
     public void onPreUpdate() {
-        this.modifiedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+        this.modifiedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 }
