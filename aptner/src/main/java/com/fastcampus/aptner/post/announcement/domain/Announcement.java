@@ -3,7 +3,7 @@ package com.fastcampus.aptner.post.announcement.domain;
 import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
 import com.fastcampus.aptner.member.domain.Member;
-import com.fastcampus.aptner.post.common.PostStatus;
+import com.fastcampus.aptner.post.common.domain.PostStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,8 +23,8 @@ public class Announcement extends BaseTimeEntity {
     private Long announcementId;
 
     @ManyToOne
-    @JoinColumn(name = "apartment_id")
-    private Apartment apartmentId;
+    @JoinColumn(name = "announcement_category_id")
+    private AnnouncementCategory announcementCategoryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -52,7 +52,4 @@ public class Announcement extends BaseTimeEntity {
     @Column(name = "important", nullable = false)
     private Integer important;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
-    private AnnouncementType type;
 }

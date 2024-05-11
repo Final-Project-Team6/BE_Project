@@ -19,7 +19,7 @@ public class ComplaintCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "complaint_category_id")
-    private Long id;
+    private Long complaintCategoryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apartment_id")

@@ -4,16 +4,14 @@ package com.fastcampus.aptner.member.domain;
 import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
 import com.fastcampus.aptner.jwt.domain.TokenStorage;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
+import com.fastcampus.aptner.post.common.domain.Comment;
+import com.fastcampus.aptner.post.common.domain.Vote;
 import com.fastcampus.aptner.post.communication.domain.Communication;
-import com.fastcampus.aptner.post.communication.domain.CommunicationComment;
-import com.fastcampus.aptner.post.communication.domain.CommunicationVote;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
-import com.fastcampus.aptner.post.complaint.domain.ComplaintComment;
 import com.fastcampus.aptner.post.information.domain.Information;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.antlr.v4.runtime.Token;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -87,11 +85,11 @@ public class Member extends BaseTimeEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")
-    private List<ComplaintComment> complaintComment = new ArrayList<>(); // TODO: 민원 댓글 매핑하기.
+    private List<Comment> Comment = new ArrayList<>(); // TODO: 댓글 매핑하기.
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "memberId")
-    private List<CommunicationComment> communicationComment = new ArrayList<>(); // TODO: 소통 댓글 매핑하기.
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "memberId")
+//    private List<CommunicationComment> communicationComment = new ArrayList<>(); // TODO: 소통 댓글 삭제됨.
 
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")
@@ -103,7 +101,7 @@ public class Member extends BaseTimeEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")
-    private List<CommunicationVote> communicationVote = new ArrayList<>(); // TODO: 소통 투표 매핑하기.
+    private List<Vote> Vote = new ArrayList<>(); // TODO: 투표 매핑하기.
 
     @JsonIgnore
     @OneToOne(mappedBy = "memberId")
