@@ -47,8 +47,4 @@ public class Apartment {
     @Column
     private String dutyTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
-
 }
