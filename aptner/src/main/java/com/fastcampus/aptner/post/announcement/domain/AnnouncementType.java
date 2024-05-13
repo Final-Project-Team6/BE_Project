@@ -7,6 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum AnnouncementType {
     NOTICE("공지사항"), DISCLOSURE("의무공개 사항");
-
     private final String AnnouncementType;
 }
