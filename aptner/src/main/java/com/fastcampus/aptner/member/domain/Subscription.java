@@ -28,8 +28,8 @@ public class Subscription {
     @Column(name = "private_information_collection")
     private boolean privateInformationCollection;
 
-    @Column(name = "marketing_information_receivce")
-    private boolean marketingInformationReceive;
+    @Column(name = "sns_marketing_information_receivce")
+    private boolean snsMarketingInformationReceive;
 
     @Column(name = "terms_service_agreement_modified_at")
     private LocalDateTime termsServiceAgreementModifiedAt;
@@ -37,8 +37,8 @@ public class Subscription {
     @Column(name = "private_information_collection_modified_at")
     private LocalDateTime privateInformationCollectionModifiedAt;
 
-    @Column(name = "marketing_information_receive_modified_at")
-    private LocalDateTime marketingInformationReceiveModifiedAt;
+    @Column(name = "sns_marketing_information_receive_modified_at")
+    private LocalDateTime snsMarketingInformationReceiveModifiedAt;
 
 
 
