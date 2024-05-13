@@ -1,25 +1,26 @@
-package com.fastcampus.aptner.post.common.domain;
+package com.fastcampus.aptner.post.opinion.domain;
 
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
+import com.fastcampus.aptner.post.common.enumType.BoardType;
 import com.fastcampus.aptner.post.communication.domain.Communication;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
+@Entity
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
-@ToString
-@Table(name = "comment")
-@Entity
-public class Comment {
-
+@Table(name = "vote")
+public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    @Column(name = "vote_id")
+    private Long voteId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -37,24 +38,9 @@ public class Comment {
     @JoinColumn(name = "announcement_id")
     private Announcement announcementId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "board_type", nullable = false)
-    private BoardType boardType;
+    @Column(name = "opinion")
+    private boolean opinion;
 
-    @Column(name = "contents", nullable = false)
-    private String contents;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
 
-    @Column(name = "modified_at", length = 50, nullable = false)
-    private LocalDateTime modifiedAt;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private PostStatus status;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Comment parentId;
 }

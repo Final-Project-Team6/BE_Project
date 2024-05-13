@@ -1,7 +1,7 @@
 package com.fastcampus.aptner.post.information.domain;
 
 import com.fastcampus.aptner.member.domain.Member;
-import com.fastcampus.aptner.post.common.domain.PostStatus;
+import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
