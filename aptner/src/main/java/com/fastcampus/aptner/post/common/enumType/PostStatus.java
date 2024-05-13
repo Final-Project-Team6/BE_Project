@@ -1,4 +1,4 @@
-package com.fastcampus.aptner.post.common.domain;
+package com.fastcampus.aptner.post.common.enumType;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
