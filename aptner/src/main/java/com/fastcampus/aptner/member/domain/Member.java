@@ -1,69 +1,106 @@
 package com.fastcampus.aptner.member.domain;
 
 
-import com.fastcampus.aptner.global.common.BaseTimeEntity;
+import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
+import com.fastcampus.aptner.jwt.domain.TokenStorage;
+import com.fastcampus.aptner.post.announcement.domain.Announcement;
+import com.fastcampus.aptner.post.communication.domain.Communication;
+import com.fastcampus.aptner.post.complaint.domain.Complaint;
+import com.fastcampus.aptner.post.information.domain.Information;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import com.fastcampus.aptner.post.opinion.domain.*;
 
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(exclude = "memberRoleList")
-@Builder
+@ToString
+@Table(name = "member")
 @Entity
 public class Member extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id", nullable = false, updatable = false)
+    private Long id; // 회원 고유 번호
 
-    private String email;
+    @Column(nullable = false, length = 20)
+    private String username; // 회원 아이디
 
-    private String password;
+    @Column(nullable = false, length = 255) // 비밀번호 인코딩: BCrypt
+    private String password; // 회원 비밀번호
 
-    private String nickname;
+    @Column(nullable = false, length = 13)
+    private String phone; // 회원 휴대전화번호
 
-    private String content;
+    @Column(nullable = false, length = 20)
+    private String phoneCarrier; // 회원 통신사
 
-    private String phone;
+    @Column(nullable = false, length = 6)
+    private String birthFirst; // 회원 주민등록번호 앞자리
 
-    private Boolean socialLogin;
+    @Column(nullable = false, length = 16)
+    private String nickname; // 회원 닉네임
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @Column(nullable = false, unique = true, length = 16)
+    private String fullName; // 회원 이름
+
+    @Column(nullable = false, updatable = false, length = 1)
+    private String gender; // 회원 성별(M, W)
+
+    @Column(nullable = false)
+    private LocalDateTime authenticatedAt; // 회원 인증일자
+
+    @Column(nullable = false)
+    private boolean authenticationStatus; // 회원 인증여부
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private List<MemberRole> memberRoleList = new ArrayList<>();
+    private MemberStatus status; // 회원 상태여부
 
-    public void addRole(MemberRole memberRole) {
-        memberRoleList.add(memberRole);
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<MemberRole> memberRole = new ArrayList<>(); // 회원 권한
 
-    public void clearRole() {
-        memberRoleList.clear();
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<MemberHome> memberHome = new ArrayList<>();  // 회원-자택
 
-    public void changePassword(String password) {
-        this.password = password;
-    }
+    @JsonIgnore
+    @OneToOne(mappedBy = "memberId")
+    private Subscription subscription; // 동의 여부
 
-    public void changeNickname(String nickname) {
-        this.nickname = nickname;
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<Announcement> announcement = new ArrayList<>(); // 공지사항 게시판
 
-    public void changeContent(String content) {
-        this.content = content;
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<Complaint> complaint = new ArrayList<>(); // 민원 게시판
 
-    public void changePhone(String phone) {
-        this.phone = phone;
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<Comment> Comment = new ArrayList<>(); // TODO: 댓글 매핑하기.
 
-    public void changeSocialLogin(Boolean socialLogin) {
-        this.socialLogin = socialLogin;
-    }
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<Communication> communication = new ArrayList<>(); // 소통 게시판
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<Vote> Vote = new ArrayList<>(); // TODO: 투표 매핑하기.
+  
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<Information> information = new ArrayList<>(); // 정보 게시판
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "memberId")
+    private TokenStorage tokenStorage; // 토큰 저장소
+    
 }
