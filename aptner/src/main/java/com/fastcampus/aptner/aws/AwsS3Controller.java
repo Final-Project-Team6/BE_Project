@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AwsS3Controller {
     private final AwsS3Service awsS3Service;
 
-    @PostMapping(value ="/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value ="/api/file",consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
             summary = "파일 업로드 API",
             description = "파일을 업로드 하고, URL 을 반환",
