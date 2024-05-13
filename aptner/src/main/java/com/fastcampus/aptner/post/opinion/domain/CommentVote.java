@@ -1,13 +1,14 @@
-package com.fastcampus.aptner.post.common.domain;
+package com.fastcampus.aptner.post.opinion.domain;
 
 import com.fastcampus.aptner.member.domain.Member;
-import com.fastcampus.aptner.post.communication.domain.Communication;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "comment_vote")

@@ -1,15 +1,18 @@
-package com.fastcampus.aptner.post.common.domain;
+package com.fastcampus.aptner.post.opinion.domain;
 
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
+import com.fastcampus.aptner.post.common.enumType.BoardType;
 import com.fastcampus.aptner.post.communication.domain.Communication;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "vote")
@@ -34,10 +37,6 @@ public class Vote {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "announcement_id")
     private Announcement announcementId;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "board_type", nullable = false)
-    private BoardType boardType;
 
     @Column(name = "opinion")
     private boolean opinion;
