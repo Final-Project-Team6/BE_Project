@@ -1,11 +1,7 @@
 package com.fastcampus.aptner.apartment.domain;
 
-import com.fastcampus.aptner.member.domain.Member;
-import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -46,5 +42,16 @@ public class Apartment {
 
     @Column
     private String dutyTime;
-
+    @Builder
+    public Apartment(String name, String sido, String gugun, String road, String zipcode, String icon, String banner, String tel, String dutyTime) {
+        this.name = name;
+        this.sido = sido;
+        this.gugun = gugun;
+        this.road = road;
+        this.zipcode = zipcode;
+        this.icon = icon;
+        this.banner = banner;
+        this.tel = tel;
+        this.dutyTime = dutyTime;
+    }
 }
