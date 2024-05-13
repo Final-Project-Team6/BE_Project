@@ -1,7 +1,9 @@
-package com.fastcampus.aptner.post.communication.domain;
+package com.fastcampus.aptner.post.common.domain;
 
 import com.fastcampus.aptner.member.domain.Member;
-import com.fastcampus.aptner.post.common.PostStatus;
+import com.fastcampus.aptner.post.announcement.domain.Announcement;
+import com.fastcampus.aptner.post.communication.domain.Communication;
+import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,13 +13,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
-@Table(name = "communication_comment")
+@Table(name = "comment")
 @Entity
-public class CommunicationComment {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long communicationCommentId;
+    private Long commentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -28,8 +30,16 @@ public class CommunicationComment {
     private Communication communicationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private CommunicationComment parentId;
+    @JoinColumn(name = "complaint_id")
+    private Complaint complaintId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "announcement_id")
+    private Announcement announcementId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "board_type", nullable = false)
+    private BoardType boardType;
 
     @Column(name = "contents", nullable = false)
     private String contents;
@@ -44,4 +54,7 @@ public class CommunicationComment {
     @Column(name = "status", nullable = false)
     private PostStatus status;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parentId;
 }

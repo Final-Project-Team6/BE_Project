@@ -1,7 +1,8 @@
 package com.fastcampus.aptner.post.complaint.domain;
 
 import com.fastcampus.aptner.member.domain.Member;
-import com.fastcampus.aptner.post.common.PostStatus;
+import com.fastcampus.aptner.post.common.domain.Comment;
+import com.fastcampus.aptner.post.common.domain.PostStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -59,5 +60,5 @@ public class Complaint {
 
     @JsonIgnore
     @OneToMany(mappedBy = "complaintId")
-    private List<ComplaintComment> complaintCommentList = new ArrayList<>();
+    private List<Comment> complaintCommentList = new ArrayList<>();
 }

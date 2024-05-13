@@ -1,6 +1,8 @@
-package com.fastcampus.aptner.post.complaint.domain;
+package com.fastcampus.aptner.post.announcement.domain;
 
 import com.fastcampus.aptner.apartment.domain.Apartment;
+import com.fastcampus.aptner.post.complaint.domain.Complaint;
+import com.fastcampus.aptner.post.complaint.domain.ComplaintType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,14 +14,14 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
-@Table(name = "complaint_category")
+@Table(name = "announcement_category")
 @Entity
-public class ComplaintCategory {
+public class AnnouncementCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "complaint_category_id")
-    private Long complaintCategoryId;
+    @Column(name = "announcement_category_id")
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apartment_id")
@@ -27,12 +29,12 @@ public class ComplaintCategory {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type",length = 10, nullable = false)
-    private ComplaintType type;
+    private AnnouncementType type;
 
     @Column(name = "name",length = 20, nullable = false)
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "complaintCategoryId")
-    private List<Complaint> complaintList = new ArrayList<>();
+    @OneToMany(mappedBy = "announcementCategoryId")
+    private List<Announcement> announcementList = new ArrayList<>();
 }
