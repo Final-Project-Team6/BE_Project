@@ -11,8 +11,10 @@ import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import com.fastcampus.aptner.post.information.domain.Information;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
+import org.antlr.v4.runtime.Token;
+import org.hibernate.validator.constraints.Length;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +37,14 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, length = 20)
     private String username; // 회원 아이디
 
-    @Column(nullable = false, length = 120) // 비밀번호 인코딩: BCrypt
+    @Column(nullable = false, length = 255) // 비밀번호 인코딩: BCrypt
     private String password; // 회원 비밀번호
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 13)
     private String phone; // 회원 휴대전화번호
+
+    @Column(nullable = false, length = 20)
+    private String phoneCarrier; // 회원 통신사
 
     @Column(nullable = false, length = 6)
     private String birthFirst; // 회원 주민등록번호 앞자리
@@ -50,7 +55,7 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, unique = true, length = 16)
     private String fullName; // 회원 이름
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, length = 1)
     private String gender; // 회원 성별(M, W)
 
     @Column(nullable = false)
@@ -65,45 +70,42 @@ public class Member extends BaseTimeEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")
-    private List<MemberRole> memberRole = new ArrayList<>(); // TODO: 회원권환 매핑하기.
+    private List<MemberRole> memberRole = new ArrayList<>(); // 회원 권한
 
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")
-    private List<MemberHome> memberHome = new ArrayList<>();  // TODO: 회원자택 중간 테이블 매핑하기.
+    private List<MemberHome> memberHome = new ArrayList<>();  // 회원-자택
 
     @JsonIgnore
     @OneToOne(mappedBy = "memberId")
-    private Subscription subscription; // TODO: 동의여부 매핑하기.
+    private Subscription subscription; // 동의 여부
 
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")
-    private List<Announcement> announcement = new ArrayList<>(); // TODO: 공지사항 게시판 매핑하기.
+    private List<Announcement> announcement = new ArrayList<>(); // 공지사항 게시판
 
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")
-    private List<Complaint> complaint = new ArrayList<>(); // TODO: 민원 게시판 매핑하기.
+    private List<Complaint> complaint = new ArrayList<>(); // 민원 게시판
 
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")
     private List<Comment> Comment = new ArrayList<>(); // TODO: 댓글 매핑하기.
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "memberId")
-//    private List<CommunicationComment> communicationComment = new ArrayList<>(); // TODO: 소통 댓글 삭제됨.
-
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")
-    private List<Communication> communication = new ArrayList<>(); // TODO: 소통 게시판 매핑하기.
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "memberId")
-    private List<Information> information = new ArrayList<>(); // TODO: 정보 게시판 매핑하기.
+    private List<Communication> communication = new ArrayList<>(); // 소통 게시판
 
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")
     private List<Vote> Vote = new ArrayList<>(); // TODO: 투표 매핑하기.
+  
+    @JsonIgnore
+    @OneToMany(mappedBy = "memberId")
+    private List<Information> information = new ArrayList<>(); // 정보 게시판
 
     @JsonIgnore
     @OneToOne(mappedBy = "memberId")
-    private TokenStorage tokenStorage; // TODO: 토큰 저장소 매핑하기.
+    private TokenStorage tokenStorage; // 토큰 저장소
+    
 }
