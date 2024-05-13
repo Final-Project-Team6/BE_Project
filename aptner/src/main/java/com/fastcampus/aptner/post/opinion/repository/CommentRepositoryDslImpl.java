@@ -32,7 +32,7 @@ public class CommentRepositoryDslImpl extends QuerydslRepositorySupport implemen
                 .leftJoin(comment.announcementId,announcement)
                 .leftJoin(comment.communicationId,communication)
                 .leftJoin(comment.complaintId,complaint)
-                .groupBy(comment.announcementId)
+                .groupBy(comment.commentId)
                 .where(setWithoutParent(),setTargetBoard(postId,boardType))
                 .orderBy(sortByDay());
         return query.fetch();

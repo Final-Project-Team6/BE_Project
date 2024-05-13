@@ -4,21 +4,16 @@ package com.fastcampus.aptner.member.domain;
 import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
 import com.fastcampus.aptner.jwt.domain.TokenStorage;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
-import com.fastcampus.aptner.post.common.domain.Comment;
-import com.fastcampus.aptner.post.common.domain.Vote;
 import com.fastcampus.aptner.post.communication.domain.Communication;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import com.fastcampus.aptner.post.information.domain.Information;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.antlr.v4.runtime.Token;
-import org.hibernate.validator.constraints.Length;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.fastcampus.aptner.post.opinion.domain.*;
 
 
 @AllArgsConstructor

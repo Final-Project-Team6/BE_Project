@@ -1,5 +1,6 @@
 package com.fastcampus.aptner.post.announcement.controller;
 
+import com.fastcampus.aptner.member.domain.RoleName;
 import com.fastcampus.aptner.post.announcement.domain.AnnouncementType;
 import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
 import com.fastcampus.aptner.post.announcement.service.AnnouncementService;
@@ -23,6 +24,10 @@ import java.util.List;
 @Tag(name = "공지사항(사용자)", description = "공지사항 목록 조회, 공지사항 조회")
 public class AnnouncementController {
     private final AnnouncementService announcementService;
+
+    //todo Member 완성되면 지우기
+    private MemberTempDTO.MemberAuthDTO memberTempToken = new MemberTempDTO.MemberAuthDTO(1L, RoleName.ADMIN,1L);
+
     //todo 날짜 조건 걸기
     @Operation(
             summary = "공지사항 목록 조회 API",
@@ -71,6 +76,6 @@ public class AnnouncementController {
     public ResponseEntity<?> getAnnouncement(
             @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO token,
             @PathVariable Long announcementId){
-        return announcementService.getAnnouncement(announcementId,token);
+        return announcementService.getAnnouncement(announcementId,memberTempToken);
     }
 }
