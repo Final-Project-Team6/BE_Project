@@ -40,7 +40,11 @@ public class AnnouncementRepositoryDslImpl extends QuerydslRepositorySupport imp
                 .leftJoin(announcement.commentList,comment)
                 .leftJoin(announcement.voteList,vote)
                 .groupBy(announcement.announcementId)
-                .where(chooseApartment(reqDTO.getApartmentId()), searchByKeyword(reqDTO.getKeyword(),reqDTO.getSearchType()))
+                .where(chooseApartment(reqDTO.getApartmentId()),
+                        searchByKeyword(reqDTO.getKeyword(),reqDTO.getSearchType()),
+                        targetType(reqDTO.getAnnouncementType()),
+                        targetCategory(reqDTO.getCategoryId())
+                )
                 .orderBy(sort(reqDTO.getOrderType(),reqDTO.getOrderBy()));
         List<Announcement> announcementList = this.getQuerydsl().applyPagination(reqDTO.getPageable(),query).fetch();
         return new PageImpl<>(announcementList,reqDTO.getPageable(),query.fetchCount());
@@ -55,9 +59,15 @@ public class AnnouncementRepositoryDslImpl extends QuerydslRepositorySupport imp
             return null;
         }
         switch (searchType){
-            case TITLE -> titleContainsKeyword(keyword);
-            case CONTENTS -> contentsContainsKeyword(keyword);
-            case TITLE_CONTENTS -> titleContainsKeyword(keyword).or(titleContainsKeyword(keyword));
+            case TITLE -> {
+                return titleContainsKeyword(keyword);
+            }
+            case CONTENTS -> {
+                return contentsContainsKeyword(keyword);
+            }
+            case TITLE_CONTENTS -> {
+                return titleContainsKeyword(keyword).or(titleContainsKeyword(keyword));
+            }
         }
         return null;
     }
@@ -114,5 +124,19 @@ public class AnnouncementRepositoryDslImpl extends QuerydslRepositorySupport imp
     private BooleanExpression titleContainsKeyword(String keyword){
        return announcement.title.contains(keyword);
     }
+
+    private BooleanExpression targetCategory(Long categoryId){
+        if (categoryId==null){
+            return null;
+        }
+        return announcement.announcementCategoryId.announcementCategoryId.eq(categoryId);
+    }
+    private BooleanExpression targetType(AnnouncementType announcementType){
+        if (announcementType == null){
+            return null;
+        }
+        return announcement.announcementCategoryId.type.eq(announcementType);
+    }
+
 
 }
