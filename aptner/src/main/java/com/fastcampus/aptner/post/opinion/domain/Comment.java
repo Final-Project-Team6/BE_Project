@@ -49,6 +49,7 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "announcement_id")
     private Announcement announcementId;
 
+    @Setter
     @Column(name = "contents", nullable = false)
     private String contents;
 
@@ -61,6 +62,7 @@ public class Comment extends BaseTimeEntity {
     private LocalDateTime modifiedAt;
 
     @Enumerated(EnumType.STRING)
+    @Setter
     @Column(name = "status", nullable = false)
     private PostStatus status;
 
@@ -73,7 +75,7 @@ public class Comment extends BaseTimeEntity {
     private List<Comment> children = new ArrayList<>();
 
     @OneToMany(mappedBy = "commentId", fetch = FetchType.LAZY)
-    private List<CommentVote> commentVoteList = new ArrayList<>();
+    private List<Vote> voteList = new ArrayList<>();
 
     @Builder
     public Comment(Member memberId, Communication communicationId, Complaint complaintId, Announcement announcementId, String contents, PostStatus status, Comment parentId) {
@@ -88,13 +90,13 @@ public class Comment extends BaseTimeEntity {
 
     public VoteDTO.VoteRespDTO aboutVote(MemberTempDTO.MemberAuthDTO token){
         int agreeCnt = getAgreeCount();
-        int total = commentVoteList.size();
+        int total = voteList.size();
         return new VoteDTO.VoteRespDTO(total,agreeCnt,total-agreeCnt,yourVote(token));
     }
 
     public int getAgreeCount(){
         int cnt =0;
-        for(CommentVote v : commentVoteList){
+        for(Vote v : voteList){
             if (v.isOpinion()){
                 cnt++;
             }
@@ -104,7 +106,7 @@ public class Comment extends BaseTimeEntity {
 
     public Boolean yourVote(MemberTempDTO.MemberAuthDTO token){
         if (token==null)return null;
-        for(CommentVote v : commentVoteList){
+        for(Vote v : voteList){
             if (v.getMemberId().getId().equals(token.memberId())){
                 return v.isOpinion();
             }
