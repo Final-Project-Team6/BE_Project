@@ -9,6 +9,7 @@ import com.fastcampus.aptner.post.announcement.repository.AnnouncementRepository
 import com.fastcampus.aptner.post.common.dto.PageResponseDTO;
 import com.fastcampus.aptner.post.common.enumType.BoardType;
 import com.fastcampus.aptner.post.common.enumType.SearchType;
+import com.fastcampus.aptner.post.opinion.domain.CommentType;
 import com.fastcampus.aptner.post.opinion.dto.CommentDTO;
 import com.fastcampus.aptner.post.opinion.service.CommentCommonService;
 import com.fastcampus.aptner.post.opinion.service.CommentService;
@@ -64,7 +65,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     public ResponseEntity<AnnouncementDTO.AnnouncementRespDTO> getAnnouncement(Long announcementId, MemberTempDTO.MemberAuthDTO token) {
         Announcement announcement = announcementRepository.findById(announcementId).orElseThrow(NoSuchElementException::new);
         AnnouncementDTO.AnnouncementRespDTO resp =new AnnouncementDTO.AnnouncementRespDTO(announcement,token);
-        List<CommentDTO.ViewComments> comments = commentCommonService.getComments(announcementId, BoardType.ANNOUNCEMENT,token);
+        List<CommentDTO.ViewComments> comments = commentCommonService.getComments(announcementId, CommentType.ANNOUNCEMENT,token);
         resp.setComments(comments);
         announcement.addViewCount();
         return new ResponseEntity<>(resp,HttpStatus.OK);

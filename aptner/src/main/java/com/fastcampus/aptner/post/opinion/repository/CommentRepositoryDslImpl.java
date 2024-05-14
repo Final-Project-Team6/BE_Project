@@ -3,6 +3,7 @@ package com.fastcampus.aptner.post.opinion.repository;
 import com.fastcampus.aptner.global.error.RestAPIException;
 import com.fastcampus.aptner.post.common.enumType.BoardType;
 import com.fastcampus.aptner.post.opinion.domain.Comment;
+import com.fastcampus.aptner.post.opinion.domain.CommentType;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static com.fastcampus.aptner.global.error.CommonErrorCode.INVALID_PARAMETER;
+import static com.fastcampus.aptner.post.opinion.domain.CommentType.*;
 import static com.fastcampus.aptner.post.opinion.domain.QComment.comment;
 import static com.fastcampus.aptner.post.announcement.domain.QAnnouncement.announcement;
 import static com.fastcampus.aptner.post.communication.domain.QCommunication.communication;
@@ -27,13 +29,13 @@ public class CommentRepositoryDslImpl extends QuerydslRepositorySupport implemen
     public CommentRepositoryDslImpl(){super(Comment.class);}
 
     @Override
-    public List<Comment> getComments(Long postId, BoardType boardType){
+    public List<Comment> getComments(Long postId, CommentType commentType){
         JPAQuery<Comment> query = queryFactory.selectFrom(comment)
                 .leftJoin(comment.announcementId,announcement)
                 .leftJoin(comment.communicationId,communication)
                 .leftJoin(comment.complaintId,complaint)
                 .groupBy(comment.commentId)
-                .where(setWithoutParent(),setTargetBoard(postId,boardType))
+                .where(setWithoutParent(),setTargetBoard(postId,commentType))
                 .orderBy(sortByDay());
         return query.fetch();
     }
@@ -42,12 +44,12 @@ public class CommentRepositoryDslImpl extends QuerydslRepositorySupport implemen
         return comment.parentId.isNull();
     }
 
-    private BooleanExpression setTargetBoard(Long postId,BoardType boardType){
-        if (boardType == null || boardType == BoardType.INFORMATION){
+    private BooleanExpression setTargetBoard(Long postId,CommentType commentType){
+        if (commentType == null || commentType == REPLY){
             throw new RestAPIException(INVALID_PARAMETER);
         }
         try {
-            switch (boardType){
+            switch (commentType){
                 case ANNOUNCEMENT -> {
                     return comment.announcementId.announcementId.eq(postId);
                 }
@@ -66,6 +68,6 @@ public class CommentRepositoryDslImpl extends QuerydslRepositorySupport implemen
     }
 
     private OrderSpecifier<?> sortByDay(){
-        return new OrderSpecifier<>(Order.DESC,comment.createdAt);
+        return new OrderSpecifier<>(Order.ASC,comment.createdAt);
     }
 }
