@@ -42,7 +42,7 @@ public class CommentDTO {
         public static CommentDTO.ViewComments of(Comment comment, MemberTempDTO.MemberAuthDTO token) {
             String tempContents = comment.getContents();
             if (comment.getStatus()!=PostStatus.PUBLISHED){
-                tempContents = "삭제되거나 숨겨진 댓글 입니다.";
+                tempContents = "삭제된 댓글 입니다.";
             }
             VoteDTO.VoteRespDTO voteRespDTO = comment.aboutVote(token);
             return new CommentDTO.ViewComments(
@@ -58,4 +58,6 @@ public class CommentDTO {
             );
         }
     }
+    @Schema(name = "댓글 수정",description = "댓글 수정 요청 Body")
+    public record UpdateComment(String contents){}
 }
