@@ -2,7 +2,6 @@ package com.fastcampus.aptner.post.complaint.controller;
 
 import com.fastcampus.aptner.member.domain.RoleName;
 import com.fastcampus.aptner.post.complaint.dto.ComplaintDTO;
-import com.fastcampus.aptner.post.complaint.service.ComplaintCategoryService;
 import com.fastcampus.aptner.post.complaint.service.admin.ComplaintCategoryAdminService;
 import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,25 +41,23 @@ public class ComplaintCategoryAdminController {
                     "apartmentId : 현재 사용중인 아파트 ID\n\n" +
                     "complaintCategoryId : 수정 하려는 민원 카테고리 ID  "
     )
-    @PatchMapping("/{apartmentId}/{complaintCategoryId}")
+    @PatchMapping("/{complaintCategoryId}")
     public ResponseEntity<HttpStatus> updateComplaintCategory(
             @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
-            @PathVariable Long apartmentId,
             @PathVariable Long complaintCategoryId,
             @RequestBody ComplaintDTO.ComplaintCategoryReqDTO dto){
-        return complaintCategoryAdminService.updateComplaintCategory(memberTempToken,apartmentId,complaintCategoryId,dto);
+        return complaintCategoryAdminService.updateComplaintCategory(memberTempToken,complaintCategoryId,dto);
     }
     @Operation(
             summary = "민원 카테고리 삭제 API",
             description = "apartmentId : 현재 사용중인 아파트 ID \n\n" +
                     "complaintCategoryId : 삭제 하려는 민원 카테고리 ID "
     )
-    @DeleteMapping("/{apartmentId}/{complaintCategoryId}")
+    @DeleteMapping("/{complaintCategoryId}")
     public ResponseEntity<HttpStatus> deleteComplaintCategory(
             @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
-            @PathVariable Long apartmentId,
             @PathVariable Long complaintCategoryId){
-        return complaintCategoryAdminService.deleteComplaintCategory(memberTempToken,apartmentId,complaintCategoryId);
+        return complaintCategoryAdminService.deleteComplaintCategory(memberTempToken,complaintCategoryId);
     }
 
 }

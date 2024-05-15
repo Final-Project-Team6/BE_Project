@@ -7,6 +7,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface ComplaintCategoryAdminService {
     ResponseEntity<HttpStatus> createComplaintCategory(MemberTempDTO.MemberAuthDTO token, Long apartmentId, ComplaintDTO.ComplaintCategoryReqDTO dto);
-    ResponseEntity<HttpStatus> updateComplaintCategory(MemberTempDTO.MemberAuthDTO token,Long apartmentId, Long complaintCategoryId ,ComplaintDTO.ComplaintCategoryReqDTO dto);
-    ResponseEntity<HttpStatus> deleteComplaintCategory(MemberTempDTO.MemberAuthDTO token,Long apartmentId, Long complaintCategoryId);
+    ResponseEntity<HttpStatus> updateComplaintCategory(MemberTempDTO.MemberAuthDTO token, Long complaintCategoryId ,ComplaintDTO.ComplaintCategoryReqDTO dto);
+    ResponseEntity<HttpStatus> deleteComplaintCategory(MemberTempDTO.MemberAuthDTO token, Long complaintCategoryId);
 }
