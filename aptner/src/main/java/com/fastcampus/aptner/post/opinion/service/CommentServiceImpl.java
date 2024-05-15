@@ -6,6 +6,8 @@ import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.service.AnnouncementCommonService;
 import com.fastcampus.aptner.post.common.enumType.BoardType;
 import com.fastcampus.aptner.post.common.enumType.PostStatus;
+import com.fastcampus.aptner.post.complaint.domain.Complaint;
+import com.fastcampus.aptner.post.complaint.service.ComplaintCommonService;
 import com.fastcampus.aptner.post.opinion.domain.Comment;
 import com.fastcampus.aptner.post.opinion.domain.CommentType;
 import com.fastcampus.aptner.post.opinion.dto.CommentDTO;
@@ -37,6 +39,7 @@ public class CommentServiceImpl implements CommentService{
     private final CommentCommonService commentCommonService;
     private final MemberCommonService memberCommonService;
     private final AnnouncementCommonService announcementCommonService;
+    private final ComplaintCommonService complaintCommonService;
 
 
     @Override
@@ -69,7 +72,13 @@ public class CommentServiceImpl implements CommentService{
                 commentRepository.save(comment);
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }
-            //todo 민원, 소통 댓글 구현
+            case COMPLAINT -> {
+                Complaint complaint = complaintCommonService.getComplaintEntity(postId);
+                comment.setComplaintId(complaint);
+                commentRepository.save(comment);
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }
+            //todo 소통 댓글 구현
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
