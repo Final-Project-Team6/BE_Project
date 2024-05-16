@@ -19,17 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "announcement")
 @Getter
+@Entity
 public class Announcement extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "announcement_id")
-    private Long announcementId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "announcement_category_id")

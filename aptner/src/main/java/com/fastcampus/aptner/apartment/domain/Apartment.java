@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@ToString(exclude = {"homes"})
 @Table(name = "apartment")
 @Entity
 public class Apartment {
@@ -42,6 +42,13 @@ public class Apartment {
 
     @Column
     private String dutyTime;
+
+    @OneToMany(mappedBy = "apartment")
+    private List<Home> homes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "apartment")
+    private List<MemberRole> memberRoles = new ArrayList<>();
+
     @Builder
     public Apartment(String name, String sido, String gugun, String road, String zipcode, String icon, String banner, String tel, String dutyTime) {
         this.name = name;
