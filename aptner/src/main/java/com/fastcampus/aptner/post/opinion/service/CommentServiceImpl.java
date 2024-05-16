@@ -79,7 +79,7 @@ public class CommentServiceImpl implements CommentService{
     public ResponseEntity<HttpStatus> updateComment(MemberTempDTO.MemberAuthDTO token, Long commentId, String contents){
         Member member = memberCommonService.getUserByToken(token);
         Comment comment =commentRepository.findById(commentId).orElseThrow(NoSuchElementException::new);
-        if (member.getId()!=comment.getMemberId().getId()){
+        if (member.getMemberId()!=comment.getMemberId().getMemberId()){
             throw new RestAPIException(NOT_SAME_USER);
         }
         comment.setContents(contents);
@@ -91,7 +91,7 @@ public class CommentServiceImpl implements CommentService{
     public ResponseEntity<HttpStatus> deleteComment(MemberTempDTO.MemberAuthDTO token, Long commentId) {
         Member member = memberCommonService.getUserByToken(token);
         Comment comment =commentRepository.findById(commentId).orElseThrow(NoSuchElementException::new);
-        if (member.getId()!=comment.getMemberId().getId()){
+        if (member.getMemberId()!=comment.getMemberId().getMemberId()){
             throw new RestAPIException(NOT_SAME_USER);
         }
         comment.setStatus(PostStatus.DELETED);

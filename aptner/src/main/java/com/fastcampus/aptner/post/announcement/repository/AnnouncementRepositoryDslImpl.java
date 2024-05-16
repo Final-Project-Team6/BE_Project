@@ -51,7 +51,7 @@ public class AnnouncementRepositoryDslImpl extends QuerydslRepositorySupport imp
     }
 
     private BooleanExpression chooseApartment(Long apartmentId){
-        return announcementCategory.apartmentId.id.eq(apartmentId);
+        return announcementCategory.apartmentId.apartmentId.eq(apartmentId);
     }
 
     private BooleanExpression searchByKeyword(String keyword, SearchType searchType){

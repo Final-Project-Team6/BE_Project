@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/apartment")
+@RequestMapping("/api/apartment")
 @RestController
 public class CreateApartmentController {
 

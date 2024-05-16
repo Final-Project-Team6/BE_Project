@@ -19,7 +19,7 @@ public class Home {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "home_id")
-    private Long id;
+    private Long homeId;
 
     @Column(length = 50)
     private String dong;
@@ -29,10 +29,10 @@ public class Home {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apartment_id")
-    private Apartment apartment;
+    private Apartment apartmentId;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "home")
+    @OneToMany(mappedBy = "homeId")
     private List<MemberHome> memberHomes = new ArrayList<>();
 
 
@@ -43,6 +43,6 @@ public class Home {
     }
 
     public void changeApartment(Apartment apartment) {
-        this.apartment = apartment;
+        this.apartmentId = apartment;
     }
 }

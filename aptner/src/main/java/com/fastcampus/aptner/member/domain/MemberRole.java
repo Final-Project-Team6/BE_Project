@@ -30,14 +30,14 @@ public class MemberRole {
     @Builder
     public MemberRole(RoleName roleName, Apartment apartment) {
         this.roleName = roleName;
-        this.apartment = apartment;
+        this.apartmentId = apartmentId;
     }
 
-    public void changeMember(Member member) {
-        this.member = member;
+    public void changeMember(Member memberId) {
+        this.memberId = memberId;
     }
 
-    public void changeApartment(Apartment apartment){
-        this.apartment = apartment;
+    public void changeApartment(Apartment apartmentId){
+        this.apartmentId = apartmentId;
     }
 }

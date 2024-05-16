@@ -27,11 +27,11 @@ public class MemberHome {
 
     @Builder
     public MemberHome(Home home, Member member) {
-        this.home = home;
-        this.member = member;
+        this.homeId = home;
+        this.memberId = member;
     }
 
     public void changeMember(Member member) {
-        this.member = member;
+        this.memberId = member;
     }
 }

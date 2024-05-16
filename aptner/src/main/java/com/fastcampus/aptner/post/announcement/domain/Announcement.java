@@ -29,7 +29,7 @@ public class Announcement extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "announcement_id")
-    private Long id;
+    private Long announcementId;
 
     @ManyToOne
     @JoinColumn(name = "announcement_category_id")

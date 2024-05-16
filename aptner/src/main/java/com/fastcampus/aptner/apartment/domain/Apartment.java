@@ -43,10 +43,10 @@ public class Apartment {
     @Column
     private String dutyTime;
 
-    @OneToMany(mappedBy = "apartment")
+    @OneToMany(mappedBy = "apartmentId")
     private List<Home> homes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "apartment")
+    @OneToMany(mappedBy = "apartmentId")
     private List<MemberRole> memberRoles = new ArrayList<>();
 
     @Builder

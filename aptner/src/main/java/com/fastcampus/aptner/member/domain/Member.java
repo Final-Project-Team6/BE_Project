@@ -108,10 +108,6 @@ public class Member extends BaseTimeEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")
-    private List<CommunicationComment> communicationComment = new ArrayList<>(); // 소통 댓글
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "memberId")
     private List<Vote> Vote = new ArrayList<>(); // TODO: 투표 매핑하기.
 
     @JsonIgnore
@@ -148,7 +144,7 @@ public class Member extends BaseTimeEntity {
 
     // [연관 관계 메서드]: Member, MemberHome
     public void addMemberSubscription(Subscription subscription) {
-        this.subscription = subscription;
+        this.subscriptionId = subscription;
         subscription.changeMember(this);
     }
 
