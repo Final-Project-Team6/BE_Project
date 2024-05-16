@@ -1,14 +1,9 @@
 package com.fastcampus.aptner.apartment.domain;
 
-import com.fastcampus.aptner.member.domain.Member;
-import com.fastcampus.aptner.member.domain.MemberRole;
-import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString(exclude = {"homes"})

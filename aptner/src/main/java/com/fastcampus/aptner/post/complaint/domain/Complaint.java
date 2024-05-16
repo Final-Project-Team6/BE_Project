@@ -1,7 +1,9 @@
 package com.fastcampus.aptner.post.complaint.domain;
 
+import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
 import com.fastcampus.aptner.member.domain.Member;
-import com.fastcampus.aptner.post.common.PostStatus;
+import com.fastcampus.aptner.post.opinion.domain.Comment;
+import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,7 +18,7 @@ import java.util.List;
 @ToString
 @Table(name = "compaint")
 @Entity
-public class Complaint {
+public class Complaint extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,5 +61,5 @@ public class Complaint {
 
     @JsonIgnore
     @OneToMany(mappedBy = "complaintId")
-    private List<ComplaintComment> complaintCommentList = new ArrayList<>();
+    private List<Comment> complaintCommentList = new ArrayList<>();
 }
