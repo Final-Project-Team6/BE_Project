@@ -8,7 +8,7 @@ import java.time.temporal.ChronoUnit;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(exclude = {"member"})
+@ToString(exclude = {"memberId"})
 @Table(name = "subscription")
 @Entity
 public class Subscription {
@@ -16,11 +16,11 @@ public class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "subscription_id")
-    private Long id;
+    private Long subscriptionId;
 
     @OneToOne
     @JoinColumn(name = "member_id")
-    private Member member;
+    private Member memberId;
 
     @Column(name = "terms_service")
     private boolean termsService;
@@ -52,8 +52,8 @@ public class Subscription {
         this.snsMarketingInformationReceiveModifiedAt = now;
     }
 
-    public void changeMember(Member member) {
-        this.member = member;
+    public void changeMember(Member memberId) {
+        this.memberId = memberId;
     }
 
 }

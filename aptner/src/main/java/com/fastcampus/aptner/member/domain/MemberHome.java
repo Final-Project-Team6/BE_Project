@@ -15,15 +15,15 @@ public class MemberHome {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_home_id")
-    private Long id;
+    private Long memberHomeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "home_id")
-    private Home home;
+    private Home homeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private Member memberId;
 
     @Builder
     public MemberHome(Home home, Member member) {

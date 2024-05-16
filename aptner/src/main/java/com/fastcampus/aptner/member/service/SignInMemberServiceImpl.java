@@ -23,7 +23,7 @@ public class SignInMemberServiceImpl implements SignInMemberService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Member> findMemberById(Long id) {
-        return memberRepository.findById(id);
+    public Optional<Member> findMemberById(Long memberId) {
+        return memberRepository.findById(memberId);
     }
 }

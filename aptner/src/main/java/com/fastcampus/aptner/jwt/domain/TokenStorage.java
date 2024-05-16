@@ -17,7 +17,7 @@ public class TokenStorage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tokenStorage_id", nullable = false, updatable = false)
-    private Long id; // 토큰 id
+    private Long tokenStorageId; // 토큰 id
 
     private String refreshToken; // 리프레시 토큰 번호
 
