@@ -47,6 +47,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         PageRequest pageable = PageRequest.of(reqDTO.getPageNumber()-1, reqDTO.getPageSize());
         reqDTO.setPageable(pageable);
         Page<Announcement> result = announcementRepository.searchAnnouncement(reqDTO);
+        if (result.getContent().isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         PageResponseDTO resp = new PageResponseDTO(result);
         resp.setContent(
                 result

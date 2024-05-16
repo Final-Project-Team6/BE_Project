@@ -34,11 +34,11 @@ public class AnnouncementController {
             description = "apartmentId : 현재 사용중인 아파트 ID \n\n" +
                     "pageNumber : 조회 페이지 번호\n\n" +
                     "pageSize : 페이지당 내용 개수\n\n" +
-                    "searchType : 검색어 검색 조건 (제목,내용,제목+내용)\n\n" +
-                    "orderType : 정렬 조건 ( 조회수, 댓글수, 공감수, 날짜순)\n\n" +
-                    "orderBy : 정렬 차순 (내림차순, 오름차순)\n\n" +
+                    "searchType : 검색어 검색 조건 => TITLE(제목), CONTENTS(내용), TITLE_CONTENTS(제목+내용);\n\n" +
+                    "orderType : 정렬 조건 => VIEW(조회수), COMMENT(댓글), VOTE(공감수), DATE(날짜)\n\n" +
+                    "orderBy : 정렬 차순 => ASC(오름차순), DESC(내림차순)\n\n" +
                     "keyword : 검색어\n\n" +
-                    "announcementType : 공지사항 타입(공지, 의무공개)\n\n" +
+                    "announcementType : 공지사항 타입 =>  NOTICE(공지사항), DISCLOSURE(의무공개 사항)\n\n" +
                     "categoryId : 공지사항 카테고리 ID\n\n" +
                     "apartmentId 를 제외한 나머지 값은 필수가 아니며, 포함하지 않으면 기본조건으로 처리하거나 영향을 주지 않습니다."
     )
