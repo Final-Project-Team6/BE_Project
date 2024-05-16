@@ -6,9 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum OrderType {
-    VIEW("조회수"),
-    COMMENT("댓글"),
-    VOTE("공감수"),
-    DATE("날짜");
+    VIEW("조회수"), COMMENT("댓글"), VOTE("공감수"), DATE("날짜");
     private final String OrderType;
 }

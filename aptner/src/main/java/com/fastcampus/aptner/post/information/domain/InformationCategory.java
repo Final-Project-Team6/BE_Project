@@ -15,7 +15,7 @@ public class InformationCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "informationCategory_id")
-    private Long id;
+    private Long informationCategoryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apartment_id")

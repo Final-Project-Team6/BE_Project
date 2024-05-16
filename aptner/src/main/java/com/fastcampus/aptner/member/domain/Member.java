@@ -1,8 +1,8 @@
 package com.fastcampus.aptner.member.domain;
 
 
+import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
-import com.fastcampus.aptner.jwt.domain.TokenStorage;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.communication.domain.Communication;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
@@ -10,16 +10,27 @@ import com.fastcampus.aptner.post.information.domain.Information;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.fastcampus.aptner.post.opinion.domain.*;
 
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@ToString(exclude = {"memberRole",
+        "memberHomes",
+        "subscriptionId",
+        "announcement",
+        "complaint",
+        "Comment",
+        "communication",
+        "Vote",
+        "information"})
 @Table(name = "member")
 @Entity
 public class Member extends BaseTimeEntity {
@@ -27,7 +38,7 @@ public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id", nullable = false, updatable = false)
-    private Long id; // 회원 고유 번호
+    private Long memberId; // 회원 고유 번호
 
     @Column(nullable = false, length = 20)
     private String username; // 회원 아이디
@@ -64,16 +75,18 @@ public class Member extends BaseTimeEntity {
     private MemberStatus status; // 회원 상태여부
 
     @JsonIgnore
-    @OneToMany(mappedBy = "memberId")
+    @OneToMany(mappedBy = "memberRoleId", cascade = {CascadeType.ALL})
     private List<MemberRole> memberRole = new ArrayList<>(); // 회원 권한
 
+    // TODO : CascadeType.ALL 삭제 정책에 따라 변경이 될 가능성이 크다.
     @JsonIgnore
-    @OneToMany(mappedBy = "memberId")
-    private List<MemberHome> memberHome = new ArrayList<>();  // 회원-자택
+    @OneToMany(mappedBy = "memberId", cascade = {CascadeType.ALL})
+    private List<MemberHome> memberHomes = new ArrayList<>();  // 회원-자택
 
     @JsonIgnore
-    @OneToOne(mappedBy = "memberId")
-    private Subscription subscription; // 동의 여부
+    @JoinColumn(name = "subscription_id")
+    @OneToOne(mappedBy = "memberId", cascade = {CascadeType.ALL})
+    private Subscription subscriptionId; // 동의 여부
 
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")
@@ -94,13 +107,51 @@ public class Member extends BaseTimeEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")
     private List<Vote> Vote = new ArrayList<>(); // TODO: 투표 매핑하기.
-  
+
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")
     private List<Information> information = new ArrayList<>(); // 정보 게시판
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "memberId")
-    private TokenStorage tokenStorage; // 토큰 저장소
-    
+    @Builder
+    public Member(String username,
+                  String password,
+                  String phone,
+                  String phoneCarrier,
+                  String birthFirst,
+                  String nickname,
+                  String fullName,
+                  String gender) {
+        this.username = username;
+        this.password = password;
+        this.phone = phone;
+        this.phoneCarrier = phoneCarrier;
+        this.birthFirst = birthFirst;
+        this.nickname = nickname;
+        this.fullName = fullName;
+        this.gender = gender;
+        this.authenticatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS); // null 대신 생성일자와 동일한 시간 추가하기.
+        this.authenticationStatus = false; // 모든 가입 회원은 최초 1회 인증이 반드시 필요하다.
+        this.status = MemberStatus.ACTIVATE; // 인증이 안된 상태이더라도 활성화하기.
+    }
+
+    // [연관 관계 메서드]: Member, MemberHome
+    public void addMemberHome(MemberHome memberHome) {
+        this.memberHomes.add(memberHome);
+        memberHome.changeMember(this);
+    }
+
+    // [연관 관계 메서드]: Member, MemberHome
+    public void addMemberSubscription(Subscription subscription) {
+        this.subscriptionId = subscription;
+        subscription.changeMember(this);
+    }
+
+    // [연관 관계 메서드]: Member, MemberRole
+    public void addMemberRole(MemberRole memberRole, Apartment apartment) {
+        memberRole.changeApartment(apartment);
+        this.memberRole.add(memberRole);
+        memberRole.changeMember(this);
+    }
+
+
 }

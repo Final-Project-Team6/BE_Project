@@ -24,4 +24,14 @@ public class MemberHome {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member memberId;
+
+    @Builder
+    public MemberHome(Home home, Member member) {
+        this.homeId = home;
+        this.memberId = member;
+    }
+
+    public void changeMember(Member member) {
+        this.memberId = member;
+    }
 }

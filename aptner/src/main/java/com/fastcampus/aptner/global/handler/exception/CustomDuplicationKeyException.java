@@ -2,9 +2,8 @@ package com.fastcampus.aptner.global.handler.exception;
 
 import org.springframework.dao.DuplicateKeyException;
 
-public class DataDuplicateKeyException extends DuplicateKeyException {
-
-    public DataDuplicateKeyException(String message) {
+public class CustomDuplicationKeyException extends DuplicateKeyException {
+    public CustomDuplicationKeyException(String message) {
         super(message);
     }
 }

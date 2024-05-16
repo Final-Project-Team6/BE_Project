@@ -7,8 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ComplaintType {
 
-    MANAGEMENT_OFFICE("관리사무소"),
-    RESIDENTS_COMMITTEE("입주자 대표회의");
+    MANAGEMENT_OFFICE("관리사무소"), RESIDENTS_COMMITTEE("입주자 대표회의");
 
     private final String ComplaintType;
 

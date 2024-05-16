@@ -57,16 +57,15 @@ public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
     /**
      * 공지사항 수정
      * @param userToken 토큰 정보
-     * @param apartmentId 현재 아파트단지 ID
      * @param announcementId 수정하려는 게시글
      * @param dto 수정 내용 (제목, 내용, 중요도, 공지 타입, 상태)
      */
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> updateAnnouncement(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId, Long announcementId, AnnouncementDTO.AnnouncementPostReqDTO dto) {
-        UserAndAPT userAndAPT = getUserAndAPT(userToken,apartmentId);
-        AnnouncementCategory announcementCategory =announcementCommonService.getAnnouncementCategory(dto.announcementCategoryId());
+    public ResponseEntity<HttpStatus> updateAnnouncement(MemberTempDTO.MemberAuthDTO userToken, Long announcementId, AnnouncementDTO.AnnouncementPostReqDTO dto) {
         Announcement announcement = announcementRepository.findById(announcementId).orElseThrow(NoSuchElementException::new);
+        checkApartmentByAnnouncement(userToken,announcement);
+        AnnouncementCategory announcementCategory =announcementCommonService.getAnnouncementCategory(dto.announcementCategoryId());
         //Todo 권한 확인
         //Todo 예외처리
         announcement.updateAnnouncement(announcementCategory,dto);
@@ -76,14 +75,13 @@ public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
     /**
      * 공지사항 삭제
      * @param userToken 토큰 정보
-     * @param apartmentId 현재 아파트단지 ID
      * @param announcementId 삭제하려는 게시글
      */
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> deleteAnnouncement(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId, Long announcementId) {
-        UserAndAPT userAndAPT = getUserAndAPT(userToken,apartmentId);
+    public ResponseEntity<HttpStatus> deleteAnnouncement(MemberTempDTO.MemberAuthDTO userToken, Long announcementId) {
         Announcement announcement =announcementRepository.findById(announcementId).orElseThrow(NoSuchElementException::new);
+        checkApartmentByAnnouncement(userToken,announcement);
         //Todo 권한 확인
         //Todo 예외처리
         announcement.deleteAnnouncement();
@@ -93,14 +91,13 @@ public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
     /**
      * 공지사항 숨기기
      * @param userToken 토큰 정보
-     * @param apartmentId 현재 아파트단지 ID
      * @param announcementId 숨기려는 게시글
      */
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> hideAnnouncement(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId, Long announcementId) {
-        UserAndAPT userAndAPT = getUserAndAPT(userToken,apartmentId);
+    public ResponseEntity<HttpStatus> hideAnnouncement(MemberTempDTO.MemberAuthDTO userToken, Long announcementId) {
         Announcement announcement =announcementRepository.findById(announcementId).orElseThrow(NoSuchElementException::new);
+        checkApartmentByAnnouncement(userToken,announcement);
         //Todo 권한 확인
         //Todo 예외처리
         announcement.hideAnnouncement();
@@ -122,4 +119,9 @@ public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
         return new UserAndAPT(member, apartment);
     }
 
+    private void checkApartmentByAnnouncement(MemberTempDTO.MemberAuthDTO userToken,Announcement announcement){
+        if (!Objects.equals(userToken.ApartmentId(), announcement.getAnnouncementCategoryId().getApartmentId().getApartmentId())){
+            throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
+        }
+    }
 }

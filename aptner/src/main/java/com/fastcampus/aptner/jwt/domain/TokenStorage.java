@@ -1,6 +1,5 @@
 package com.fastcampus.aptner.jwt.domain;
 
-import com.fastcampus.aptner.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,15 +17,19 @@ public class TokenStorage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tokenStorage_id", nullable = false, updatable = false)
-    private Long tokenStorageId;
+    private Long tokenStorageId; // 토큰 id
 
-    private String refreshToken;
+    private String refreshToken; // 리프레시 토큰 번호
 
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt; // 생성일자
 
-    @OneToOne
-    @JoinColumn(name = "member_id")
-    private Member memberId;
+    private Long memberId; // 회원 id
 
+    @Builder
+    public TokenStorage(String refreshToken, Long memberId) {
+        this.refreshToken = refreshToken;
+        this.memberId = memberId;
+        this.createdAt = createdAt; // TODO: 날짜 넣기
+    }
 }

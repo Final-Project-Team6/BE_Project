@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class CommentDTO {
     @Schema(name = "댓글 생성",description = "댓글 생성 요청 Body")
     public record UploadCommentReqDTO(
-            @Schema(description = "댓글 타입 (공지사항, 민원 게시판, 소통공간, 대댓글)")
+            @Schema(description = "댓글 타입 => ANNOUNCEMENT(공지사항 댓글), COMPLAINT(민원 댓글), COMMUNICATION(소통 공간 댓글), REPLY(대댓글)")
             CommentType commentType,
             @Schema(description = "댓글 내용")
             String contents){}

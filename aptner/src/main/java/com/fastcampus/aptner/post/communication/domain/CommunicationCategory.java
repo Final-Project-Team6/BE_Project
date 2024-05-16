@@ -14,7 +14,7 @@ public class CommunicationCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "communication_category_id")
-    private Long id;
+    private Long communicationCategoryId;
 
     @ManyToOne
     @JoinColumn(name = "apartment_id")

@@ -32,14 +32,14 @@ public class AnnouncementDTO {
             String contents,
             @Schema(description = "공지사항 중요도.기본 0, 높을수록 우선 노출")
             Integer important,
-            @Schema(description = "게시글 상태")
+            @Schema(description = "게시글 상태 => PUBLISHED(게시됨), HIDDEN(숨김), DELETED(삭제됨), FORCE_DELETED(강제 삭제됨)")
             PostStatus status) {
     }
     @Schema(name = "공지사항 카테고리 생성",description = "공지사항 카테고리 생성 요청 Body")
     public record AnnouncementCategoryReqDTO(
             @Schema(description = "공지사항 카테고리 이름")
             String name,
-            @Schema(description = "공지사항 카테고리 타입")
+            @Schema(description = "공지사항 카테고리 타입 =>  NOTICE(공지사항), DISCLOSURE(의무공개 사항)")
             AnnouncementType type) {
     }
 
@@ -49,7 +49,7 @@ public class AnnouncementDTO {
             Long announcementCategoryId,
             @Schema(description = "공지사항 카테고리 이름")
             String name,
-            @Schema(description = "공지사항 카테고리 타입")
+            @Schema(description = "공지사항 카테고리 타입 => NOTICE(공지사항), DISCLOSURE(의무공개 사항)")
             AnnouncementType type) {
         public AnnouncementCategoryRespDTO(AnnouncementCategory announcementCategory) {
             this(announcementCategory.getAnnouncementCategoryId(), announcementCategory.getName(), announcementCategory.getType());

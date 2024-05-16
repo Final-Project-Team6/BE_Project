@@ -51,7 +51,7 @@ public class AnnouncementRepositoryDslImpl extends QuerydslRepositorySupport imp
     }
 
     private BooleanExpression chooseApartment(Long apartmentId){
-        return announcementCategory.apartmentId.id.eq(apartmentId);
+        return announcementCategory.apartmentId.apartmentId.eq(apartmentId);
     }
 
     private BooleanExpression searchByKeyword(String keyword, SearchType searchType){
@@ -66,7 +66,7 @@ public class AnnouncementRepositoryDslImpl extends QuerydslRepositorySupport imp
                 return contentsContainsKeyword(keyword);
             }
             case TITLE_CONTENTS -> {
-                return titleContainsKeyword(keyword).or(titleContainsKeyword(keyword));
+                return titleContainsKeyword(keyword).or(contentsContainsKeyword(keyword));
             }
         }
         return null;

@@ -23,7 +23,6 @@ public class BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime modifiedAt;
 
-    // TODO: Mysql TIMESTAMP 형식으로 저장하기 yyyy-mm-dd hh:mm:ss -> 2024-05-10 11:12:39
     @PrePersist
     public void onPrePersist() {
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);

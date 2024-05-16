@@ -25,7 +25,7 @@ public class VoteController {
     @Operation(
             summary = "공감/비공감 생성 API",
             description = "postId : 공감/비공감 생성하려는 게시글 ID\n\n" +
-                    "voteType : 공감/비공감 하려는 게시글 타입 (공지사항, 민원 게시판, 소통 공간, 댓글)\n\n" +
+                    "voteType : 공감/비공감 하려는 게시글 타입 ANNOUNCEMENT(공지사항 공감), COMPLAINT(민원 공감), COMMUNICATION(소통 공간 공감), COMMENT(댓글 공감)\n\n" +
                     "opinion : 공감(true) 비공감 (false)"
     )
     @PostMapping("/{postId}")
@@ -40,7 +40,7 @@ public class VoteController {
     @Operation(
             summary = "공감/비공감 삭제 API",
             description = "postId : 공감/비공감 삭제하려는 게시글 ID\n\n" +
-                    "voteType : 공감/비공감 삭제 하려는 게시글 타입 (공지사항, 민원 게시판, 소통 공간, 댓글)"
+                    "voteType : 공감/비공감 삭제 하려는 게시글 타입 ANNOUNCEMENT(공지사항 공감), COMPLAINT(민원 공감), COMMUNICATION(소통 공간 공감), COMMENT(댓글 공감)"
     )
     @DeleteMapping("/{postId}")
     public ResponseEntity<HttpStatus> deleteVote(

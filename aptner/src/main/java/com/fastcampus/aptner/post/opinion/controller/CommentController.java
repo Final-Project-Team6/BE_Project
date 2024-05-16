@@ -26,7 +26,7 @@ public class CommentController {
     @Operation(
             summary = "댓글 조회 API",
             description = "postId : 댓글을 조회하려는 게시글 ID\n\n" +
-                    "comment : 조회하려는 게시글 타입 (공지사항, 민원 게시판, 소통 공간, 대댓글 X) "
+                    "comment : 조회하려는 게시글 타입 ANNOUNCEMENT(\"공지사항 댓글\"), COMPLAINT(\"민원 댓글\"), COMMUNICATION(\"소통 공간 댓글\"), REPLY(\"대댓글에 대한 조회는 구현하지 않음. 요청X\") "
     )
     @GetMapping("/{postId}")
     public ResponseEntity<?> getComments(

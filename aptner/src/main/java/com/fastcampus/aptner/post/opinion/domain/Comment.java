@@ -107,7 +107,7 @@ public class Comment extends BaseTimeEntity {
     public Boolean yourVote(MemberTempDTO.MemberAuthDTO token){
         if (token==null)return null;
         for(Vote v : voteList){
-            if (v.getMemberId().getId().equals(token.memberId())){
+            if (v.getMemberId().getMemberId().equals(token.memberId())){
                 return v.isOpinion();
             }
         }

@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum OrderBy {
-    ASC("오름차순"),
-    DESC("내림차순");
+    ASC("오름차순"), DESC("내림차순");
     private final String OrderBy;
 }
