@@ -45,17 +45,17 @@ public class SignInMemberController {
         }
 
         // 회원 아이디, 아파트로 권한 찾기
-        Long apartmentId = apartmentService.findApartmentByName(request.getApartmentName()).getId();
-        String memberRole = memberRoleService.getMemberRole(member.getId(), apartmentService.findApartmentByName(request.getApartmentName()).getId()).toString();
+        Long apartmentId = apartmentService.findApartmentByName(request.getApartmentName()).getApartmentId();
+        String memberRole = memberRoleService.getMemberRole(member.getMemberId(), apartmentService.findApartmentByName(request.getApartmentName()).getApartmentId()).toString();
 
         // JWT 토큰 생성하는 시점.
-        String accessToken = jwtTokenizer.createAccessToken(member.getId(), member.getUsername(), memberRole, request.getApartmentName(), apartmentId);
-        String refreshToken = jwtTokenizer.createRefreshToken(member.getId(), member.getUsername(), memberRole, apartmentId);
+        String accessToken = jwtTokenizer.createAccessToken(member.getMemberId(), member.getUsername(), memberRole, request.getApartmentName(), apartmentId);
+        String refreshToken = jwtTokenizer.createRefreshToken(member.getMemberId(), member.getUsername(), memberRole, apartmentId);
 
         // RefreshToken 을 MySQL 에 저장. -> Redis 으로 저장 필요하다.
         TokenStorage refreshTokenEntity = TokenStorage.builder()
                 .refreshToken(refreshToken)
-                .memberId(member.getId())
+                .memberId(member.getMemberId())
                 .build();
 
         refreshTokenService.addRefreshToken(refreshTokenEntity);
@@ -63,7 +63,7 @@ public class SignInMemberController {
         SignInMemberResponse loginResponse = SignInMemberResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .memberId(member.getId())
+                .memberId(member.getMemberId())
                 .nickname(member.getUsername())
                 .build();
 
@@ -97,14 +97,14 @@ public class SignInMemberController {
 
         // 회원 아이디, 아파트로 권한 찾기
         String apartmentName = apartmentService.findApartmentById(apartmentId).getName();
-        String memberRole = memberRoleService.getMemberRole(member.getId(), apartmentId).toString();
+        String memberRole = memberRoleService.getMemberRole(member.getMemberId(), apartmentId).toString();
 
         String accessToken = jwtTokenizer.createAccessToken(memberId, username, memberRole, apartmentName, apartmentId);
 
         SignInMemberResponse loginResponse = SignInMemberResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshTokenDto.getRefreshToken())
-                .memberId(member.getId())
+                .memberId(member.getMemberId())
                 .nickname(member.getUsername())
                 .build();
 

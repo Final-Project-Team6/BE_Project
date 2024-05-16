@@ -5,7 +5,6 @@ import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.communication.domain.Communication;
-import com.fastcampus.aptner.post.communication.domain.CommunicationComment;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import com.fastcampus.aptner.post.information.domain.Information;
 import com.fasterxml.jackson.annotation.JsonIgnore;
