@@ -1,16 +1,17 @@
 package com.fastcampus.aptner.apartment.domain;
 
 import com.fastcampus.aptner.member.domain.Member;
+import com.fastcampus.aptner.member.domain.MemberRole;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@ToString(exclude = {"homes"})
 @Table(name = "apartment")
 @Entity
 public class Apartment {
@@ -47,8 +48,22 @@ public class Apartment {
     @Column
     private String dutyTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @OneToMany(mappedBy = "apartment")
+    private List<Home> homes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "apartment")
+    private List<MemberRole> memberRoles = new ArrayList<>();
+
+    @Builder
+    public Apartment(String name, String sido, String gugun, String road, String zipcode, String icon, String banner, String tel, String dutyTime) {
+        this.name = name;
+        this.sido = sido;
+        this.gugun = gugun;
+        this.road = road;
+        this.zipcode = zipcode;
+        this.icon = icon;
+        this.banner = banner;
+        this.tel = tel;
+        this.dutyTime = dutyTime;
+    }
 }
