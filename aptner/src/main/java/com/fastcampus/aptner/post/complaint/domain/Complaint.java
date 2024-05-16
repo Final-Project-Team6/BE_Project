@@ -139,7 +139,7 @@ public class Complaint extends BaseTimeEntity {
     public Boolean yourVote(MemberTempDTO.MemberAuthDTO token){
         if (token==null) return null;
         for(Vote v : voteList){
-            if (Objects.equals(v.getMemberId().getId(), token.memberId())){
+            if (Objects.equals(v.getMemberId().getMemberId(), token.memberId())){
                 return v.isOpinion();
             }
         }

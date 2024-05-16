@@ -24,13 +24,13 @@ public class ComplaintAdminController {
     @Operation(
             summary = "민원 진행 상태 변경 API",
             description = "complaintId : 상태 변경 하려는 민원 ID\n\n" +
-                    "complaintStatus : 변경 하려는 상태"
+                    "complaintStatus : 변경 하려는 상태 => SUBMITTED(제출됨), VERIFIED(확인됨), INVESTIGATING(조사중), PROCESSING(처리중), RESPONDED(답변됨), COMPLETED(완료됨)"
     )
     @PatchMapping("{complaintId}")
     public ResponseEntity<HttpStatus> updateComplaintStatus(
             @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO token,
             @PathVariable Long complaintId,
             @RequestParam ComplaintStatus complaintStatus){
-        return complaintAdminService.updateComplaintStatus(token,complaintId,complaintStatus);
+        return complaintAdminService.updateComplaintStatus(memberTempToken,complaintId,complaintStatus);
     }
 }

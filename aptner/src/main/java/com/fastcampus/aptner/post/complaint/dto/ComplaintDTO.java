@@ -3,6 +3,9 @@ package com.fastcampus.aptner.post.complaint.dto;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.domain.AnnouncementType;
 import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
+import com.fastcampus.aptner.post.common.enumType.OrderBy;
+import com.fastcampus.aptner.post.common.enumType.OrderType;
+import com.fastcampus.aptner.post.common.enumType.SearchType;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import com.fastcampus.aptner.post.complaint.domain.ComplaintCategory;
 import com.fastcampus.aptner.post.complaint.domain.ComplaintStatus;
@@ -13,8 +16,10 @@ import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,7 +31,8 @@ public class ComplaintDTO {
     public record ComplaintCategoryReqDTO(
             @Schema(description = "민원 카테고리 이름")
             String name,
-            @Schema(description = "민원 카테고리 타입")
+            @Schema(description = "민원 카테고리 타입 => MANAGEMENT_OFFICE(관리사무소),\n" +
+                    "    RESIDENTS_COMMITTEE(입주자 대표회의)")
             ComplaintType type) {
     }
     @Schema(name = "민원 카테고리 응답",description = "민원 카테고리 응답값")
@@ -66,6 +72,7 @@ public class ComplaintDTO {
         private int disagreeCnt;
         private Boolean yourVote;
         private List<CommentDTO.ViewComments> comments;
+        private boolean secret;
 
         public ComplaintRespDTO(Complaint complaint, MemberTempDTO.MemberAuthDTO token,List<CommentDTO.ViewComments> comments) {
             VoteDTO.VoteRespDTO voteRespDTO = complaint.aboutVote(token);
@@ -81,6 +88,53 @@ public class ComplaintDTO {
             this.disagreeCnt = voteRespDTO.disagree();
             this.yourVote = voteRespDTO.yourVote();
             this.comments = comments;
+            this.secret = complaint.isSecret();
         }
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class ComplaintListRespDTO {
+        private Long complaintId;
+        private ComplaintCategoryRespDTO complaintCategoryRespDTO;
+        private ComplaintStatus complaintStatus;
+        private MemberTempDTO.MemberRespDTO writer;
+        private String title;
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+        private LocalDateTime createdAt;
+        private Long view;
+        private int commentCnt;
+        private int agreeCnt;
+        private boolean secret;
+
+        public ComplaintListRespDTO(Complaint complaint) {
+            VoteDTO.VoteRespDTO voteRespDTO = complaint.aboutVoteWithoutMember();
+            this.complaintId = complaint.getComplaintId();
+            this.complaintCategoryRespDTO = new ComplaintDTO.ComplaintCategoryRespDTO(complaint.getComplaintCategoryId());
+            this.complaintStatus =complaint.getComplaintStatus();
+            this.writer = new MemberTempDTO.MemberRespDTO(complaint.getMemberId());
+            this.title = complaint.getTitle();
+            this.createdAt = complaint.getCreatedAt();
+            this.view = complaint.getView();
+            this.commentCnt = complaint.getCommentList().size();
+            this.agreeCnt = voteRespDTO.agree();
+            this.secret = complaint.isSecret();
+        }
+    }
+
+    @Builder
+    @Getter
+    @Setter
+    public static class ComplaintSearchReqDTO{
+        private int pageNumber;
+        private int pageSize;
+        private Pageable pageable;
+        private Long apartmentId;
+        private SearchType searchType;
+        private OrderType orderType;
+        private OrderBy orderBy;
+        private String keyword;
+        private ComplaintType complaintType;
+        private Long categoryId;
     }
 }

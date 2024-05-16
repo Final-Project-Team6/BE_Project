@@ -1,6 +1,7 @@
 package com.fastcampus.aptner.post.complaint.service;
 
 import com.fastcampus.aptner.member.domain.Member;
+import com.fastcampus.aptner.post.common.dto.PageResponseDTO;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import com.fastcampus.aptner.post.complaint.domain.ComplaintCategory;
 import com.fastcampus.aptner.post.complaint.dto.ComplaintDTO;
@@ -16,6 +17,8 @@ public interface ComplaintService {
     ResponseEntity<HttpStatus> updateComplaint(MemberTempDTO.MemberAuthDTO userToken,Long complaintId, ComplaintDTO.ComplaintReqDTO dto);
     ResponseEntity<HttpStatus> deleteComplaint(MemberTempDTO.MemberAuthDTO userToken,Long complaintId);
     ResponseEntity<?> getComplaint(MemberTempDTO.MemberAuthDTO token, Long complaintId);
+
+    ResponseEntity<PageResponseDTO> searchComplaint(ComplaintDTO.ComplaintSearchReqDTO reqDTO, MemberTempDTO.MemberAuthDTO memberToken);
 
 
 }

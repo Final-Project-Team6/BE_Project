@@ -2,6 +2,9 @@ package com.fastcampus.aptner.post.complaint.service;
 
 import com.fastcampus.aptner.global.error.RestAPIException;
 import com.fastcampus.aptner.member.domain.Member;
+import com.fastcampus.aptner.post.announcement.domain.Announcement;
+import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
+import com.fastcampus.aptner.post.common.dto.PageResponseDTO;
 import com.fastcampus.aptner.post.common.error.PostErrorCode;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import com.fastcampus.aptner.post.complaint.domain.ComplaintCategory;
@@ -17,6 +20,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -52,7 +57,7 @@ public class ComplaintServiceImpl implements ComplaintService{
     @Transactional
     public ResponseEntity<HttpStatus> updateComplaint(MemberTempDTO.MemberAuthDTO userToken,Long complaintId, ComplaintDTO.ComplaintReqDTO dto){
         Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(NoSuchElementException::new);
-        isSameUser(complaint.getMemberId().getId(),userToken);
+        isSameUser(complaint.getMemberId().getMemberId(),userToken);
         ComplaintCategory category = complaintCommonService.getComplaintCategoryEntity(dto.complaintCategoryId());
         complaint.updateComplaint(dto,category);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -62,7 +67,7 @@ public class ComplaintServiceImpl implements ComplaintService{
     @Transactional
     public ResponseEntity<HttpStatus> deleteComplaint(MemberTempDTO.MemberAuthDTO userToken,Long complaintId){
         Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(NoSuchElementException::new);
-        isSameUser(complaint.getMemberId().getId(),userToken);
+        isSameUser(complaint.getMemberId().getMemberId(),userToken);
         complaint.deleteComplaint();
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -73,7 +78,7 @@ public class ComplaintServiceImpl implements ComplaintService{
         Member viewer = memberCommonService.getUserByToken(token);
         Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(NoSuchElementException::new);
         if (complaint.isSecret()){
-            if (viewer.getId()!=token.memberId()){
+            if (viewer.getMemberId()!=token.memberId()){
                 //todo 권한에 따른 접근
                 throw new RestAPIException(NOT_SAME_USER);
             }
@@ -84,6 +89,23 @@ public class ComplaintServiceImpl implements ComplaintService{
         return new ResponseEntity<>(resp,HttpStatus.OK);
     }
 
+    public ResponseEntity<PageResponseDTO> searchComplaint(ComplaintDTO.ComplaintSearchReqDTO reqDTO, MemberTempDTO.MemberAuthDTO memberToken){
+        PageRequest pageable = PageRequest.of(reqDTO.getPageNumber()-1, reqDTO.getPageSize());
+        reqDTO.setPageable(pageable);
+        Page<Complaint> result = complaintRepository.searchComplaint(reqDTO,memberToken);
+        if (result.getContent().isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        PageResponseDTO resp = new PageResponseDTO(result);
+        resp.setContent(
+                result
+                        .getContent()
+                        .stream()
+                        .map(ComplaintDTO.ComplaintListRespDTO::new)
+                        .toList()
+        );
+        return new ResponseEntity<>(resp,HttpStatus.OK);
+    }
 
     private static void isCorrectApartment(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId){
         if (userToken.ApartmentId()!= apartmentId){

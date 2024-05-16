@@ -38,7 +38,6 @@ public class ComplaintCategoryAdminController {
     @Operation(
             summary = "민원 카테고리 수정 API",
             description = "Schema -> 민원 카테고리 생성 \n\n" +
-                    "apartmentId : 현재 사용중인 아파트 ID\n\n" +
                     "complaintCategoryId : 수정 하려는 민원 카테고리 ID  "
     )
     @PatchMapping("/{complaintCategoryId}")
@@ -50,8 +49,7 @@ public class ComplaintCategoryAdminController {
     }
     @Operation(
             summary = "민원 카테고리 삭제 API",
-            description = "apartmentId : 현재 사용중인 아파트 ID \n\n" +
-                    "complaintCategoryId : 삭제 하려는 민원 카테고리 ID "
+            description = "complaintCategoryId : 삭제 하려는 민원 카테고리 ID "
     )
     @DeleteMapping("/{complaintCategoryId}")
     public ResponseEntity<HttpStatus> deleteComplaintCategory(
