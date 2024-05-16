@@ -66,7 +66,7 @@ public class AnnouncementRepositoryDslImpl extends QuerydslRepositorySupport imp
                 return contentsContainsKeyword(keyword);
             }
             case TITLE_CONTENTS -> {
-                return titleContainsKeyword(keyword).or(titleContainsKeyword(keyword));
+                return titleContainsKeyword(keyword).or(contentsContainsKeyword(keyword));
             }
         }
         return null;

@@ -4,6 +4,8 @@ import com.fastcampus.aptner.global.error.RestAPIException;
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.service.AnnouncementCommonService;
+import com.fastcampus.aptner.post.complaint.domain.Complaint;
+import com.fastcampus.aptner.post.complaint.service.ComplaintCommonService;
 import com.fastcampus.aptner.post.opinion.domain.Comment;
 import com.fastcampus.aptner.post.opinion.domain.Vote;
 import com.fastcampus.aptner.post.opinion.domain.VoteType;
@@ -35,6 +37,7 @@ public class VoteServiceImpl implements VoteService{
     private final MemberCommonService memberCommonService;
     private final AnnouncementCommonService announcementCommonService;
     private final CommentCommonService commentCommonService;
+    private final ComplaintCommonService complaintCommonService;
 
     @Override
     public ResponseEntity<HttpStatus> voteToPost(MemberTempDTO.MemberAuthDTO token, Long postId, VoteType voteType, Boolean opinion){
@@ -63,7 +66,18 @@ public class VoteServiceImpl implements VoteService{
                         .commentId(comment)
                         .build();
             }
-            //todo 민원, 소통
+            case COMPLAINT -> {
+                Complaint complaint = complaintCommonService.getComplaintEntity(postId);
+                if (voteRepository.existsByComplaintIdAndMemberId(complaint,member)){
+                    throw new RestAPIException(ALREADY_EXiSTS);
+                }
+                vote = Vote.builder()
+                        .opinion(opinion)
+                        .memberId(member)
+                        .complaintId(complaint)
+                        .build();
+            }
+            //todo 소통
         }
         if (vote!=null){
             voteRepository.save(vote);

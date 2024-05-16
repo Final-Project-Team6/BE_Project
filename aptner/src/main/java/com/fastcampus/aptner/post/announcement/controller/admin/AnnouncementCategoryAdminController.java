@@ -37,24 +37,22 @@ public class AnnouncementCategoryAdminController {
             summary = "공지사항 카테고리 수정 API",
             description = "Schema -> 공지사항 카테고리 수정 \n\n apartmentId : 현재 사용중인 아파트 ID\n\n announcementCategoryId : 수정하려는 공지사항 카테고리 ID"
     )
-    @PatchMapping(value ="/{apartmentId}/{announcementCategoryId}")
+    @PatchMapping(value ="/{announcementCategoryId}")
     public ResponseEntity<HttpStatus> updateAnnouncementCategory(
             @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
-            @PathVariable Long apartmentId,
             @PathVariable Long announcementCategoryId,
             @RequestBody AnnouncementDTO.AnnouncementCategoryReqDTO dto){
-        return  announcementCategoryAdminService.updateAnnouncementCategory(memberTempToken,announcementCategoryId,apartmentId,dto);
+        return  announcementCategoryAdminService.updateAnnouncementCategory(memberTempToken,announcementCategoryId,dto);
     }
     @Operation(
             summary = "공지사항 카테고리 삭제 API",
             description = "apartmentId : 현재 사용중인 아파트 ID\n\n announcementId : 삭제하려는 공지사항 ID"
     )
-    @DeleteMapping(value ="/{apartmentId}/{announcementCategoryId}")
+    @DeleteMapping(value ="/{announcementCategoryId}")
     public ResponseEntity<HttpStatus> deleteAnnouncementCategory(
             @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
-            @PathVariable Long apartmentId,
             @PathVariable Long announcementCategoryId){
-        return  announcementCategoryAdminService.deleteAnnouncementCategory(memberTempToken,announcementCategoryId,apartmentId);
+        return  announcementCategoryAdminService.deleteAnnouncementCategory(memberTempToken,announcementCategoryId);
     }
 
 }
