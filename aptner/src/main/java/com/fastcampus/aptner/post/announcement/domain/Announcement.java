@@ -11,16 +11,16 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "announcement")
+@Entity
 public class Announcement extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "announcement_id")
-    private Long announcementId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "apartment_id")
