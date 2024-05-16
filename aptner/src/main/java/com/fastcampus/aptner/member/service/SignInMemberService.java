@@ -7,6 +7,6 @@ import java.util.Optional;
 public interface SignInMemberService {
 
     Member findByUsername(String username);
-    Optional<Member> findMemberById(Long id);
+    Optional<Member> findMemberById(Long memberId);
 
 }

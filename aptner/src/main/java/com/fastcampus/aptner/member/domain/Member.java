@@ -5,7 +5,6 @@ import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.communication.domain.Communication;
-import com.fastcampus.aptner.post.communication.domain.CommunicationComment;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import com.fastcampus.aptner.post.information.domain.Information;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,12 +24,11 @@ import com.fastcampus.aptner.post.opinion.domain.*;
 @Getter
 @ToString(exclude = {"memberRole",
         "memberHomes",
-        "subscription",
+        "subscriptionId",
         "announcement",
         "complaint",
         "Comment",
         "communication",
-        "communicationComment",
         "Vote",
         "information"})
 @Table(name = "member")
@@ -40,7 +38,7 @@ public class Member extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id", nullable = false, updatable = false)
-    private Long id; // 회원 고유 번호
+    private Long memberId; // 회원 고유 번호
 
     @Column(nullable = false, length = 20)
     private String username; // 회원 아이디
@@ -77,18 +75,18 @@ public class Member extends BaseTimeEntity {
     private MemberStatus status; // 회원 상태여부
 
     @JsonIgnore
-    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "memberRoleId", cascade = {CascadeType.ALL})
     private List<MemberRole> memberRole = new ArrayList<>(); // 회원 권한
 
     // TODO : CascadeType.ALL 삭제 정책에 따라 변경이 될 가능성이 크다.
     @JsonIgnore
-    @OneToMany(mappedBy = "member", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "memberId", cascade = {CascadeType.ALL})
     private List<MemberHome> memberHomes = new ArrayList<>();  // 회원-자택
 
     @JsonIgnore
     @JoinColumn(name = "subscription_id")
-    @OneToOne(mappedBy = "member", cascade = {CascadeType.ALL})
-    private Subscription subscription; // 동의 여부
+    @OneToOne(mappedBy = "memberId", cascade = {CascadeType.ALL})
+    private Subscription subscriptionId; // 동의 여부
 
     @JsonIgnore
     @OneToMany(mappedBy = "memberId")

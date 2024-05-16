@@ -19,8 +19,8 @@ public class FindApartmentServiceImpl implements FindApartmentService {
     }
 
     @Override
-    public Apartment findApartmentById(Long id) {
-        return apartmentRepository.findApartmentById(id)
+    public Apartment findApartmentById(Long apartmentId) {
+        return apartmentRepository.findApartmentByApartmentId(apartmentId)
                 .orElseThrow(() -> new IllegalArgumentException("아파트가 존재하지 않습니다."));
     }
 }

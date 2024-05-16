@@ -1,7 +1,11 @@
 package com.fastcampus.aptner.apartment.domain;
 
+import com.fastcampus.aptner.member.domain.MemberRole;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -14,7 +18,7 @@ public class Apartment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "apartment_id")
-    private Long id;
+    private Long apartmentId;
 
     @Column(length = 100)
     private String name;

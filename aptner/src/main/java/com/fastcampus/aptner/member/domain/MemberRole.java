@@ -14,21 +14,21 @@ public class MemberRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "memberRole_id", nullable = false, updatable = false)
-    private Long id;
+    private Long memberRoleId;
 
     @Enumerated(EnumType.STRING)
     private RoleName roleName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private Member memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "apartment_id")
-    private Apartment apartment;
+    private Apartment apartmentId;
 
     @Builder
-    public MemberRole(RoleName roleName, Apartment apartment) {
+    public MemberRole(RoleName roleName, Apartment apartmentId) {
         this.roleName = roleName;
         this.apartmentId = apartmentId;
     }

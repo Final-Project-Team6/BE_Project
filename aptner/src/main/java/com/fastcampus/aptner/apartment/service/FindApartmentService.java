@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface FindApartmentService {
     Apartment findApartmentByName(String name);
-    Apartment findApartmentById(Long id);
+    Apartment findApartmentById(Long apartmentId);
 }
