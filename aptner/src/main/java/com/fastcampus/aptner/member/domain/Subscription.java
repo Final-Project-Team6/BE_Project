@@ -4,11 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@ToString(exclude = {"member"})
 @Table(name = "subscription")
 @Entity
 public class Subscription {
@@ -16,11 +16,11 @@ public class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "subscription_id")
-    private Long subscriptionId;
+    private Long id;
 
     @OneToOne
     @JoinColumn(name = "member_id")
-    private Member memberId;
+    private Member member;
 
     @Column(name = "terms_service")
     private boolean termsService;
@@ -40,6 +40,20 @@ public class Subscription {
     @Column(name = "sns_marketing_information_receive_modified_at")
     private LocalDateTime snsMarketingInformationReceiveModifiedAt;
 
+    @Builder
+    public Subscription(boolean termsService, boolean privateInformationCollection, boolean snsMarketingInformationReceive) {
+        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
+        this.termsService = termsService;
+        this.privateInformationCollection = privateInformationCollection;
+        this.snsMarketingInformationReceive = snsMarketingInformationReceive;
+        this.termsServiceAgreementModifiedAt = now;
+        this.privateInformationCollectionModifiedAt = now;
+        this.snsMarketingInformationReceiveModifiedAt = now;
+    }
+
+    public void changeMember(Member member) {
+        this.member = member;
+    }
 
 }
