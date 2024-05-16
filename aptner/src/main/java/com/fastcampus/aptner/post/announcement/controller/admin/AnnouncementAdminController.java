@@ -37,7 +37,7 @@ public class AnnouncementAdminController {
 
     @Operation(
             summary = "공지사항 수정 API",
-            description = "Schema -> 공지사항 업로드\n\n apartmentId : 현재 사용중인 아파트 ID\n\n announcementId : 수정하려는 공지사항 ID"
+            description = "Schema -> 공지사항 생성\n\n apartmentId : 현재 사용중인 아파트 ID\n\n announcementId : 수정하려는 공지사항 ID"
     )
     @PatchMapping(value = "/{apartmentId}/{announcementId}")
     public ResponseEntity<HttpStatus> updateAnnouncement(
