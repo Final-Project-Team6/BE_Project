@@ -7,13 +7,13 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
-@Table(name = "memberRole")
+@Table(name = "member_role")
 @Entity
 public class MemberRole {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "memberRole_id", nullable = false, updatable = false)
+    @Column(name = "member_role_id", nullable = false, updatable = false)
     private Long memberRoleId;
 
     @Enumerated(EnumType.STRING)

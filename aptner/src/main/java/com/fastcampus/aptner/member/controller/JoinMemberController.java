@@ -1,23 +1,25 @@
 package com.fastcampus.aptner.member.controller;
 
 import com.fastcampus.aptner.member.dto.HttpResponse;
-import com.fastcampus.aptner.member.dto.reqeust.SignUpMemberRequest;
-import com.fastcampus.aptner.member.service.SignUpMemberService;
+import com.fastcampus.aptner.member.dto.reqeust.JoinMemberRequest;
+import com.fastcampus.aptner.member.service.JoinMemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/members")
+@RequestMapping("/api/join")
 @RestController
-public class SignUpMemberController {
+public class JoinMemberController {
 
-    private final SignUpMemberService memberService;
+    private final JoinMemberService memberService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> signUpMember(@RequestBody SignUpMemberRequest request) {
-        memberService.signUpMember(request);
+    @PostMapping("/member")
+    public ResponseEntity<?> joinMember(@RequestBody @Valid JoinMemberRequest request, BindingResult result) {
+        memberService.joinMember(request);
         return new ResponseEntity<>(new HttpResponse<>(1, "회원 가입에 성공했습니다.", null), HttpStatus.CREATED);
     }
 

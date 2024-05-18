@@ -6,7 +6,7 @@ import com.fastcampus.aptner.apartment.repository.ApartmentRepository;
 import com.fastcampus.aptner.apartment.repository.HomeRepository;
 import com.fastcampus.aptner.global.handler.exception.CustomDuplicationKeyException;
 import com.fastcampus.aptner.member.domain.*;
-import com.fastcampus.aptner.member.dto.reqeust.SignUpMemberRequest;
+import com.fastcampus.aptner.member.dto.reqeust.JoinMemberRequest;
 import com.fastcampus.aptner.member.repository.MemberRepository;
 import com.fastcampus.aptner.member.repository.MemberRoleRepository;
 import com.fastcampus.aptner.member.repository.SubscriptionRepository;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Service
-public class SignUpMemberServiceImpl implements SignUpMemberService {
+public class JoinMemberServiceImpl implements JoinMemberService {
 
     private final MemberRepository memberRepository;
     private final HomeRepository homeRepository;
@@ -52,9 +52,11 @@ public class SignUpMemberServiceImpl implements SignUpMemberService {
         }
     }
 
+
+
     // TODO: 로직 분리가 가능해 보인다. 리팩토링 고민해보자.
     @Transactional
-    public void signUpMember(SignUpMemberRequest request) {
+    public void joinMember(JoinMemberRequest request) {
 
         checkMemberPhoneDuplication(request.getPhone());
         checkMemberNickNameDuplication(request.getNickname());

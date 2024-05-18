@@ -7,12 +7,10 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class SignUpMemberRequest {
+public class JoinMemberRequest {
 
-    @NotBlank(message = "동의여부: 서비스 이용약관 동의는 필수입니다.")
     private final boolean termsService;
 
-    @NotBlank(message = "동의여부: 개인정보 수집 동의는 필수입니다.")
     private final boolean privateInformationCollection;
 
     private final boolean snsMarketingInformationReceive; // SNS 마케팅 정보 수신 동의는 선택입니다.
@@ -73,7 +71,7 @@ public class SignUpMemberRequest {
 
 
     @Builder
-    public SignUpMemberRequest(boolean termsService, boolean privateInformationCollection, boolean snsMarketingInformationReceive, String fullName, String birthFirst, String gender, String phoneCarrier, String phone, String username, String password, String nickname, String dong, String ho, String apartmentName) {
+    public JoinMemberRequest(boolean termsService, boolean privateInformationCollection, boolean snsMarketingInformationReceive, String fullName, String birthFirst, String gender, String phoneCarrier, String phone, String username, String password, String nickname, String dong, String ho, String apartmentName) {
         this.termsService = termsService;
         this.privateInformationCollection = privateInformationCollection;
         this.snsMarketingInformationReceive = snsMarketingInformationReceive;

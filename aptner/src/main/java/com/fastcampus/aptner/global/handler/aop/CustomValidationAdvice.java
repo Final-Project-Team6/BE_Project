@@ -17,7 +17,7 @@ import java.util.Map;
 @Component
 @Aspect
 public class CustomValidationAdvice {
-    
+
     // post, put (body) 어드바이스 작성하기
     @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
     public void postMapping() {}
