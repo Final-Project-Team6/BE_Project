@@ -1,12 +1,12 @@
 package com.fastcampus.aptner.member.service;
 
 
-import com.fastcampus.aptner.member.dto.reqeust.SignUpMemberRequest;
+import com.fastcampus.aptner.member.dto.reqeust.JoinMemberRequest;
 
-public interface SignUpMemberService {
+public interface JoinMemberService {
     void checkMemberPhoneDuplication(String phone);
     void checkMemberNickNameDuplication(String nickname);
     void checkMemberUsernameDuplication(String username);
-    void signUpMember(SignUpMemberRequest request);
+    void joinMember(JoinMemberRequest request);
 
 }

@@ -15,8 +15,8 @@ public class CreateApartmentController {
 
     private final CreateApartmentService apartmentService;
 
-    @PostMapping("/insert")
-    public ResponseEntity<?> saveApartment(@RequestBody CreateApartmentRequest request) {
+    @PostMapping("/create")
+    public ResponseEntity<?> createApartment(@RequestBody CreateApartmentRequest request) {
         apartmentService.createApartment(request);
         return new ResponseEntity<>(new HttpResponse<>(1, "아파트 등록 성공", null), HttpStatus.CREATED);
     }

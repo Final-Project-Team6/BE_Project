@@ -1,7 +1,7 @@
 package com.fastcampus.aptner.jwt.util;
 
 import com.fastcampus.aptner.jwt.token.JwtAuthenticationToken;
-import com.fastcampus.aptner.member.dto.reqeust.SignInMemberRequest;
+import com.fastcampus.aptner.member.dto.reqeust.LoginMemberRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,7 +19,7 @@ public class isLoginArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.getParameterAnnotation(isLogin.class) != null
-                && parameter.getParameterType() == SignInMemberRequest.class;
+                && parameter.getParameterType() == LoginMemberRequest.class;
     }
 
     @Override

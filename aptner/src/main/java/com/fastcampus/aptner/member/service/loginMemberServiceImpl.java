@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class SignInMemberServiceImpl implements SignInMemberService {
+public class loginMemberServiceImpl implements loginMemberService {
 
     private final MemberRepository memberRepository;
 
