@@ -17,7 +17,6 @@ import java.util.NoSuchElementException;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CommentCommonServiceImpl implements CommentCommonService {
 
     private final CommentRepository commentRepository;

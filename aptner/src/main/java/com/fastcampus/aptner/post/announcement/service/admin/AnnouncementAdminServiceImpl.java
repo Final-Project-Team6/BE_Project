@@ -28,7 +28,6 @@ import java.util.Objects;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
 
     private final AnnouncementRepository announcementRepository;

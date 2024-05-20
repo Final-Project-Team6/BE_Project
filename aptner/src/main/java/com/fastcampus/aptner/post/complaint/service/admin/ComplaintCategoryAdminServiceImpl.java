@@ -1,4 +1,4 @@
-package com.fastcampus.aptner.post.complaint.service;
+package com.fastcampus.aptner.post.complaint.service.admin;
 
 import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.global.error.RestAPIException;
@@ -24,7 +24,6 @@ import java.util.NoSuchElementException;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ComplaintCategoryAdminServiceImpl implements ComplaintCategoryAdminService {
 
     private final ComplaintCategoryRepository complaintCategoryRepository;

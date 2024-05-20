@@ -31,7 +31,6 @@ import static com.fastcampus.aptner.post.common.error.PostErrorCode.NOT_SAME_USE
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CommentServiceImpl implements CommentService{
 
     private final CommentRepository commentRepository;

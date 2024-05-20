@@ -18,7 +18,6 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AnnouncementCategoryServiceImpl implements AnnouncementCategoryService {
 
     private final AnnouncementCategoryRepository announcementCategoryRepository;

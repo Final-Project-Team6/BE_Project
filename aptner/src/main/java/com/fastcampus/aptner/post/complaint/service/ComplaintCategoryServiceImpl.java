@@ -3,7 +3,6 @@ package com.fastcampus.aptner.post.complaint.service;
 import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.post.complaint.dto.ComplaintDTO;
 import com.fastcampus.aptner.post.complaint.repository.ComplaintCategoryRepository;
-import com.fastcampus.aptner.post.complaint.service.admin.ComplaintCategoryService;
 import com.fastcampus.aptner.post.temp.service.ApartmentCommonService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ComplaintCategoryServiceImpl implements ComplaintCategoryService {
 
     private final ComplaintCategoryRepository complaintCategoryRepository;

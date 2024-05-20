@@ -26,7 +26,6 @@ import static com.fastcampus.aptner.post.common.error.PostErrorCode.CANT_DELETE;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AnnouncementCategoryAdminServiceImpl implements AnnouncementCategoryAdminService{
 
     private final AnnouncementCategoryRepository announcementCategoryRepository;

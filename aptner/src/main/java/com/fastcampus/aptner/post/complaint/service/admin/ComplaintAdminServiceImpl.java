@@ -28,7 +28,6 @@ import java.util.NoSuchElementException;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ComplaintAdminServiceImpl implements ComplaintAdminService {
 
     private final ComplaintRepository complaintRepository;

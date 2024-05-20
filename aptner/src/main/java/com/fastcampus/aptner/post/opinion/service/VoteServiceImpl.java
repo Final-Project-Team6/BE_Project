@@ -30,7 +30,6 @@ import static com.fastcampus.aptner.post.common.error.VoteErrorCode.ALREADY_EXiS
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class VoteServiceImpl implements VoteService{
 
     private final VoteRepository voteRepository;
