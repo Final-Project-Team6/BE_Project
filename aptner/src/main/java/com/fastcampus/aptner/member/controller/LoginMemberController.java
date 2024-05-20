@@ -10,6 +10,8 @@ import com.fastcampus.aptner.member.dto.reqeust.LoginMemberRequest;
 import com.fastcampus.aptner.member.dto.reqeust.LoginMemberResponse;
 import com.fastcampus.aptner.member.service.FindMemberRoleServiceImpl;
 import com.fastcampus.aptner.member.service.loginMemberService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +19,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "회원 로그인(사용자)", description = "회원 로그인")
 @RequiredArgsConstructor
-@RequestMapping("/api/login")
+@RequestMapping("/api/members")
 @RestController
 public class LoginMemberController {
 
@@ -30,8 +33,14 @@ public class LoginMemberController {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @PostMapping("/member")
-    public ResponseEntity<?> signIn(@RequestBody LoginMemberRequest request, BindingResult bindingResult) {
+    @Operation(
+            summary = "회원 로그인 API",
+            description = "username: 회원 아이디(필수)\n\n" +
+                    "password: 회원 비밀번호(필수)\n\n" +
+                    "apartmentName: 회원 아파트 이름(필수)"
+    )
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginMemberRequest request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(new HttpResponse<>(-1, "잘못된 요청 입니다.", null), HttpStatus.BAD_REQUEST);
         }

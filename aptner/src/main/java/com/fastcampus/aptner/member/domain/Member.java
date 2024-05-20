@@ -153,5 +153,13 @@ public class Member extends BaseTimeEntity {
         memberRole.changeMember(this);
     }
 
+    // 회원 상태 변경하기
+    public void updateMemberAuthenticationStatus(boolean authenticationStatus) {
+        this.authenticationStatus = authenticationStatus;
+    }
 
+    // 회원 닉네임 변경하기
+    public void updateMemberNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }
