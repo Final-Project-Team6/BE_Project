@@ -1,11 +1,15 @@
 package com.fastcampus.aptner.jwt.util;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
-public class MemberLoginResponse {
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
+public class JWTMemberInfoDTO {
     private Long memberId;
     private String username;
+    private Long apartmentId;
     private String apartmentName;
     private String roleName;
 }

@@ -9,7 +9,7 @@ import java.util.Collection;
 @Getter
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     private String token;
-    private Object principal; // 로그인한 사용자 id , email
+    private Object principal; // 로그인한 사용자 아이디
     private Object credentials;
 
     /**

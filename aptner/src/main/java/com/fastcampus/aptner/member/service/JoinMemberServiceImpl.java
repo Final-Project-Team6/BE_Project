@@ -4,6 +4,7 @@ import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.apartment.domain.Home;
 import com.fastcampus.aptner.apartment.repository.ApartmentRepository;
 import com.fastcampus.aptner.apartment.repository.HomeRepository;
+import com.fastcampus.aptner.global.handler.exception.CustomAPIException;
 import com.fastcampus.aptner.global.handler.exception.CustomDuplicationKeyException;
 import com.fastcampus.aptner.member.domain.*;
 import com.fastcampus.aptner.member.dto.reqeust.JoinMemberRequest;
@@ -85,7 +86,7 @@ public class JoinMemberServiceImpl implements JoinMemberService {
         // TODO: 예외 생성하기
         // Apartment 엔티티 가져오기
         Apartment apartment = apartmentRepository.findApartmentByName(request.getApartmentName())
-                .orElseThrow(() -> new IllegalArgumentException("해당 아파트가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomAPIException("아파트가 존재하지 않습니다."));
 
         // [연관 관계 메서드]: Home, Apartment
         home.changeApartment(apartment);

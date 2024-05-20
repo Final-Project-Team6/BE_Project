@@ -9,9 +9,9 @@ import lombok.Getter;
 @Getter
 public class JoinMemberRequest {
 
-    private final boolean termsService;
+    private final boolean termsService; // 서비스 이용 약관 동의
 
-    private final boolean privateInformationCollection;
+    private final boolean privateInformationCollection; // 개인 정보 수집 동의
 
     private final boolean snsMarketingInformationReceive; // SNS 마케팅 정보 수신 동의는 선택입니다.
 

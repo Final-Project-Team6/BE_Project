@@ -2,13 +2,14 @@ package com.fastcampus.aptner.jwt.provider;
 
 import com.fastcampus.aptner.jwt.token.JwtAuthenticationToken;
 import com.fastcampus.aptner.jwt.util.JwtTokenizer;
-import com.fastcampus.aptner.jwt.util.MemberLoginResponse;
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -31,22 +32,35 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String username = claims.getSubject();
         Long memberId = claims.get("memberId", Long.class);
         String apartmentName = claims.get("apartmentName", String.class);
-        List<GrantedAuthority> authorities = getGrantedAuthorities(claims);
+        Long apartmentId = claims.get("apartmentId", Long.class);
+        String roleName = claims.get("roleName", String.class);
 
-        MemberLoginResponse memberLoginResponse = new MemberLoginResponse();
-        memberLoginResponse.setMemberId(memberId);
-        memberLoginResponse.setUsername(username);
-        memberLoginResponse.setApartmentName(apartmentName);
+        // 권한 설정
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + roleName);
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(authority);
 
-        return new JwtAuthenticationToken(authorities, memberLoginResponse, null);
+        JWTMemberInfoDTO JWTMemberInfoDTO = new JWTMemberInfoDTO();
+        JWTMemberInfoDTO.setMemberId(memberId);
+        JWTMemberInfoDTO.setUsername(username);
+        JWTMemberInfoDTO.setApartmentName(apartmentName);
+        JWTMemberInfoDTO.setApartmentId(apartmentId);
+        JWTMemberInfoDTO.setRoleName(roleName);
+
+        System.out.println("memberInfoRequest.getMemberId() = " + JWTMemberInfoDTO.getMemberId());
+        System.out.println("memberInfoRequest.getApartmentName() = " + JWTMemberInfoDTO.getApartmentName());
+        System.out.println("memberInfoRequest.getRoleName() = " + JWTMemberInfoDTO.getRoleName());
+
+        return new JwtAuthenticationToken(authorities, JWTMemberInfoDTO, null);
     }
 
     private List<GrantedAuthority> getGrantedAuthorities(Claims claims) {
-        List<String> roles = (List<String>) claims.get("roles");
+        String roleName = (String) claims.get("roleName");
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + roleName);
+
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for (String role : roles) {
-            authorities.add(()-> role);
-        }
+        authorities.add(authority);
+        System.out.println("authorities.get(0) = " + authorities.get(0));
         return authorities;
     }
 
