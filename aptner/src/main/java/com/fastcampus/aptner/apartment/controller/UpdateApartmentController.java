@@ -16,7 +16,6 @@ public class UpdateApartmentController {
 
     private final UpdateApartmentService apartmentService;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/update-name/{apartmentId}")
     public ResponseEntity<?> updateApartmentName(@PathVariable Long apartmentId, @RequestBody String newName) {
         apartmentService.updateApartmentName(apartmentId, newName);
