@@ -1,10 +1,10 @@
 package com.fastcampus.aptner.post.opinion.service;
 
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.post.opinion.domain.Comment;
 import com.fastcampus.aptner.post.opinion.domain.CommentType;
 import com.fastcampus.aptner.post.opinion.dto.CommentDTO;
 import com.fastcampus.aptner.post.opinion.repository.CommentRepository;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,11 +22,11 @@ public class CommentCommonServiceImpl implements CommentCommonService {
     private final CommentRepository commentRepository;
 
     @Override
-    public List<CommentDTO.ViewComments> getComments(Long postId, CommentType commentType, MemberTempDTO.MemberAuthDTO token) {
+    public List<CommentDTO.ViewComments> getComments(Long postId, CommentType commentType, JWTMemberInfoDTO request) {
         return commentRepository
                 .getComments(postId, commentType)
                 .stream()
-                .map(e -> CommentDTO.ViewComments.of(e, token))
+                .map(e -> CommentDTO.ViewComments.of(e, request))
                 .toList();
     }
 

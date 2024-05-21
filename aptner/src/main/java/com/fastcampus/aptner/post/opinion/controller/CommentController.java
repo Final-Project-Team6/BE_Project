@@ -1,11 +1,10 @@
 package com.fastcampus.aptner.post.opinion.controller;
 
-import com.fastcampus.aptner.member.domain.RoleName;
-import com.fastcampus.aptner.post.common.enumType.BoardType;
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
+import com.fastcampus.aptner.jwt.util.isLogin;
 import com.fastcampus.aptner.post.opinion.domain.CommentType;
 import com.fastcampus.aptner.post.opinion.dto.CommentDTO;
 import com.fastcampus.aptner.post.opinion.service.CommentService;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentService;
 
-    //TODO Member 개발 완료시 지우기
-    private MemberTempDTO.MemberAuthDTO memberTempToken = new MemberTempDTO.MemberAuthDTO(1L, RoleName.ADMIN,1L);
     @Operation(
             summary = "댓글 조회 API",
             description = "postId : 댓글을 조회하려는 게시글 ID\n\n" +
@@ -30,10 +27,10 @@ public class CommentController {
     )
     @GetMapping("/{postId}")
     public ResponseEntity<?> getComments(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
+            @isLogin JWTMemberInfoDTO request,
             @PathVariable Long postId,
             @RequestParam CommentType commentType){
-        return commentService.getCommentsResp(postId,commentType,memberTempToken);
+        return commentService.getCommentsResp(postId,commentType,request);
     }
 
     @Operation(
@@ -43,10 +40,10 @@ public class CommentController {
     )
     @PostMapping("/{postId}")
     public ResponseEntity<HttpStatus> uploadComment(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long postId,
             @RequestBody CommentDTO.UploadCommentReqDTO dto){
-        return commentService.uploadComment(memberTempToken,postId,dto);
+        return commentService.uploadComment(memberToken,postId,dto);
     }
 
     @Operation(
@@ -56,10 +53,10 @@ public class CommentController {
     )
     @PatchMapping("/{commentId}")
     public ResponseEntity<HttpStatus> updateComment(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long commentId,
             @RequestBody CommentDTO.UpdateComment contents){
-        return commentService.updateComment(memberTempToken,commentId,contents.contents());
+        return commentService.updateComment(memberToken,commentId,contents.contents());
     }
 
     @Operation(
@@ -68,8 +65,8 @@ public class CommentController {
     )
     @DeleteMapping("/{commentId}")
     public ResponseEntity<HttpStatus> deleteComment(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long commentId){
-        return commentService.deleteComment(memberTempToken,commentId);
+        return commentService.deleteComment(memberToken,commentId);
     }
 }

@@ -1,6 +1,7 @@
 package com.fastcampus.aptner.post.opinion.service;
 
 import com.fastcampus.aptner.global.error.RestAPIException;
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.service.AnnouncementCommonService;
@@ -9,13 +10,9 @@ import com.fastcampus.aptner.post.complaint.service.ComplaintCommonService;
 import com.fastcampus.aptner.post.opinion.domain.Comment;
 import com.fastcampus.aptner.post.opinion.domain.Vote;
 import com.fastcampus.aptner.post.opinion.domain.VoteType;
-import com.fastcampus.aptner.post.opinion.repository.CommentRepository;
 import com.fastcampus.aptner.post.opinion.repository.VoteRepository;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
-import com.fastcampus.aptner.post.temp.service.MemberCommonService;
-import lombok.AccessLevel;
+import com.fastcampus.aptner.member.service.MemberCommonService;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static com.fastcampus.aptner.post.common.error.VoteErrorCode.ALREADY_EXiSTS;
 
@@ -39,7 +35,7 @@ public class VoteServiceImpl implements VoteService{
     private final ComplaintCommonService complaintCommonService;
 
     @Override
-    public ResponseEntity<HttpStatus> voteToPost(MemberTempDTO.MemberAuthDTO token, Long postId, VoteType voteType, Boolean opinion){
+    public ResponseEntity<HttpStatus> voteToPost(JWTMemberInfoDTO token, Long postId, VoteType voteType, Boolean opinion){
         Member member = memberCommonService.getUserByToken(token);
         Vote vote = null;
         switch (voteType){
@@ -87,7 +83,7 @@ public class VoteServiceImpl implements VoteService{
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> deleteVote(MemberTempDTO.MemberAuthDTO token, Long postId, VoteType voteType){
+    public ResponseEntity<HttpStatus> deleteVote(JWTMemberInfoDTO token, Long postId, VoteType voteType){
         Member member = memberCommonService.getUserByToken(token);
         Vote vote = null;
         switch (voteType){

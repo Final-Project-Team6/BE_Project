@@ -1,10 +1,10 @@
 package com.fastcampus.aptner.post.opinion.service;
 
 import com.fastcampus.aptner.global.error.RestAPIException;
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.service.AnnouncementCommonService;
-import com.fastcampus.aptner.post.common.enumType.BoardType;
 import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import com.fastcampus.aptner.post.complaint.service.ComplaintCommonService;
@@ -12,11 +12,8 @@ import com.fastcampus.aptner.post.opinion.domain.Comment;
 import com.fastcampus.aptner.post.opinion.domain.CommentType;
 import com.fastcampus.aptner.post.opinion.dto.CommentDTO;
 import com.fastcampus.aptner.post.opinion.repository.CommentRepository;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
-import com.fastcampus.aptner.post.temp.service.MemberCommonService;
-import lombok.AccessLevel;
+import com.fastcampus.aptner.member.service.MemberCommonService;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,8 +39,8 @@ public class CommentServiceImpl implements CommentService{
 
 
     @Override
-    public ResponseEntity<List<CommentDTO.ViewComments>> getCommentsResp(Long postId, CommentType commentType, MemberTempDTO.MemberAuthDTO token) {
-        List<CommentDTO.ViewComments> list = commentCommonService.getComments(postId,commentType,token);
+    public ResponseEntity<List<CommentDTO.ViewComments>> getCommentsResp(Long postId, CommentType commentType, JWTMemberInfoDTO request) {
+        List<CommentDTO.ViewComments> list = commentCommonService.getComments(postId,commentType,request);
         if (list.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -51,7 +48,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public ResponseEntity<HttpStatus> uploadComment(MemberTempDTO.MemberAuthDTO token, Long postId, CommentDTO.UploadCommentReqDTO dto){
+    public ResponseEntity<HttpStatus> uploadComment(JWTMemberInfoDTO token, Long postId, CommentDTO.UploadCommentReqDTO dto){
         Member member = memberCommonService.getUserByToken(token);
         Comment comment = Comment.builder()
                 .memberId(member)
@@ -84,7 +81,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> updateComment(MemberTempDTO.MemberAuthDTO token, Long commentId, String contents){
+    public ResponseEntity<HttpStatus> updateComment(JWTMemberInfoDTO token, Long commentId, String contents){
         Member member = memberCommonService.getUserByToken(token);
         Comment comment =commentRepository.findById(commentId).orElseThrow(NoSuchElementException::new);
         if (member.getMemberId()!=comment.getMemberId().getMemberId()){
@@ -96,7 +93,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> deleteComment(MemberTempDTO.MemberAuthDTO token, Long commentId) {
+    public ResponseEntity<HttpStatus> deleteComment(JWTMemberInfoDTO token, Long commentId) {
         Member member = memberCommonService.getUserByToken(token);
         Comment comment =commentRepository.findById(commentId).orElseThrow(NoSuchElementException::new);
         if (member.getMemberId()!=comment.getMemberId().getMemberId()){
