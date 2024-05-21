@@ -2,18 +2,16 @@ package com.fastcampus.aptner.post.information.service;
 
 import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.global.error.RestAPIException;
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
-import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.common.error.PostErrorCode;
 import com.fastcampus.aptner.post.information.domain.Information;
 import com.fastcampus.aptner.post.information.domain.InformationCategory;
 import com.fastcampus.aptner.post.information.dto.InformationDTO;
 import com.fastcampus.aptner.post.information.repository.InformationCategoryRepository;
 import com.fastcampus.aptner.post.information.repository.InformationRepository;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
-import com.fastcampus.aptner.post.temp.repository.TempMemberRepository;
-import com.fastcampus.aptner.post.temp.service.ApartmentCommonService;
-import com.fastcampus.aptner.post.temp.service.MemberCommonService;
+import com.fastcampus.aptner.apartment.service.ApartmentCommonService;
+import com.fastcampus.aptner.member.service.MemberCommonService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -34,14 +31,13 @@ import java.util.Objects;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class InformationServiceImpl implements InformationService {
     InformationRepository informationRepository;
-    TempMemberRepository tempMemberRepository;
     InformationCategoryRepository informationCategoryRepository;
 
     MemberCommonService memberCommonService;
     ApartmentCommonService apartmentCommonService;
 
     @Override
-    public ResponseEntity<HttpStatus> uploadInformation(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId, InformationDTO.InformationPostReqDTO dto) {
+    public ResponseEntity<HttpStatus> uploadInformation(JWTMemberInfoDTO userToken, Long apartmentId, InformationDTO.InformationPostReqDTO dto) {
         UserAndAPT userAndAPT = getUserAndAPT(userToken,apartmentId);
         InformationCategory informationCategory = informationCategoryRepository.findById(dto.informationCategoryId()).get();
         Information information = Information.from(userAndAPT.member,informationCategory,dto);
@@ -52,7 +48,7 @@ public class InformationServiceImpl implements InformationService {
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> updateInformation(MemberTempDTO.MemberAuthDTO userToken, Long informationId, InformationDTO.InformationPostReqDTO dto) {
+    public ResponseEntity<HttpStatus> updateInformation(JWTMemberInfoDTO userToken, Long informationId, InformationDTO.InformationPostReqDTO dto) {
         Information information = informationRepository.findById(informationId).orElseThrow(NoSuchElementException::new);
         checkApartmentByAnnouncement(userToken,information);
         InformationCategory informationCategory = informationCategoryRepository.findById(dto.informationCategoryId()).get();
@@ -64,7 +60,7 @@ public class InformationServiceImpl implements InformationService {
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> deleteInformation(MemberTempDTO.MemberAuthDTO userToken, Long informationId) {
+    public ResponseEntity<HttpStatus> deleteInformation(JWTMemberInfoDTO userToken, Long informationId) {
         Information information = informationRepository.findById(informationId).orElseThrow(NoSuchElementException::new);
         checkApartmentByAnnouncement(userToken,information);
         //Todo 권한 확인
@@ -78,16 +74,16 @@ public class InformationServiceImpl implements InformationService {
         Member member;
         Apartment apartment;
     }
-    private UserAndAPT getUserAndAPT(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId){
+    private UserAndAPT getUserAndAPT(JWTMemberInfoDTO userToken, Long apartmentId){
         Member member = memberCommonService.getUserByToken(userToken);
-        if (!Objects.equals(userToken.ApartmentId(), apartmentId)){
+        if (!Objects.equals(userToken.getApartmentId(), apartmentId)){
             throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
         }
         Apartment apartment = apartmentCommonService.getApartmentById(apartmentId);
         return new UserAndAPT(member, apartment);
     }
-    private void checkApartmentByAnnouncement(MemberTempDTO.MemberAuthDTO userToken,Information information){
-        if (!Objects.equals(userToken.ApartmentId(), information.getInformationCategoryId().getApartmentId().getApartmentId())){
+    private void checkApartmentByAnnouncement(JWTMemberInfoDTO userToken,Information information){
+        if (!Objects.equals(userToken.getApartmentId(), information.getInformationCategoryId().getApartmentId().getApartmentId())){
             throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
         }
     }

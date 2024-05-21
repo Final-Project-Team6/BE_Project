@@ -1,5 +1,6 @@
 package com.fastcampus.aptner.post.complaint.repository;
 
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.post.announcement.domain.AnnouncementType;
 import com.fastcampus.aptner.post.common.enumType.OrderBy;
 import com.fastcampus.aptner.post.common.enumType.OrderType;
@@ -7,7 +8,6 @@ import com.fastcampus.aptner.post.common.enumType.SearchType;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import com.fastcampus.aptner.post.complaint.domain.ComplaintType;
 import com.fastcampus.aptner.post.complaint.dto.ComplaintDTO;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -37,7 +37,7 @@ public class ComplaintRepositoryDslImpl extends QuerydslRepositorySupport implem
 
 
     @Override
-    public Page<Complaint> searchComplaint(ComplaintDTO.ComplaintSearchReqDTO reqDTO, MemberTempDTO.MemberAuthDTO memberToken){
+    public Page<Complaint> searchComplaint(ComplaintDTO.ComplaintSearchReqDTO reqDTO, JWTMemberInfoDTO memberToken){
         JPAQuery<Complaint> query = queryFactory.selectFrom(complaint)
                 .leftJoin(complaint.complaintCategoryId, complaintCategory)
                 .leftJoin(complaint.memberId,member)
@@ -146,10 +146,10 @@ public class ComplaintRepositoryDslImpl extends QuerydslRepositorySupport implem
         return complaint.secret.eq(false);
     }
 
-    private BooleanExpression aboutSecretComplaint(MemberTempDTO.MemberAuthDTO memberToken){
+    private BooleanExpression aboutSecretComplaint(JWTMemberInfoDTO memberToken){
         if (memberToken==null){
             return notSecretComplaint();
         }
-        return complaint.memberId.memberId.eq(memberToken.memberId()).or(notSecretComplaint());
+        return complaint.memberId.memberId.eq(memberToken.getMemberId()).or(notSecretComplaint());
     }
 }

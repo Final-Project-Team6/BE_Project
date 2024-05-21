@@ -1,9 +1,9 @@
 package com.fastcampus.aptner.post.communication.controller;
 
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.RoleName;
 import com.fastcampus.aptner.post.communication.dto.CommunicationDTO;
 import com.fastcampus.aptner.post.communication.service.CommunicationCategoryService;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,19 +20,16 @@ public class CommunicationCategoryController {
 
     private final CommunicationCategoryService communicationCategoryService;
 
-    //TODO 지우기
-    private MemberTempDTO.MemberAuthDTO memberTempToken = new MemberTempDTO.MemberAuthDTO(1L, RoleName.ADMIN,1L);
-
     @Operation(
             summary = "소통공간 카테고리 생성 API",
             description = "Schema -> 소통공간 카테고리 생성 \n\n apartmentId : 현재 사용중인 아파트 ID "
     )
     @PostMapping(value = "/{apartmentId}")
     public ResponseEntity<HttpStatus> createCategory(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long apartmentId,
             @RequestBody CommunicationDTO.CommunicationCategoryReqDTO dto){
-        return communicationCategoryService.createCommunicationCategory(memberTempToken,apartmentId,dto);
+        return communicationCategoryService.createCommunicationCategory(memberToken,apartmentId,dto);
     }
 
     @Operation(
@@ -41,10 +38,10 @@ public class CommunicationCategoryController {
     )
     @PatchMapping(value = "/{communicationCategoryId}")
     public ResponseEntity<HttpStatus> updateCommunicationCategory(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long communicationCategoryId,
             @RequestBody CommunicationDTO.CommunicationCategoryReqDTO dto){
-        return communicationCategoryService.updateCommunicationCategory(memberTempToken,communicationCategoryId,dto);
+        return communicationCategoryService.updateCommunicationCategory(memberToken,communicationCategoryId,dto);
     }
 
     @Operation(
@@ -53,8 +50,8 @@ public class CommunicationCategoryController {
     )
     @DeleteMapping(value ="/{communicationCategoryId}")
     public ResponseEntity<HttpStatus> deleteCommunicationCategory(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long communicationCategoryId){
-        return  communicationCategoryService.deleteCommunicationCategory(memberTempToken,communicationCategoryId);
+        return  communicationCategoryService.deleteCommunicationCategory(memberToken,communicationCategoryId);
     }
 }

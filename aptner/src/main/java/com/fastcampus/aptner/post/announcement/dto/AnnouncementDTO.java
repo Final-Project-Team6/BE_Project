@@ -1,6 +1,8 @@
 package com.fastcampus.aptner.post.announcement.dto;
 
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
+import com.fastcampus.aptner.member.dto.response.PostMemberResponse;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.domain.AnnouncementCategory;
 import com.fastcampus.aptner.post.announcement.domain.AnnouncementType;
@@ -10,7 +12,6 @@ import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.common.enumType.SearchType;
 import com.fastcampus.aptner.post.opinion.dto.CommentDTO;
 import com.fastcampus.aptner.post.opinion.dto.VoteDTO;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -59,7 +60,7 @@ public class AnnouncementDTO {
     public static class AnnouncementListRespDTO {
         private Long announcementId;
         private AnnouncementCategoryRespDTO announcementCategory;
-        private MemberTempDTO.MemberRespDTO writer;
+        private PostMemberResponse writer;
         private String title;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         private LocalDateTime createdAt;
@@ -71,7 +72,7 @@ public class AnnouncementDTO {
             VoteDTO.VoteRespDTO voteRespDTO = announcement.aboutVoteWithoutMember();
             this.announcementId = announcement.getAnnouncementId();
             this.announcementCategory = new AnnouncementCategoryRespDTO(announcement.getAnnouncementCategoryId());
-            this.writer =new MemberTempDTO.MemberRespDTO(announcement.getMemberId());
+            this.writer =new PostMemberResponse(announcement.getMemberId());
             this.title = announcement.getTitle();
             this.createdAt = announcement.getCreatedAt();
             this.view = announcement.getView();
@@ -86,7 +87,7 @@ public class AnnouncementDTO {
     public static class AnnouncementRespDTO {
         private Long announcementId;
         private AnnouncementCategoryRespDTO announcementCategory;
-        private MemberTempDTO.MemberRespDTO writer;
+        private PostMemberResponse writer;
         private String title;
         private String contents;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -97,11 +98,11 @@ public class AnnouncementDTO {
         private int disagreeCnt;
         private Boolean yourVote;
         private List<CommentDTO.ViewComments> comments;
-        public AnnouncementRespDTO(Announcement announcement, MemberTempDTO.MemberAuthDTO token){
-            VoteDTO.VoteRespDTO voteRespDTO = announcement.aboutVote(token);
+        public AnnouncementRespDTO(Announcement announcement, JWTMemberInfoDTO request){
+            VoteDTO.VoteRespDTO voteRespDTO = announcement.aboutVote(request);
             this.announcementId = announcement.getAnnouncementId();
             this.announcementCategory = new AnnouncementCategoryRespDTO(announcement.getAnnouncementCategoryId());
-            this.writer =new MemberTempDTO.MemberRespDTO(announcement.getMemberId());
+            this.writer =new PostMemberResponse(announcement.getMemberId());
             this.title = announcement.getTitle();
             this.createdAt = announcement.getCreatedAt();
             this.view = announcement.getView();
@@ -125,5 +126,6 @@ public class AnnouncementDTO {
         private String keyword;
         private AnnouncementType announcementType;
         private Long categoryId;
+        private Boolean important;
     }
 }

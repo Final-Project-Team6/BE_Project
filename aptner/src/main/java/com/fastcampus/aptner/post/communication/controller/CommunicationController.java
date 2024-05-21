@@ -1,12 +1,12 @@
 package com.fastcampus.aptner.post.communication.controller;
 
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.RoleName;
 import com.fastcampus.aptner.post.common.enumType.OrderBy;
 import com.fastcampus.aptner.post.common.enumType.OrderType;
 import com.fastcampus.aptner.post.common.enumType.SearchType;
 import com.fastcampus.aptner.post.communication.dto.CommunicationDTO;
 import com.fastcampus.aptner.post.communication.service.CommunicationService;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,6 @@ public class CommunicationController {
     private final CommunicationService communicationService;
 
     //TODO Member 개발 완료시 지우기
-    private MemberTempDTO.MemberAuthDTO memberTempToken = new MemberTempDTO.MemberAuthDTO(1L, RoleName.ADMIN,1L);
 
     @Operation(
             summary = "소통글 생성 API",
@@ -31,10 +30,10 @@ public class CommunicationController {
     )
     @PostMapping(value = "/{apartmentId}")
     public ResponseEntity<HttpStatus> uploadCommunication(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long apartmentId,
             @RequestBody CommunicationDTO.CommunicationPostReqDTO dto){
-        return communicationService.uploadCommunication(memberTempToken, apartmentId, dto);
+        return communicationService.uploadCommunication(memberToken, apartmentId, dto);
     }
 
     @Operation(
@@ -43,10 +42,10 @@ public class CommunicationController {
     )
     @PatchMapping(value = "/{communicationId}")
     public ResponseEntity<HttpStatus> updateCommunication(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long communicationId,
             @RequestBody CommunicationDTO.CommunicationPostReqDTO dto){
-        return communicationService.updateCommunication(memberTempToken, communicationId, dto);
+        return communicationService.updateCommunication(memberToken, communicationId, dto);
     }
 
     @Operation(
@@ -55,9 +54,9 @@ public class CommunicationController {
     )
     @DeleteMapping(value = "/{communicationId}")
     public ResponseEntity<HttpStatus> deleteCommunication(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO meberToken,
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long communicationId){
-        return communicationService.deleteCommunication(memberTempToken, communicationId);
+        return communicationService.deleteCommunication(memberToken, communicationId);
     }
 
 

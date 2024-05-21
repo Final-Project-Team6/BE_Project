@@ -20,7 +20,6 @@ import static com.fastcampus.aptner.global.error.CommonErrorCode.INVALID_PARAMET
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AnnouncementCommonServiceImpl implements AnnouncementCommonService{
 
     private final AnnouncementRepository announcementRepository;

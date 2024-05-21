@@ -1,5 +1,7 @@
 package com.fastcampus.aptner.post.communication.dto;
 
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
+import com.fastcampus.aptner.member.dto.response.PostMemberResponse;
 import com.fastcampus.aptner.post.common.enumType.OrderBy;
 import com.fastcampus.aptner.post.common.enumType.OrderType;
 import com.fastcampus.aptner.post.common.enumType.PostStatus;
@@ -8,7 +10,6 @@ import com.fastcampus.aptner.post.communication.domain.Communication;
 import com.fastcampus.aptner.post.communication.domain.CommunicationCategory;
 import com.fastcampus.aptner.post.opinion.dto.CommentDTO;
 import com.fastcampus.aptner.post.opinion.dto.VoteDTO;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -55,7 +56,7 @@ public class CommunicationDTO {
     public static class CommunicationListRespDTO{
         private Long communicationId;
         private CommunicationCategoryRespDTO communicationCategory;
-        private MemberTempDTO.MemberRespDTO writer;
+        private PostMemberResponse writer;
         private String title;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         private LocalDateTime createdAt;
@@ -67,7 +68,7 @@ public class CommunicationDTO {
             VoteDTO.VoteRespDTO voteRespDTO=communication.aboutVoteWithoutMember();
             this.communicationId = communication.getCommunicationId();
             this.communicationCategory = new CommunicationCategoryRespDTO(communication.getCommunicationCategoryId());
-            this.writer = new MemberTempDTO.MemberRespDTO(communication.getMemberId());
+            this.writer = new PostMemberResponse(communication.getMemberId());
             this.title = communication.getTitle();
             this.createdAt = communication.getCreatedAt();
             this.view = communication.getView();
@@ -84,7 +85,7 @@ public class CommunicationDTO {
     public static class CommunicationRespDTO {
         private Long communicationId;
         private CommunicationCategoryRespDTO communicationCategory;
-        private MemberTempDTO.MemberRespDTO writer;
+        private PostMemberResponse writer;
         private String title;
         private String contents;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -95,11 +96,11 @@ public class CommunicationDTO {
         private int disagreeCnt;
         private Boolean yourVote;
         private List<CommentDTO.ViewComments> comments;
-        public CommunicationRespDTO(Communication communication,MemberTempDTO.MemberAuthDTO token){
+        public CommunicationRespDTO(Communication communication, JWTMemberInfoDTO token){
             VoteDTO.VoteRespDTO voteRespDTO=communication.aboutVote(token);
             this.communicationId = communication.getCommunicationId();
             this.communicationCategory = new CommunicationCategoryRespDTO(communication.getCommunicationCategoryId());
-            this.writer = new MemberTempDTO.MemberRespDTO(communication.getMemberId());
+            this.writer = new PostMemberResponse(communication.getMemberId());
             this.title = communication.getTitle();
             this.contents = communication.getContents();
             this.createdAt = communication.getCreatedAt();
