@@ -3,11 +3,11 @@ package com.fastcampus.aptner.post.information.service;
 import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.apartment.repository.ApartmentRepository;
 import com.fastcampus.aptner.global.error.RestAPIException;
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.post.common.error.PostErrorCode;
 import com.fastcampus.aptner.post.information.domain.InformationCategory;
 import com.fastcampus.aptner.post.information.dto.InformationDTO;
 import com.fastcampus.aptner.post.information.repository.InformationCategoryRepository;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,7 +32,7 @@ public class InformationCategoryServiceImpl implements InformationCategoryServic
     ApartmentRepository apartmentRepository;
 
     @Override
-    public ResponseEntity<HttpStatus> createInformationCategory(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId, InformationDTO.InformationCategoryReqDTO dto) {
+    public ResponseEntity<HttpStatus> createInformationCategory(JWTMemberInfoDTO userToken, Long apartmentId, InformationDTO.InformationCategoryReqDTO dto) {
         isCorrectApartment(userToken,apartmentId);
         Apartment apartment = apartmentRepository.findApartmentByApartmentId(apartmentId).get();
         informationCategoryRepository.save(InformationCategory.from(apartment,dto));
@@ -41,7 +41,7 @@ public class InformationCategoryServiceImpl implements InformationCategoryServic
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> updateInformationCategory(MemberTempDTO.MemberAuthDTO userToken, Long informationCategoryId, InformationDTO.InformationCategoryReqDTO dto) {
+    public ResponseEntity<HttpStatus> updateInformationCategory(JWTMemberInfoDTO userToken, Long informationCategoryId, InformationDTO.InformationCategoryReqDTO dto) {
         InformationCategory informationCategory = informationCategoryRepository.findById(informationCategoryId).orElseThrow(NoSuchElementException::new);
         checkApartmentByAnnouncementCategory(userToken,informationCategory);
         informationCategory.updateCategory(dto);
@@ -51,7 +51,7 @@ public class InformationCategoryServiceImpl implements InformationCategoryServic
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> deleteInformationCategory(MemberTempDTO.MemberAuthDTO userToken, Long InformationCategoryId) {
+    public ResponseEntity<HttpStatus> deleteInformationCategory(JWTMemberInfoDTO userToken, Long InformationCategoryId) {
 
         InformationCategory informationCategory = informationCategoryRepository.findById(InformationCategoryId).orElseThrow(NoSuchElementException::new);
         checkApartmentByAnnouncementCategory(userToken,informationCategory);
@@ -62,14 +62,14 @@ public class InformationCategoryServiceImpl implements InformationCategoryServic
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private static void isCorrectApartment(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId){
-        if (userToken.ApartmentId()!= apartmentId){
+    private static void isCorrectApartment(JWTMemberInfoDTO userToken, Long apartmentId){
+        if (userToken.getApartmentId()!= apartmentId){
             throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
         }
     }
 
-    private void checkApartmentByAnnouncementCategory(MemberTempDTO.MemberAuthDTO userToken, InformationCategory informationCategory){
-        if (!Objects.equals(userToken.ApartmentId(), informationCategory.getApartmentId().getApartmentId())){
+    private void checkApartmentByAnnouncementCategory(JWTMemberInfoDTO userToken, InformationCategory informationCategory){
+        if (!Objects.equals(userToken.getApartmentId(), informationCategory.getApartmentId().getApartmentId())){
             throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
         }
     }

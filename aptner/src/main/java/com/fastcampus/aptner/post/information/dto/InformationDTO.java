@@ -1,12 +1,13 @@
 package com.fastcampus.aptner.post.information.dto;
 
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
+import com.fastcampus.aptner.member.dto.response.PostMemberResponse;
 import com.fastcampus.aptner.post.common.enumType.OrderBy;
 import com.fastcampus.aptner.post.common.enumType.OrderType;
 import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.common.enumType.SearchType;
 import com.fastcampus.aptner.post.information.domain.Information;
 import com.fastcampus.aptner.post.information.domain.InformationCategory;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -54,7 +55,7 @@ public class InformationDTO {
     public static class InformationListRespDTO{
         private Long informationId;
         private InformationCategoryRespDTO informationCategory;
-        private MemberTempDTO.MemberRespDTO writer;
+        private PostMemberResponse writer;
         private String title;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         private LocalDateTime createdAt;
@@ -62,7 +63,7 @@ public class InformationDTO {
         public InformationListRespDTO(Information information){
             this.informationId = information.getInformationId();
             this.informationCategory = new InformationCategoryRespDTO(information.getInformationCategoryId());
-            this.writer = new MemberTempDTO.MemberRespDTO(information.getMemberId());
+            this.writer = new PostMemberResponse(information.getMemberId());
             this.title = information.getTitle();
             this.createdAt = information.getCreatedAt();
             this.view = information.getView();
@@ -76,16 +77,16 @@ public class InformationDTO {
     public static class InformationRespDTO {
         private Long informationId;
         private InformationCategoryRespDTO informationCategory;
-        private MemberTempDTO.MemberRespDTO writer;
+        private PostMemberResponse writer;
         private String title;
         private String contents;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         private LocalDateTime createdAt;
         private Long view;
-        public InformationRespDTO(Information information,MemberTempDTO.MemberAuthDTO token){
+        public InformationRespDTO(Information information, JWTMemberInfoDTO token){
             this.informationId = information.getInformationId();
             this.informationCategory = new InformationCategoryRespDTO(information.getInformationCategoryId());
-            this.writer = new MemberTempDTO.MemberRespDTO(information.getMemberId());
+            this.writer = new PostMemberResponse(information.getMemberId());
             this.title = information.getTitle();
             this.contents = information.getContents();
             this.createdAt = information.getCreatedAt();

@@ -6,7 +6,6 @@ import com.fastcampus.aptner.post.information.dto.InformationDTO;
 import com.fastcampus.aptner.post.opinion.domain.Comment;
 import com.fastcampus.aptner.post.opinion.domain.Vote;
 import com.fastcampus.aptner.post.opinion.dto.VoteDTO;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
