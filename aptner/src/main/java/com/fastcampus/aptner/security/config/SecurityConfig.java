@@ -61,26 +61,26 @@ public class SecurityConfig {
         // HTTP Basic 비활성화
         http.httpBasic(AbstractHttpConfigurer::disable);
 
-//        // 회원 인증 실패 401
-//        http.exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
-//                httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint((request, response, authException) -> {
-//                    CustomResponseUtil.fail(response, "로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
-//                }));
-//
-//        // 회원 권한 실패 403
-//        http.exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
-//                httpSecurityExceptionHandlingConfigurer.accessDeniedHandler((request, response, accessDeniedException) -> {
-//                    CustomResponseUtil.fail(response, "권한이 없습니다.", HttpStatus.FORBIDDEN);
-//                }));
+        // 회원 인증 실패 401
+        http.exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
+                httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint((request, response, authException) -> {
+                    CustomResponseUtil.fail(response, "로그인이 필요합니다.", HttpStatus.UNAUTHORIZED);
+                }));
+
+        // 회원 권한 실패 403
+        http.exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
+                httpSecurityExceptionHandlingConfigurer.accessDeniedHandler((request, response, accessDeniedException) -> {
+                    CustomResponseUtil.fail(response, "권한이 없습니다.", HttpStatus.FORBIDDEN);
+                }));
 
         // TODO: 임시로 모든 요청에 허용한 상태이다.
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // Preflight 요청은 허용
                                 .requestMatchers("/api/join/**", "/api/refresh-token", "/api/login/**").permitAll()
-                                .requestMatchers("/api/apartment/search/**").hasAnyRole("USER", "MANAGER", "ADMIN")
-                                .requestMatchers("/api/apartment/update-name/**").hasRole("ADMIN")
+                                .requestMatchers("/api/apartment/**").permitAll()
                                 .requestMatchers("/api/update/**").hasAnyRole("USER", "MANAGER", "ADMIN")
+                                .requestMatchers("/hello").hasAnyRole("ADMIN")
                                 .anyRequest().permitAll()
                 )
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
