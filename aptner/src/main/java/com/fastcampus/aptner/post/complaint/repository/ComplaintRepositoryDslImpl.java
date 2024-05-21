@@ -49,7 +49,9 @@ public class ComplaintRepositoryDslImpl extends QuerydslRepositorySupport implem
                         chooseApartment(reqDTO.getApartmentId()),
                         targetCategory(reqDTO.getCategoryId()),
                         targetType(reqDTO.getComplaintType()),
-                        aboutSecretComplaint(memberToken))
+                        aboutSecretComplaint(memberToken),
+                        onlyMyComplaint(memberToken,reqDTO.getMyComplaint())
+                )
                 .orderBy(sort(reqDTO.getOrderType(),reqDTO.getOrderBy()));
         List<Complaint> complaintList = this.getQuerydsl().applyPagination(reqDTO.getPageable(),query).fetch();
         return new PageImpl<>(complaintList,reqDTO.getPageable(),query.fetchCount());
@@ -151,5 +153,17 @@ public class ComplaintRepositoryDslImpl extends QuerydslRepositorySupport implem
             return notSecretComplaint();
         }
         return complaint.memberId.memberId.eq(memberToken.getMemberId()).or(notSecretComplaint());
+    }
+
+    private BooleanExpression onlyMyComplaint(JWTMemberInfoDTO memberToken,Boolean myComplaint){
+        if (memberToken==null){
+            return null;
+        }
+        if (myComplaint == null){
+            return null;
+        }
+        if (myComplaint){
+            return complaint.memberId.memberId.eq(memberToken.getMemberId());
+        }else return null;
     }
 }

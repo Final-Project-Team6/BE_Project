@@ -83,6 +83,7 @@ public class ComplaintController {
                     "keyword : 검색어\n\n" +
                     "complaintType : 민원 타입 =>  MANAGEMENT_OFFICE(관리사무소), RESIDENTS_COMMITTEE(입주자 대표회의)\n\n" +
                     "categoryId : 공지사항 카테고리 ID\n\n" +
+                    "myComplaint : 내 민원글만 보이기 => true 내 민원글만 반환, false & null 조건 처리 X\n\n" +
                     "apartmentId 를 제외한 나머지 값은 필수가 아니며, 포함하지 않으면 기본조건으로 처리하거나 영향을 주지 않습니다."
     )
     @GetMapping("/search/{apartmentId}")
@@ -96,7 +97,8 @@ public class ComplaintController {
             @RequestParam(required = false, defaultValue = "DESC") OrderBy orderBy,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) ComplaintType complaintType,
-            @RequestParam(required = false) Long categoryId){
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Boolean myComplaint){
         ComplaintDTO.ComplaintSearchReqDTO reqDTO = ComplaintDTO.ComplaintSearchReqDTO.builder()
                 .pageNumber(pageNumber)
                 .pageSize(pageSize)
@@ -107,6 +109,7 @@ public class ComplaintController {
                 .keyword(keyword)
                 .complaintType(complaintType)
                 .categoryId(categoryId)
+                .myComplaint(myComplaint)
                 .build();
         return complaintService.searchComplaint(reqDTO,memberToken);
     }

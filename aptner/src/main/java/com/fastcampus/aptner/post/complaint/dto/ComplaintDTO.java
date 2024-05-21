@@ -132,5 +132,6 @@ public class ComplaintDTO {
         private String keyword;
         private ComplaintType complaintType;
         private Long categoryId;
+        private Boolean myComplaint;
     }
 }
