@@ -2,6 +2,7 @@ package com.fastcampus.aptner.post.announcement.service.admin;
 
 import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.global.error.RestAPIException;
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.domain.AnnouncementCategory;
@@ -9,13 +10,10 @@ import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
 import com.fastcampus.aptner.post.announcement.repository.AnnouncementRepository;
 import com.fastcampus.aptner.post.announcement.service.AnnouncementCommonService;
 import com.fastcampus.aptner.post.common.error.PostErrorCode;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
-import com.fastcampus.aptner.post.temp.service.ApartmentCommonService;
-import com.fastcampus.aptner.post.temp.service.MemberCommonService;
-import lombok.AccessLevel;
+import com.fastcampus.aptner.apartment.service.ApartmentCommonService;
+import com.fastcampus.aptner.member.service.MemberCommonService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +41,7 @@ public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
      * @param dto 공지사항 정보 (제목, 내용, 중요도, 카테고리, 상태)
      */
     @Override
-    public ResponseEntity<HttpStatus> uploadAnnouncement(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId, AnnouncementDTO.AnnouncementPostReqDTO dto) {
+    public ResponseEntity<HttpStatus> uploadAnnouncement(JWTMemberInfoDTO userToken, Long apartmentId, AnnouncementDTO.AnnouncementPostReqDTO dto) {
 
         UserAndAPT userAndAPT = getUserAndAPT(userToken,apartmentId);
         AnnouncementCategory announcementCategory =announcementCommonService.getAnnouncementCategory(dto.announcementCategoryId());
@@ -61,7 +59,7 @@ public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
      */
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> updateAnnouncement(MemberTempDTO.MemberAuthDTO userToken, Long announcementId, AnnouncementDTO.AnnouncementPostReqDTO dto) {
+    public ResponseEntity<HttpStatus> updateAnnouncement(JWTMemberInfoDTO userToken, Long announcementId, AnnouncementDTO.AnnouncementPostReqDTO dto) {
         Announcement announcement = announcementRepository.findById(announcementId).orElseThrow(NoSuchElementException::new);
         checkApartmentByAnnouncement(userToken,announcement);
         AnnouncementCategory announcementCategory =announcementCommonService.getAnnouncementCategory(dto.announcementCategoryId());
@@ -78,7 +76,7 @@ public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
      */
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> deleteAnnouncement(MemberTempDTO.MemberAuthDTO userToken, Long announcementId) {
+    public ResponseEntity<HttpStatus> deleteAnnouncement(JWTMemberInfoDTO userToken, Long announcementId) {
         Announcement announcement =announcementRepository.findById(announcementId).orElseThrow(NoSuchElementException::new);
         checkApartmentByAnnouncement(userToken,announcement);
         //Todo 권한 확인
@@ -94,7 +92,7 @@ public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
      */
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> hideAnnouncement(MemberTempDTO.MemberAuthDTO userToken, Long announcementId) {
+    public ResponseEntity<HttpStatus> hideAnnouncement(JWTMemberInfoDTO userToken, Long announcementId) {
         Announcement announcement =announcementRepository.findById(announcementId).orElseThrow(NoSuchElementException::new);
         checkApartmentByAnnouncement(userToken,announcement);
         //Todo 권한 확인
@@ -109,17 +107,17 @@ public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
         Apartment apartment;
     }
 
-    private UserAndAPT getUserAndAPT(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId){
+    private UserAndAPT getUserAndAPT(JWTMemberInfoDTO userToken, Long apartmentId){
         Member member = memberCommonService.getUserByToken(userToken);
-        if (!Objects.equals(userToken.ApartmentId(), apartmentId)){
+        if (!Objects.equals(userToken.getApartmentId(), apartmentId)){
             throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
         }
         Apartment apartment = apartmentCommonService.getApartmentById(apartmentId);
         return new UserAndAPT(member, apartment);
     }
 
-    private void checkApartmentByAnnouncement(MemberTempDTO.MemberAuthDTO userToken,Announcement announcement){
-        if (!Objects.equals(userToken.ApartmentId(), announcement.getAnnouncementCategoryId().getApartmentId().getApartmentId())){
+    private void checkApartmentByAnnouncement(JWTMemberInfoDTO userToken,Announcement announcement){
+        if (!Objects.equals(userToken.getApartmentId(), announcement.getAnnouncementCategoryId().getApartmentId().getApartmentId())){
             throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
         }
     }
