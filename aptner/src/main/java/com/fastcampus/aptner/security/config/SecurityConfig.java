@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -22,6 +23,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
@@ -37,7 +39,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         AuthenticationManager authenticationManager = authenticationManager(http.getSharedObject(AuthenticationConfiguration.class));
-
 
         // cors 설정 등록
         http.cors(httpSecurityCorsConfigurer ->
@@ -74,7 +75,14 @@ public class SecurityConfig {
 
         // TODO: 임시로 모든 요청에 허용한 상태이다.
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-                authorizationManagerRequestMatcherRegistry.requestMatchers("/**").permitAll())
+                        authorizationManagerRequestMatcherRegistry
+                                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // Preflight 요청은 허용
+                                .requestMatchers("/api/join/**", "/api/refresh-token", "/api/login/**").permitAll()
+                                .requestMatchers("/api/apartment/**").permitAll()
+                                .requestMatchers("/api/update/**").hasAnyRole("USER", "MANAGER", "ADMIN")
+                                .requestMatchers("/hello").hasAnyRole("ADMIN")
+                                .anyRequest().permitAll()
+                )
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
                         httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(customAuthenticationEntryPoint));
 
@@ -116,7 +124,6 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
-
 
     // TODO:authenticationManager 주석 작성하기
     @Bean

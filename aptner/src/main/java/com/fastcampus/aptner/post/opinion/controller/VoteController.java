@@ -1,9 +1,8 @@
 package com.fastcampus.aptner.post.opinion.controller;
 
-import com.fastcampus.aptner.member.domain.RoleName;
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.post.opinion.domain.VoteType;
 import com.fastcampus.aptner.post.opinion.service.VoteService;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +19,6 @@ public class VoteController {
 
     private final VoteService voteService;
 
-    private MemberTempDTO.MemberAuthDTO memberTempToken = new MemberTempDTO.MemberAuthDTO(1L, RoleName.ADMIN,1L);
-
     @Operation(
             summary = "공감/비공감 생성 API",
             description = "postId : 공감/비공감 생성하려는 게시글 ID\n\n" +
@@ -30,11 +27,11 @@ public class VoteController {
     )
     @PostMapping("/{postId}")
     public ResponseEntity<HttpStatus> voteToPost(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long postId,
             @RequestParam VoteType voteType,
             @RequestParam Boolean opinion){
-        return voteService.voteToPost(memberTempToken,postId,voteType,opinion);
+        return voteService.voteToPost(memberToken,postId,voteType,opinion);
     }
 
     @Operation(
@@ -44,9 +41,9 @@ public class VoteController {
     )
     @DeleteMapping("/{postId}")
     public ResponseEntity<HttpStatus> deleteVote(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long postId,
             @RequestParam VoteType voteType){
-        return voteService.deleteVote(memberTempToken,postId,voteType);
+        return voteService.deleteVote(memberToken,postId,voteType);
     }
 }

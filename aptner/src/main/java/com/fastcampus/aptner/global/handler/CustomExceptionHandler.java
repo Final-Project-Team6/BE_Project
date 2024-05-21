@@ -8,6 +8,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
@@ -16,6 +17,7 @@ public class CustomExceptionHandler {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @ExceptionHandler(CustomAPIException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> apiException(CustomAPIException e) {
         log.error(e.getMessage());
         return new ResponseEntity<>(new HttpResponse<>(-1, e.getMessage(), null), HttpStatus.BAD_REQUEST);
@@ -49,6 +51,6 @@ public class CustomExceptionHandler {
     public ResponseEntity<?> handleDataAccessException(DataAccessException e) {
         log.error(e.getMessage());
         return new ResponseEntity<>(new HttpResponse<>(-1, e.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
-
     }
+    
 }

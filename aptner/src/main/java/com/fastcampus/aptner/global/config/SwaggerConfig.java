@@ -72,18 +72,35 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public GroupedOpenApi memberGroup() {
-        return GroupedOpenApi.builder()
-                .group("회원")
-                .pathsToMatch("/api/members/**")
-                .build();
-    }
-
-    @Bean
     public GroupedOpenApi complaintGroup() {
         return GroupedOpenApi.builder()
                 .group("민원 게시판")
                 .pathsToMatch("/api/post/complaint/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi joinGroup() {
+        return GroupedOpenApi.builder()
+                .group("회원")
+                .pathsToMatch("/api/member/**")
+                .build();
+    }
+
+
+    @Bean
+    public GroupedOpenApi refreshTokenGroup() {
+        return GroupedOpenApi.builder()
+                .group("JWT 리프레시 토큰")
+                .pathsToMatch("/api/refresh-token/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi apartmentCreateGroup() {
+        return GroupedOpenApi.builder()
+                .group("아파트")
+                .pathsToMatch("/api/apartment/**")
                 .build();
     }
 

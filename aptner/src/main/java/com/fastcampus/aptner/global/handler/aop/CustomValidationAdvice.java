@@ -15,6 +15,7 @@ import java.util.Map;
 @Component
 @Aspect
 public class CustomValidationAdvice {
+
     // post, put (body) 어드바이스 작성하기
     @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
     public void postMapping() {}
@@ -27,9 +28,7 @@ public class CustomValidationAdvice {
     public Object validationAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         Object[] args = proceedingJoinPoint.getArgs(); // joinPoint 의 매개변수
         for (Object arg : args) {
-            if (arg instanceof BindingResult) {
-                BindingResult bindingResult = (BindingResult) arg;
-
+            if (arg instanceof BindingResult bindingResult) {
                 if (bindingResult.hasErrors()) {
                     Map<String, String> errorMap = new HashMap<>();
 

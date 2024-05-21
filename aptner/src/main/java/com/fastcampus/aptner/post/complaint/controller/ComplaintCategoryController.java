@@ -1,6 +1,6 @@
 package com.fastcampus.aptner.post.complaint.controller;
 
-import com.fastcampus.aptner.post.complaint.service.admin.ComplaintCategoryService;
+import com.fastcampus.aptner.post.complaint.service.ComplaintCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

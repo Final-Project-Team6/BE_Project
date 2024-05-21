@@ -2,16 +2,13 @@ package com.fastcampus.aptner.post.announcement.service.admin;
 
 import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.global.error.RestAPIException;
-import com.fastcampus.aptner.post.announcement.domain.Announcement;
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.post.announcement.domain.AnnouncementCategory;
 import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
 import com.fastcampus.aptner.post.announcement.repository.AnnouncementCategoryRepository;
 import com.fastcampus.aptner.post.common.error.PostErrorCode;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
-import com.fastcampus.aptner.post.temp.service.ApartmentCommonService;
-import lombok.AccessLevel;
+import com.fastcampus.aptner.apartment.service.ApartmentCommonService;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +23,6 @@ import static com.fastcampus.aptner.post.common.error.PostErrorCode.CANT_DELETE;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AnnouncementCategoryAdminServiceImpl implements AnnouncementCategoryAdminService{
 
     private final AnnouncementCategoryRepository announcementCategoryRepository;
@@ -34,7 +30,7 @@ public class AnnouncementCategoryAdminServiceImpl implements AnnouncementCategor
     private final ApartmentCommonService apartmentService;
 
     @Override
-    public ResponseEntity<HttpStatus> createAnnouncementCategory(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId, AnnouncementDTO.AnnouncementCategoryReqDTO dto) {
+    public ResponseEntity<HttpStatus> createAnnouncementCategory(JWTMemberInfoDTO userToken, Long apartmentId, AnnouncementDTO.AnnouncementCategoryReqDTO dto) {
         isCorrectApartment(userToken,apartmentId);
         Apartment apartment = apartmentService.getApartmentById(apartmentId);
         announcementCategoryRepository.save(AnnouncementCategory.from(apartment,dto));
@@ -43,7 +39,7 @@ public class AnnouncementCategoryAdminServiceImpl implements AnnouncementCategor
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> updateAnnouncementCategory(MemberTempDTO.MemberAuthDTO userToken, Long announcementCategoryId, AnnouncementDTO.AnnouncementCategoryReqDTO dto) {
+    public ResponseEntity<HttpStatus> updateAnnouncementCategory(JWTMemberInfoDTO userToken, Long announcementCategoryId, AnnouncementDTO.AnnouncementCategoryReqDTO dto) {
         AnnouncementCategory announcementCategory = announcementCategoryRepository.findById(announcementCategoryId).orElseThrow(NoSuchElementException::new);
         checkApartmentByAnnouncementCategory(userToken,announcementCategory);
         announcementCategory.updateCategory(dto);
@@ -52,7 +48,7 @@ public class AnnouncementCategoryAdminServiceImpl implements AnnouncementCategor
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> deleteAnnouncementCategory(MemberTempDTO.MemberAuthDTO userToken, Long announcementCategoryId) {
+    public ResponseEntity<HttpStatus> deleteAnnouncementCategory(JWTMemberInfoDTO userToken, Long announcementCategoryId) {
         AnnouncementCategory announcementCategory = announcementCategoryRepository.findById(announcementCategoryId).orElseThrow(NoSuchElementException::new);
         checkApartmentByAnnouncementCategory(userToken,announcementCategory);
         if (!announcementCategory.getAnnouncementList().isEmpty()){
@@ -63,14 +59,14 @@ public class AnnouncementCategoryAdminServiceImpl implements AnnouncementCategor
     }
 
 
-    private static void isCorrectApartment(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId){
-        if (userToken.ApartmentId()!= apartmentId){
+    private static void isCorrectApartment(JWTMemberInfoDTO userToken, Long apartmentId){
+        if (userToken.getApartmentId()!= apartmentId){
             throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
         }
     }
 
-    private void checkApartmentByAnnouncementCategory(MemberTempDTO.MemberAuthDTO userToken, AnnouncementCategory announcementCategory){
-        if (!Objects.equals(userToken.ApartmentId(), announcementCategory.getApartmentId().getApartmentId())){
+    private void checkApartmentByAnnouncementCategory(JWTMemberInfoDTO userToken, AnnouncementCategory announcementCategory){
+        if (!Objects.equals(userToken.getApartmentId(), announcementCategory.getApartmentId().getApartmentId())){
             throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
         }
     }

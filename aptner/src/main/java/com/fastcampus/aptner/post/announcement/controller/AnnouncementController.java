@@ -1,5 +1,7 @@
 package com.fastcampus.aptner.post.announcement.controller;
 
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
+import com.fastcampus.aptner.jwt.util.isLogin;
 import com.fastcampus.aptner.member.domain.RoleName;
 import com.fastcampus.aptner.post.announcement.domain.AnnouncementType;
 import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
@@ -8,11 +10,11 @@ import com.fastcampus.aptner.post.common.dto.PageResponseDTO;
 import com.fastcampus.aptner.post.common.enumType.OrderBy;
 import com.fastcampus.aptner.post.common.enumType.OrderType;
 import com.fastcampus.aptner.post.common.enumType.SearchType;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +26,6 @@ import java.util.List;
 @Tag(name = "공지사항(사용자)", description = "공지사항 목록 조회, 공지사항 조회")
 public class AnnouncementController {
     private final AnnouncementService announcementService;
-
-    //todo Member 완성되면 지우기
-    private MemberTempDTO.MemberAuthDTO memberTempToken = new MemberTempDTO.MemberAuthDTO(1L, RoleName.ADMIN,1L);
 
     //todo 날짜 조건 걸기
     @Operation(
@@ -40,6 +39,7 @@ public class AnnouncementController {
                     "keyword : 검색어\n\n" +
                     "announcementType : 공지사항 타입 =>  NOTICE(공지사항), DISCLOSURE(의무공개 사항)\n\n" +
                     "categoryId : 공지사항 카테고리 ID\n\n" +
+                    "important : 중요글 여부 => true 중요글만, false 중요글이 아닌 글만, null 조건X \n\n"+
                     "apartmentId 를 제외한 나머지 값은 필수가 아니며, 포함하지 않으면 기본조건으로 처리하거나 영향을 주지 않습니다."
     )
     @GetMapping("/search/{apartmentId}")
@@ -52,7 +52,8 @@ public class AnnouncementController {
             @RequestParam(required = false, defaultValue = "DESC") OrderBy orderBy,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) AnnouncementType announcementType,
-            @RequestParam(required = false) Long categoryId){
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Boolean important){
         AnnouncementDTO.AnnouncementSearchReqDTO reqDTO = AnnouncementDTO.AnnouncementSearchReqDTO.builder()
                 .apartmentId(apartmentId)
                 .pageNumber(pageNumber)
@@ -63,6 +64,7 @@ public class AnnouncementController {
                 .keyword(keyword)
                 .announcementType(announcementType)
                 .categoryId(categoryId)
+                .important(important)
                 .build();
         return announcementService.searchAnnouncement(reqDTO);
     }
@@ -74,8 +76,9 @@ public class AnnouncementController {
     )
     @GetMapping("/{announcementId}")
     public ResponseEntity<?> getAnnouncement(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO token,
+            @AuthenticationPrincipal JWTMemberInfoDTO request,
             @PathVariable Long announcementId){
-        return announcementService.getAnnouncement(announcementId,memberTempToken);
+        System.out.println("=====================\n\n"+ request.getMemberId()+ request.getApartmentName());
+        return announcementService.getAnnouncement(announcementId,request);
     }
 }

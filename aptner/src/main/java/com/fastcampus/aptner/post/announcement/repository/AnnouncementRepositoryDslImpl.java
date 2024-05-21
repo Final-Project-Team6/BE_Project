@@ -43,9 +43,10 @@ public class AnnouncementRepositoryDslImpl extends QuerydslRepositorySupport imp
                 .where(chooseApartment(reqDTO.getApartmentId()),
                         searchByKeyword(reqDTO.getKeyword(),reqDTO.getSearchType()),
                         targetType(reqDTO.getAnnouncementType()),
-                        targetCategory(reqDTO.getCategoryId())
+                        targetCategory(reqDTO.getCategoryId()),
+                        importantAnnouncement(reqDTO.getImportant())
                 )
-                .orderBy(sort(reqDTO.getOrderType(),reqDTO.getOrderBy()));
+                .orderBy(sort(reqDTO));
         List<Announcement> announcementList = this.getQuerydsl().applyPagination(reqDTO.getPageable(),query).fetch();
         return new PageImpl<>(announcementList,reqDTO.getPageable(),query.fetchCount());
     }
@@ -72,7 +73,15 @@ public class AnnouncementRepositoryDslImpl extends QuerydslRepositorySupport imp
         return null;
     }
 
-    private OrderSpecifier<?> sort(OrderType orderType, OrderBy orderBy){
+    private OrderSpecifier<?> sort(AnnouncementDTO.AnnouncementSearchReqDTO reqDTO){
+        if (reqDTO.getImportant()!=null){
+            if (reqDTO.getImportant()){
+                return new OrderSpecifier<>(Order.DESC, announcement.important);
+            }
+        }
+
+        OrderType orderType = reqDTO.getOrderType();
+        OrderBy orderBy = reqDTO.getOrderBy();
         if (orderType == null){
             orderType = OrderType.DATE;
         }
@@ -136,6 +145,17 @@ public class AnnouncementRepositoryDslImpl extends QuerydslRepositorySupport imp
             return null;
         }
         return announcement.announcementCategoryId.type.eq(announcementType);
+    }
+
+    private BooleanExpression importantAnnouncement(Boolean important){
+        if (important == null){
+            return null;
+        }
+        if (important) {
+            return announcement.important.gt(1);
+        } else {
+            return announcement.important.eq(0);
+        }
     }
 
 

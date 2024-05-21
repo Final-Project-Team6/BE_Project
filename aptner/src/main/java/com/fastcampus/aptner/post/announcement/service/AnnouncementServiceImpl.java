@@ -1,6 +1,7 @@
 package com.fastcampus.aptner.post.announcement.service;
 
 import com.fastcampus.aptner.global.error.RestAPIException;
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.domain.AnnouncementCategory;
 import com.fastcampus.aptner.post.announcement.domain.AnnouncementType;
@@ -13,7 +14,6 @@ import com.fastcampus.aptner.post.opinion.domain.CommentType;
 import com.fastcampus.aptner.post.opinion.dto.CommentDTO;
 import com.fastcampus.aptner.post.opinion.service.CommentCommonService;
 import com.fastcampus.aptner.post.opinion.service.CommentService;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -34,7 +34,6 @@ import static com.fastcampus.aptner.global.error.CommonErrorCode.INVALID_PARAMET
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AnnouncementServiceImpl implements AnnouncementService {
 
     private final AnnouncementRepository announcementRepository;
@@ -65,10 +64,10 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Override
     @Transactional
-    public ResponseEntity<AnnouncementDTO.AnnouncementRespDTO> getAnnouncement(Long announcementId, MemberTempDTO.MemberAuthDTO token) {
+    public ResponseEntity<AnnouncementDTO.AnnouncementRespDTO> getAnnouncement(Long announcementId, JWTMemberInfoDTO request) {
         Announcement announcement = announcementRepository.findById(announcementId).orElseThrow(NoSuchElementException::new);
-        AnnouncementDTO.AnnouncementRespDTO resp =new AnnouncementDTO.AnnouncementRespDTO(announcement,token);
-        List<CommentDTO.ViewComments> comments = commentCommonService.getComments(announcementId, CommentType.ANNOUNCEMENT,token);
+        AnnouncementDTO.AnnouncementRespDTO resp =new AnnouncementDTO.AnnouncementRespDTO(announcement,request);
+        List<CommentDTO.ViewComments> comments = commentCommonService.getComments(announcementId, CommentType.ANNOUNCEMENT,request);
         resp.setComments(comments);
         announcement.addViewCount();
         return new ResponseEntity<>(resp,HttpStatus.OK);

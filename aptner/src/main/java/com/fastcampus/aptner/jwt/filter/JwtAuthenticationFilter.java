@@ -33,6 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             token = getToken(request);
             if (StringUtils.hasText(token)) {
+                System.out.println("-------------------------------token = " + token);
                 getAuthentication(token);
             }
             filterChain.doFilter(request, response);
@@ -73,8 +74,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private void getAuthentication(String token) {
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(token);
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+        System.out.println("authenticate.getPrincipal() = " + authenticate.getPrincipal());
+        System.out.println("authenticate.getAuthorities() = " + authenticate.getAuthorities());
+        System.out.println("authenticate.getAuthorities().size() = " + authenticate.getAuthorities().size());
+        System.out.println("authenticate.getCredentials() = " + authenticate.getCredentials());
+        System.out.println("authenticate.getDetails() = " + authenticate.getDetails());
 
-        // 이 객체에는 JWT안의 내용을 가지고 로그인 id,role
+        // 이 객체에는 JWT 안의 내용을 가지고 로그인 아이디, 권한
         SecurityContextHolder.getContext().setAuthentication(authenticate); // 현재 요청에서 언제든지 인증정보를 꺼낼 수 있도록 해준다.
     }
 

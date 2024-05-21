@@ -2,6 +2,7 @@ package com.fastcampus.aptner.member.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @RequiredArgsConstructor
 @Getter
