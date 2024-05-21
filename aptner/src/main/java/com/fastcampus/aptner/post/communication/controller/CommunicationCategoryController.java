@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/post/announcement/category")
+@RequestMapping("/api/post/communication/category")
 @Tag(name = "소통공간", description = "소통공간 카테고리 생성, 수정, 삭제")
 public class CommunicationCategoryController {
 
