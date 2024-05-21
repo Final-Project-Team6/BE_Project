@@ -1,9 +1,9 @@
 package com.fastcampus.aptner.post.complaint.controller;
 
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.RoleName;
 import com.fastcampus.aptner.post.complaint.domain.ComplaintStatus;
 import com.fastcampus.aptner.post.complaint.service.admin.ComplaintAdminService;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 public class ComplaintAdminController {
 
     private final ComplaintAdminService complaintAdminService;
-    private MemberTempDTO.MemberAuthDTO memberTempToken = new MemberTempDTO.MemberAuthDTO(1L, RoleName.ADMIN,1L);
 
     @Operation(
             summary = "민원 진행 상태 변경 API",
@@ -28,9 +27,9 @@ public class ComplaintAdminController {
     )
     @PatchMapping("{complaintId}")
     public ResponseEntity<HttpStatus> updateComplaintStatus(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO token,
+            @AuthenticationPrincipal JWTMemberInfoDTO token,
             @PathVariable Long complaintId,
             @RequestParam ComplaintStatus complaintStatus){
-        return complaintAdminService.updateComplaintStatus(memberTempToken,complaintId,complaintStatus);
+        return complaintAdminService.updateComplaintStatus(token,complaintId,complaintStatus);
     }
 }

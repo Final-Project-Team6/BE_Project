@@ -1,9 +1,8 @@
 package com.fastcampus.aptner.post.complaint.service;
 
 import com.fastcampus.aptner.global.error.RestAPIException;
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
-import com.fastcampus.aptner.post.announcement.domain.Announcement;
-import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
 import com.fastcampus.aptner.post.common.dto.PageResponseDTO;
 import com.fastcampus.aptner.post.common.error.PostErrorCode;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
@@ -13,12 +12,8 @@ import com.fastcampus.aptner.post.complaint.repository.ComplaintRepository;
 import com.fastcampus.aptner.post.opinion.domain.CommentType;
 import com.fastcampus.aptner.post.opinion.dto.CommentDTO;
 import com.fastcampus.aptner.post.opinion.service.CommentCommonService;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
-import com.fastcampus.aptner.post.temp.service.ApartmentCommonService;
-import com.fastcampus.aptner.post.temp.service.MemberCommonService;
-import lombok.AccessLevel;
+import com.fastcampus.aptner.member.service.MemberCommonService;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,7 +39,7 @@ public class ComplaintServiceImpl implements ComplaintService{
 
 
     @Override
-    public ResponseEntity<HttpStatus> uploadComplaint(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId, ComplaintDTO.ComplaintReqDTO dto){
+    public ResponseEntity<HttpStatus> uploadComplaint(JWTMemberInfoDTO userToken, Long apartmentId, ComplaintDTO.ComplaintReqDTO dto){
         Member member = memberCommonService.getUserByToken(userToken);
         isCorrectApartment(userToken,apartmentId);
         ComplaintCategory category = complaintCommonService.getComplaintCategoryEntity(dto.complaintCategoryId());
@@ -54,7 +49,7 @@ public class ComplaintServiceImpl implements ComplaintService{
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> updateComplaint(MemberTempDTO.MemberAuthDTO userToken,Long complaintId, ComplaintDTO.ComplaintReqDTO dto){
+    public ResponseEntity<HttpStatus> updateComplaint(JWTMemberInfoDTO userToken,Long complaintId, ComplaintDTO.ComplaintReqDTO dto){
         Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(NoSuchElementException::new);
         isSameUser(complaint.getMemberId().getMemberId(),userToken);
         ComplaintCategory category = complaintCommonService.getComplaintCategoryEntity(dto.complaintCategoryId());
@@ -64,7 +59,7 @@ public class ComplaintServiceImpl implements ComplaintService{
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> deleteComplaint(MemberTempDTO.MemberAuthDTO userToken,Long complaintId){
+    public ResponseEntity<HttpStatus> deleteComplaint(JWTMemberInfoDTO userToken,Long complaintId){
         Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(NoSuchElementException::new);
         isSameUser(complaint.getMemberId().getMemberId(),userToken);
         complaint.deleteComplaint();
@@ -73,22 +68,22 @@ public class ComplaintServiceImpl implements ComplaintService{
 
     @Override
     @Transactional
-    public ResponseEntity<?> getComplaint(MemberTempDTO.MemberAuthDTO token, Long complaintId){
-        Member viewer = memberCommonService.getUserByToken(token);
+    public ResponseEntity<?> getComplaint(JWTMemberInfoDTO request, Long complaintId){
+//        Member viewer = memberCommonService.getUserByToken(request);
         Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(NoSuchElementException::new);
-        if (complaint.isSecret()){
-            if (viewer.getMemberId()!=token.memberId()){
-                //todo 권한에 따른 접근
-                throw new RestAPIException(NOT_SAME_USER);
-            }
-        }
-        List<CommentDTO.ViewComments> comments = commentCommonService.getComments(complaintId, CommentType.COMPLAINT,token);
-        ComplaintDTO.ComplaintRespDTO resp = new ComplaintDTO.ComplaintRespDTO(complaint,token,comments);
+//        if (complaint.isSecret()){
+//            if (viewer.getMemberId()!=request.getMemberId()){
+//                //todo 권한에 따른 접근
+//                throw new RestAPIException(NOT_SAME_USER);
+//            }
+//        }
+        List<CommentDTO.ViewComments> comments = commentCommonService.getComments(complaintId, CommentType.COMPLAINT,request);
+        ComplaintDTO.ComplaintRespDTO resp = new ComplaintDTO.ComplaintRespDTO(complaint,request,comments);
         complaint.addViewCount();
         return new ResponseEntity<>(resp,HttpStatus.OK);
     }
 
-    public ResponseEntity<PageResponseDTO> searchComplaint(ComplaintDTO.ComplaintSearchReqDTO reqDTO, MemberTempDTO.MemberAuthDTO memberToken){
+    public ResponseEntity<PageResponseDTO> searchComplaint(ComplaintDTO.ComplaintSearchReqDTO reqDTO, JWTMemberInfoDTO memberToken){
         PageRequest pageable = PageRequest.of(reqDTO.getPageNumber()-1, reqDTO.getPageSize());
         reqDTO.setPageable(pageable);
         Page<Complaint> result = complaintRepository.searchComplaint(reqDTO,memberToken);
@@ -106,14 +101,14 @@ public class ComplaintServiceImpl implements ComplaintService{
         return new ResponseEntity<>(resp,HttpStatus.OK);
     }
 
-    private static void isCorrectApartment(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId){
-        if (userToken.ApartmentId()!= apartmentId){
+    private static void isCorrectApartment(JWTMemberInfoDTO userToken, Long apartmentId){
+        if (userToken.getApartmentId()!= apartmentId){
             throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
         }
     }
 
-    private static void isSameUser(Long memberId,MemberTempDTO.MemberAuthDTO userToken){
-        if (userToken.memberId()!= memberId){
+    private static void isSameUser(Long memberId,JWTMemberInfoDTO userToken){
+        if (userToken.getMemberId()!= memberId){
             throw new RestAPIException(NOT_SAME_USER);
         }
     }
