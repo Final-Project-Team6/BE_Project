@@ -1,4 +1,4 @@
-package com.fastcampus.aptner.post.complaint.service.admin;
+package com.fastcampus.aptner.post.complaint.service;
 
 import org.springframework.http.ResponseEntity;
 

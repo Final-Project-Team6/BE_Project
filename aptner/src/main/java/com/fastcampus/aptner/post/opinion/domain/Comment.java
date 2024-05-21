@@ -1,6 +1,7 @@
 package com.fastcampus.aptner.post.opinion.domain;
 
 import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.common.enumType.BoardType;
@@ -8,7 +9,6 @@ import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.communication.domain.Communication;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import com.fastcampus.aptner.post.opinion.dto.VoteDTO;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -88,10 +88,10 @@ public class Comment extends BaseTimeEntity {
         this.parentId = parentId;
     }
 
-    public VoteDTO.VoteRespDTO aboutVote(MemberTempDTO.MemberAuthDTO token){
+    public VoteDTO.VoteRespDTO aboutVote(JWTMemberInfoDTO request){
         int agreeCnt = getAgreeCount();
         int total = voteList.size();
-        return new VoteDTO.VoteRespDTO(total,agreeCnt,total-agreeCnt,yourVote(token));
+        return new VoteDTO.VoteRespDTO(total,agreeCnt,total-agreeCnt,yourVote(request));
     }
 
     public int getAgreeCount(){
@@ -104,10 +104,10 @@ public class Comment extends BaseTimeEntity {
         return cnt;
     }
 
-    public Boolean yourVote(MemberTempDTO.MemberAuthDTO token){
-        if (token==null)return null;
+    public Boolean yourVote(JWTMemberInfoDTO request){
+        if (request==null)return null;
         for(Vote v : voteList){
-            if (v.getMemberId().getMemberId().equals(token.memberId())){
+            if (v.getMemberId().getMemberId().equals(request.getMemberId())){
                 return v.isOpinion();
             }
         }

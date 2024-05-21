@@ -1,9 +1,9 @@
 package com.fastcampus.aptner.post.complaint.controller;
 
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.RoleName;
 import com.fastcampus.aptner.post.complaint.dto.ComplaintDTO;
 import com.fastcampus.aptner.post.complaint.service.admin.ComplaintCategoryAdminService;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +20,6 @@ public class ComplaintCategoryAdminController {
 
     private final ComplaintCategoryAdminService complaintCategoryAdminService;
 
-    //TODO Member 개발 완료시 지우기
-    private MemberTempDTO.MemberAuthDTO memberTempToken = new MemberTempDTO.MemberAuthDTO(1L, RoleName.ADMIN,1L);
-
     @Operation(
             summary = "민원 카테고리 생성 API",
             description = "Schema -> 민원 카테고리 생성 \n\n " +
@@ -30,10 +27,10 @@ public class ComplaintCategoryAdminController {
     )
     @PostMapping("/{apartmentId}")
     public ResponseEntity<HttpStatus> createComplaintCategory(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long apartmentId,
             @RequestBody ComplaintDTO.ComplaintCategoryReqDTO dto){
-        return complaintCategoryAdminService.createComplaintCategory(memberTempToken,apartmentId,dto);
+        return complaintCategoryAdminService.createComplaintCategory(memberToken,apartmentId,dto);
     }
     @Operation(
             summary = "민원 카테고리 수정 API",
@@ -42,10 +39,10 @@ public class ComplaintCategoryAdminController {
     )
     @PatchMapping("/{complaintCategoryId}")
     public ResponseEntity<HttpStatus> updateComplaintCategory(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long complaintCategoryId,
             @RequestBody ComplaintDTO.ComplaintCategoryReqDTO dto){
-        return complaintCategoryAdminService.updateComplaintCategory(memberTempToken,complaintCategoryId,dto);
+        return complaintCategoryAdminService.updateComplaintCategory(memberToken,complaintCategoryId,dto);
     }
     @Operation(
             summary = "민원 카테고리 삭제 API",
@@ -53,9 +50,9 @@ public class ComplaintCategoryAdminController {
     )
     @DeleteMapping("/{complaintCategoryId}")
     public ResponseEntity<HttpStatus> deleteComplaintCategory(
-            @AuthenticationPrincipal MemberTempDTO.MemberAuthDTO memberToken,
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long complaintCategoryId){
-        return complaintCategoryAdminService.deleteComplaintCategory(memberTempToken,complaintCategoryId);
+        return complaintCategoryAdminService.deleteComplaintCategory(memberToken,complaintCategoryId);
     }
 
 }

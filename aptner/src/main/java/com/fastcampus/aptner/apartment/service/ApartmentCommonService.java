@@ -1,4 +1,4 @@
-package com.fastcampus.aptner.post.temp.service;
+package com.fastcampus.aptner.apartment.service;
 
 import com.fastcampus.aptner.apartment.domain.Apartment;
 

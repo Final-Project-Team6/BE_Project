@@ -1,8 +1,8 @@
-package com.fastcampus.aptner.post.temp.service;
+package com.fastcampus.aptner.member.service;
 
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
-import com.fastcampus.aptner.post.temp.repository.TempMemberRepository;
+import com.fastcampus.aptner.member.repository.MemberRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MemberCommonServiceImpl implements MemberCommonService {
 
-    private final TempMemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     @Override
-    public Member getUserByToken(MemberTempDTO.MemberAuthDTO dto) {
+    public Member getUserByToken(JWTMemberInfoDTO dto) {
         return memberRepository.findById(1L).orElse(null);
     }
 }
