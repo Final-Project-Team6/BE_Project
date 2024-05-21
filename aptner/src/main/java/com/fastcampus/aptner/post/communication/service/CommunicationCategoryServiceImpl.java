@@ -3,11 +3,11 @@ package com.fastcampus.aptner.post.communication.service;
 import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.apartment.repository.ApartmentRepository;
 import com.fastcampus.aptner.global.error.RestAPIException;
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.post.common.error.PostErrorCode;
 import com.fastcampus.aptner.post.communication.domain.CommunicationCategory;
 import com.fastcampus.aptner.post.communication.dto.CommunicationDTO;
 import com.fastcampus.aptner.post.communication.repository.CommunicationCategoryRepository;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -33,7 +33,7 @@ public class CommunicationCategoryServiceImpl implements CommunicationCategorySe
     ApartmentRepository apartmentRepository;
 
     @Override
-    public ResponseEntity<HttpStatus> createCommunicationCategory(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId, CommunicationDTO.CommunicationCategoryReqDTO dto) {
+    public ResponseEntity<HttpStatus> createCommunicationCategory(JWTMemberInfoDTO userToken, Long apartmentId, CommunicationDTO.CommunicationCategoryReqDTO dto) {
         isCorrectApartment(userToken,apartmentId);
         Apartment apartment = apartmentRepository.findApartmentByApartmentId(apartmentId).get();
         communicationCategoryRepository.save(CommunicationCategory.from(apartment,dto));
@@ -42,7 +42,7 @@ public class CommunicationCategoryServiceImpl implements CommunicationCategorySe
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> updateCommunicationCategory(MemberTempDTO.MemberAuthDTO userToken, Long communicationCategoryId, CommunicationDTO.CommunicationCategoryReqDTO dto) {
+    public ResponseEntity<HttpStatus> updateCommunicationCategory(JWTMemberInfoDTO userToken, Long communicationCategoryId, CommunicationDTO.CommunicationCategoryReqDTO dto) {
         CommunicationCategory communicationCategory = communicationCategoryRepository.findById(communicationCategoryId).orElseThrow(NoSuchElementException::new);
         checkApartmentByAnnouncementCategory(userToken,communicationCategory);
         communicationCategory.updateCategory(dto);
@@ -52,7 +52,7 @@ public class CommunicationCategoryServiceImpl implements CommunicationCategorySe
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> deleteCommunicationCategory(MemberTempDTO.MemberAuthDTO userToken, Long CommunicationCategoryId) {
+    public ResponseEntity<HttpStatus> deleteCommunicationCategory(JWTMemberInfoDTO userToken, Long CommunicationCategoryId) {
         CommunicationCategory communicationCategory = communicationCategoryRepository.findById(CommunicationCategoryId).orElseThrow(NoSuchElementException::new);
         checkApartmentByAnnouncementCategory(userToken,communicationCategory);
         if(!communicationCategory.getCommunicationList().isEmpty())
@@ -63,14 +63,14 @@ public class CommunicationCategoryServiceImpl implements CommunicationCategorySe
     }
 
 
-    private static void isCorrectApartment(MemberTempDTO.MemberAuthDTO userToken, Long apartmentId){
-        if (userToken.ApartmentId()!= apartmentId){
+    private static void isCorrectApartment(JWTMemberInfoDTO userToken, Long apartmentId){
+        if (userToken.getApartmentId()!= apartmentId){
             throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
         }
     }
 
-    private void checkApartmentByAnnouncementCategory(MemberTempDTO.MemberAuthDTO userToken, CommunicationCategory communicationCategory){
-        if (!Objects.equals(userToken.ApartmentId(), communicationCategory.getApartmentId().getApartmentId())){
+    private void checkApartmentByAnnouncementCategory(JWTMemberInfoDTO userToken, CommunicationCategory communicationCategory){
+        if (!Objects.equals(userToken.getApartmentId(), communicationCategory.getApartmentId().getApartmentId())){
             throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
         }
     }

@@ -1,12 +1,12 @@
 package com.fastcampus.aptner.post.communication.domain;
 
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.communication.dto.CommunicationDTO;
 import com.fastcampus.aptner.post.opinion.domain.Comment;
 import com.fastcampus.aptner.post.opinion.domain.Vote;
 import com.fastcampus.aptner.post.opinion.dto.VoteDTO;
-import com.fastcampus.aptner.post.temp.dto.MemberTempDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -99,7 +99,7 @@ public class Communication {
     public void deleteCommunication(){this.status=PostStatus.DELETED;}
     public void hideCommunication(){this.status=PostStatus.HIDDEN;}
 
-    public VoteDTO.VoteRespDTO aboutVote(MemberTempDTO.MemberAuthDTO token) {
+    public VoteDTO.VoteRespDTO aboutVote(JWTMemberInfoDTO token) {
         int agreeCnt = getAgreeCount();
         int total = voteList.size();
         return new VoteDTO.VoteRespDTO(total,agreeCnt,total-agreeCnt,null);
@@ -120,10 +120,10 @@ public class Communication {
         return cnt;
     }
 
-    public Boolean yourVote(MemberTempDTO.MemberAuthDTO token){
+    public Boolean yourVote(JWTMemberInfoDTO token){
         if (token==null) return null;
         for(Vote v : voteList){
-            if (Objects.equals(v.getMemberId().getMemberId(), token.memberId())){
+            if (Objects.equals(v.getMemberId().getMemberId(), token.getMemberId())){
                 return v.isOpinion();
             }
         }
