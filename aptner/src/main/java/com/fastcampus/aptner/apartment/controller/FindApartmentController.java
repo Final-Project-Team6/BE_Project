@@ -21,8 +21,9 @@ public class FindApartmentController {
     private final FindApartmentService apartmentService;
 
     @Operation(
-            summary = "아파트 이름으로 아파트 조회 API",
-            description = "apartmentName : 검색할 아파트 이름")
+            summary = "아파트 이름으로 아파트 조회 API\n\n",
+            description = "Schema -? apartmentName 아파트 이름"
+    )
     @GetMapping("/search")
     public ResponseEntity<?> findByApartmentName(@RequestBody FindApartmentRequest request) {
         FindApartmentResponse response = apartmentService.findApartmentByName(request.getApartmentName());

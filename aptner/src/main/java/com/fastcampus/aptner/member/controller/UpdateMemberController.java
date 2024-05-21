@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "회원 정보 수정(사용자)", description = "회원 닉네임 수정, 회원 인증상태 수정")
 @RequiredArgsConstructor
-@RequestMapping("/api/update")
+@RequestMapping("/api/member/update")
 @RestController
 public class UpdateMemberController {
 
