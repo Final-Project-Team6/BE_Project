@@ -1,5 +1,6 @@
 package com.fastcampus.aptner.member.service;
 
+import com.fastcampus.aptner.global.handler.exception.CustomAPIException;
 import com.fastcampus.aptner.member.domain.RoleName;
 import com.fastcampus.aptner.member.repository.MemberRoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,6 @@ public class FindMemberRoleServiceImpl implements FindMemberRoleService {
     @Transactional(readOnly = true)
     public RoleName getMemberRole(Long memberId, Long apartmentId) {
         return memberRoleRepository.findRoleByMemberAndApartment(memberId, apartmentId)
-                .orElseThrow(() -> new IllegalArgumentException("회원의 권한이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomAPIException("회원의 권한이 존재하지 않습니다."));
     }
 }

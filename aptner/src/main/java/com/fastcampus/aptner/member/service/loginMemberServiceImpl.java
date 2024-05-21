@@ -1,5 +1,6 @@
 package com.fastcampus.aptner.member.service;
 
+import com.fastcampus.aptner.global.handler.exception.CustomAPIException;
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class loginMemberServiceImpl implements loginMemberService {
     @Transactional(readOnly = true)
     public Member findByUsername(String username) {
         return memberRepository.findMemberByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomAPIException("회원이 존재하지 않습니다."));
     }
 
     @Transactional(readOnly = true)

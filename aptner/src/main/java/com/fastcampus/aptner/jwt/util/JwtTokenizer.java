@@ -2,9 +2,11 @@ package com.fastcampus.aptner.jwt.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -84,6 +86,14 @@ public class JwtTokenizer {
         return Long.valueOf((Integer)claims.get("memberId"));
     }
 
+    public String getMemberRoleFromToken(String token) {
+        String[] tokenArr = token.split(" ");
+        token = tokenArr[1];
+        Claims claims = parseToken(token, accessSecret);
+        return String.valueOf(claims.get("roleName"));
+    }
+
+
     public Claims parseAccessToken(String accessToken) {
         return parseToken(accessToken, accessSecret);
     }
@@ -94,11 +104,19 @@ public class JwtTokenizer {
 
 
     public Claims parseToken(String token, byte[] secretKey) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey(secretKey))
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey(secretKey))
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (DecodingException e) {
+            log.error("JWT 디코딩 오류: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("JWT 파싱 오류: {}", e.getMessage());
+            throw new BadCredentialsException("Invalid token");
+        }
     }
 
     /**
