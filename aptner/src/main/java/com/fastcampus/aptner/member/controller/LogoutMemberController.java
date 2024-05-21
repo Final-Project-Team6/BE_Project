@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "회원 로그아웃(사용자)", description = "회원 로그아웃")
 @RequiredArgsConstructor
-@RequestMapping("/api/members")
+@RequestMapping("/api/member")
 @RestController
 public class LogoutMemberController {
 

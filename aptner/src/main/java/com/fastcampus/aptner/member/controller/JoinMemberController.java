@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "회원 가입(사용자)", description = "회원 등록, 휴대전화번호 검증, 닉네임 검증, 아이디 검증")
 @RequiredArgsConstructor
-@RequestMapping("/api/members")
+@RequestMapping("/api/member")
 @RestController
 public class JoinMemberController {
 
