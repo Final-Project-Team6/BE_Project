@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String token="";
+        String token = "";
         try {
             token = getToken(request);
             if (StringUtils.hasText(token)) {
@@ -37,8 +37,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 getAuthentication(token);
             }
             filterChain.doFilter(request, response);
-        }
-        catch (NullPointerException | IllegalStateException e) {
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token has expired. Please refresh your token.");
+            log.error("doFilterInternal: EXPIRED Token // token : {}", token);
+            log.error("doFilterInternal: Set Request Exception Code : {}", JwtExceptionCode.EXPIRED_TOKEN.getCode());
+        } catch (NullPointerException | IllegalStateException e) {
             request.setAttribute("doFilterInternal: exception", JwtExceptionCode.NOT_FOUND_TOKEN.getCode());
             log.error("doFilterInternal: Not found Token // token : {}", token);
             log.error("doFilterInternal: Set Request Exception Code : {}", request.getAttribute("exception"));
@@ -48,11 +52,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.error("doFilterInternal: Invalid Token // token : {}", token);
             log.error("doFilterInternal: Set Request Exception Code : {}", request.getAttribute("exception"));
             throw new BadCredentialsException("doFilterInternal: throw new invalid token exception");
-        } catch (ExpiredJwtException e) {
-            request.setAttribute("doFilterInternal: exception", JwtExceptionCode.EXPIRED_TOKEN.getCode());
-            log.error("doFilterInternal: EXPIRED Token // token : {}", token);
-            log.error("doFilterInternal: Set Request Exception Code : {}", request.getAttribute("exception"));
-            throw new BadCredentialsException("doFilterInternal: throw new expired token exception");
         } catch (UnsupportedJwtException e) {
             request.setAttribute("doFilterInternal: exception", JwtExceptionCode.UNSUPPORTED_TOKEN.getCode());
             log.error("doFilterInternal: Unsupported Token // token : {}", token);
@@ -74,11 +73,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private void getAuthentication(String token) {
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(token);
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-        System.out.println("authenticate.getPrincipal() = " + authenticate.getPrincipal());
-        System.out.println("authenticate.getAuthorities() = " + authenticate.getAuthorities());
-        System.out.println("authenticate.getAuthorities().size() = " + authenticate.getAuthorities().size());
-        System.out.println("authenticate.getCredentials() = " + authenticate.getCredentials());
-        System.out.println("authenticate.getDetails() = " + authenticate.getDetails());
 
         // 이 객체에는 JWT 안의 내용을 가지고 로그인 아이디, 권한
         SecurityContextHolder.getContext().setAuthentication(authenticate); // 현재 요청에서 언제든지 인증정보를 꺼낼 수 있도록 해준다.

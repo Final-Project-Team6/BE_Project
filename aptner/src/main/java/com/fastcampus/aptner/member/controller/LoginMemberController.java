@@ -7,7 +7,7 @@ import com.fastcampus.aptner.jwt.util.JwtTokenizer;
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.member.dto.HttpResponse;
 import com.fastcampus.aptner.member.dto.reqeust.LoginMemberRequest;
-import com.fastcampus.aptner.member.dto.reqeust.LoginMemberResponse;
+import com.fastcampus.aptner.member.dto.response.LoginMemberResponse;
 import com.fastcampus.aptner.member.service.FindMemberRoleServiceImpl;
 import com.fastcampus.aptner.member.service.loginMemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,7 +57,7 @@ public class LoginMemberController {
 
         // JWT 토큰 생성하는 시점.
         String accessToken = jwtTokenizer.createAccessToken(member.getMemberId(), member.getUsername(), memberRole, request.getApartmentName(), apartmentId);
-        String refreshToken = jwtTokenizer.createRefreshToken(member.getMemberId(), member.getUsername(), memberRole, apartmentId);
+        String refreshToken = jwtTokenizer.createRefreshToken(member.getMemberId(), member.getUsername(), memberRole, request.getApartmentName(), apartmentId);
 
         // TODO: RefreshToken 을 MySQL 에 저장. -> Redis 으로 저장 필요하다.
         TokenStorage refreshTokenEntity = TokenStorage.builder()
