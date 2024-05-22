@@ -22,7 +22,7 @@ public class FindApartmentController {
 
     @Operation(
             summary = "아파트 이름으로 아파트 조회 API\n\n",
-            description = "Schema -? apartmentName 아파트 이름"
+            description = "Schema -> apartmentName: 아파트 이름"
     )
     @GetMapping("/search")
     public ResponseEntity<?> findByApartmentName(@RequestBody FindApartmentRequest request) {
