@@ -1,4 +1,4 @@
-package com.fastcampus.aptner.member.dto.reqeust;
+package com.fastcampus.aptner.member.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

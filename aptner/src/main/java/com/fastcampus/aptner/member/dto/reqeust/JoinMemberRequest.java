@@ -9,11 +9,11 @@ import lombok.Getter;
 @Getter
 public class JoinMemberRequest {
 
-    private final boolean termsService; // 서비스 이용 약관 동의
+    private final Boolean termsService; // 서비스 이용 약관 동의
 
-    private final boolean privateInformationCollection; // 개인 정보 수집 동의
+    private final Boolean privateInformationCollection; // 개인 정보 수집 동의
 
-    private final boolean snsMarketingInformationReceive; // SNS 마케팅 정보 수신 동의는 선택입니다.
+    private final Boolean snsMarketingInformationReceive; // SNS 마케팅 정보 수신 동의는 선택입니다.
 
     @NotBlank(message = "이름: 필수 정보입니다.")
     @Pattern(regexp = "^[a-zA-Z가-힣]{1,16}$", message = "이름: 1자 이상 16자 이하의 이름을 입력해주세요.")
@@ -71,7 +71,7 @@ public class JoinMemberRequest {
 
 
     @Builder
-    public JoinMemberRequest(boolean termsService, boolean privateInformationCollection, boolean snsMarketingInformationReceive, String fullName, String birthFirst, String gender, String phoneCarrier, String phone, String username, String password, String nickname, String dong, String ho, String apartmentName) {
+    public JoinMemberRequest(Boolean termsService, Boolean privateInformationCollection, Boolean snsMarketingInformationReceive, String fullName, String birthFirst, String gender, String phoneCarrier, String phone, String username, String password, String nickname, String dong, String ho, String apartmentName) {
         this.termsService = termsService;
         this.privateInformationCollection = privateInformationCollection;
         this.snsMarketingInformationReceive = snsMarketingInformationReceive;
