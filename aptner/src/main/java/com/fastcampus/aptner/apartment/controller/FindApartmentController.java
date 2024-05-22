@@ -1,6 +1,5 @@
 package com.fastcampus.aptner.apartment.controller;
 
-import com.fastcampus.aptner.apartment.dto.FindApartmentRequest;
 import com.fastcampus.aptner.apartment.dto.FindApartmentResponse;
 import com.fastcampus.aptner.apartment.service.FindApartmentService;
 import com.fastcampus.aptner.member.dto.HttpResponse;
@@ -22,11 +21,11 @@ public class FindApartmentController {
 
     @Operation(
             summary = "아파트 이름으로 아파트 조회 API\n\n",
-            description = "Schema -? apartmentName 아파트 이름"
+            description = "Schema -> apartmentName: 아파트 이름"
     )
     @GetMapping("/search")
-    public ResponseEntity<?> findByApartmentName(@RequestBody FindApartmentRequest request) {
-        FindApartmentResponse response = apartmentService.findApartmentByName(request.getApartmentName());
+    public ResponseEntity<?> findByApartmentName(@RequestParam String apartmentName) {
+        FindApartmentResponse response = apartmentService.findApartmentByName(apartmentName);
         return new ResponseEntity<>(new HttpResponse<>(1, "아파트 조회 성공", response), HttpStatus.OK);
     }
 }

@@ -5,6 +5,8 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,6 +21,7 @@ public class TokenStorage {
     @Column(name = "tokenStorage_id", nullable = false, updatable = false)
     private Long tokenStorageId; // 토큰 id
 
+    @Column(length = 512)
     private String refreshToken; // 리프레시 토큰 번호
 
     @CreatedDate
@@ -30,6 +33,6 @@ public class TokenStorage {
     public TokenStorage(String refreshToken, Long memberId) {
         this.refreshToken = refreshToken;
         this.memberId = memberId;
-        this.createdAt = createdAt; // TODO: 날짜 넣기
+        this.createdAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 }

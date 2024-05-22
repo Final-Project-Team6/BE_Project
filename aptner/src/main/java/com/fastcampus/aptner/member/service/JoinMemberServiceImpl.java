@@ -102,9 +102,9 @@ public class JoinMemberServiceImpl implements JoinMemberService {
 
         // Subscription 엔티티 생성하기
         Subscription subscription = Subscription.builder()
-                .termsService(request.isTermsService())
-                .privateInformationCollection(request.isPrivateInformationCollection())
-                .snsMarketingInformationReceive(request.isSnsMarketingInformationReceive())
+                .termsService(request.getTermsService())
+                .privateInformationCollection(request.getPrivateInformationCollection())
+                .snsMarketingInformationReceive(request.getSnsMarketingInformationReceive())
                 .build();
         subscriptionRepository.save(subscription);
 

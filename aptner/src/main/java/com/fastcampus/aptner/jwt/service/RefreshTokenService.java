@@ -1,6 +1,7 @@
 package com.fastcampus.aptner.jwt.service;
 
 import com.fastcampus.aptner.jwt.domain.TokenStorage;
+import com.fastcampus.aptner.jwt.dto.TokenStorageDto;
 import com.fastcampus.aptner.jwt.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,5 +27,19 @@ public class RefreshTokenService {
     @Transactional(readOnly = true)
     public Optional<TokenStorage> findRefreshToken(String refreshToken) {
         return refreshTokenRepository.findByRefreshToken(refreshToken);
+    }
+
+    @Transactional
+    public void saveNewRefreshToken(TokenStorageDto tokenStorageDto) {
+        // 기존 리프레시 토큰 삭제
+        refreshTokenRepository.findByMemberId(tokenStorageDto.getMemberId()).ifPresent(refreshTokenRepository::delete);
+
+        // 새로운 리프레시 토큰 저장
+        TokenStorage tokenStorage = TokenStorage.builder()
+                .refreshToken(tokenStorageDto.getRefreshToken())
+                .memberId(tokenStorageDto.getMemberId())
+                .build();
+
+        refreshTokenRepository.save(tokenStorage);
     }
 }

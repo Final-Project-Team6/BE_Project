@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -47,8 +48,8 @@ public class JwtTokenizer {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + ACCESS_TOKEN_EXPIRE_COUNT))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_COUNT))
                 .signWith(getSigningKey(accessSecret))
                 .compact();
     }
@@ -59,18 +60,24 @@ public class JwtTokenizer {
     public String createRefreshToken(Long memberId,
                                      String username,
                                      String roleName,
+                                     String apartmentName,
                                      Long apartmentId) {
         Claims claims = Jwts.claims().setSubject(username);
 
         claims.put("roleName", roleName);
         claims.put("memberId", memberId);
         claims.put("username", username);
+        claims.put("apartmentName", apartmentName);
         claims.put("apartmentId", apartmentId);
 
+        // 고유한 값을 생성하여 리프레시 토큰의 식별자로 사용
+        String uniqueId = UUID.randomUUID().toString();
+
         return Jwts.builder()
+                .setId(uniqueId)
                 .setClaims(claims)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + REFRESH_TOKEN_EXPIRE_COUNT))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE_COUNT))
                 .signWith(getSigningKey(refreshSecret))
                 .compact();
     }
@@ -83,14 +90,14 @@ public class JwtTokenizer {
         String[] tokenArr = token.split(" ");
         token = tokenArr[1];
         Claims claims = parseToken(token, accessSecret);
-        return Long.valueOf((Integer)claims.get("memberId"));
+        return claims.get("memberId", Long.class);
     }
 
     public String getMemberRoleFromToken(String token) {
         String[] tokenArr = token.split(" ");
         token = tokenArr[1];
         Claims claims = parseToken(token, accessSecret);
-        return String.valueOf(claims.get("roleName"));
+        return claims.get("roleName", String.class);
     }
 
 

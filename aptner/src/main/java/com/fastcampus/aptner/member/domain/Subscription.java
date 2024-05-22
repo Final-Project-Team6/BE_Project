@@ -23,13 +23,13 @@ public class Subscription {
     private Member memberId;
 
     @Column(name = "terms_service")
-    private boolean termsService;
+    private Boolean termsService;
 
     @Column(name = "private_information_collection")
-    private boolean privateInformationCollection;
+    private Boolean privateInformationCollection;
 
     @Column(name = "sns_marketing_information_receivce")
-    private boolean snsMarketingInformationReceive;
+    private Boolean snsMarketingInformationReceive;
 
     @Column(name = "terms_service_agreement_modified_at")
     private LocalDateTime termsServiceAgreementModifiedAt;
@@ -41,7 +41,7 @@ public class Subscription {
     private LocalDateTime snsMarketingInformationReceiveModifiedAt;
 
     @Builder
-    public Subscription(boolean termsService, boolean privateInformationCollection, boolean snsMarketingInformationReceive) {
+    public Subscription(Boolean termsService, Boolean privateInformationCollection, Boolean snsMarketingInformationReceive) {
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
 
         this.termsService = termsService;

@@ -24,30 +24,35 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(CustomForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<?> forbiddenException(CustomForbiddenException e) {
         log.error(e.getMessage());
         return new ResponseEntity<>(new HttpResponse<>(-1, e.getMessage(), null), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(CustomValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> validationApiException(CustomValidationException e) {
         log.error(e.getMessage());
         return new ResponseEntity<>(new HttpResponse<>(-1, e.getMessage(), e.getErrorMap()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CustomDataNotFoundException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<?> handleDuplicateKeyException(CustomDataNotFoundException e) {
         log.error(e.getMessage());
         return new ResponseEntity<>(new HttpResponse<>(-1, e.getMessage(), null), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(CustomDuplicationKeyException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<?> handleNotFoundException(CustomDuplicationKeyException e) {
         log.error(e.getMessage());
         return new ResponseEntity<>(new HttpResponse<>(-1, e.getMessage(), null), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DataAccessException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<?> handleDataAccessException(DataAccessException e) {
         log.error(e.getMessage());
         return new ResponseEntity<>(new HttpResponse<>(-1, e.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
