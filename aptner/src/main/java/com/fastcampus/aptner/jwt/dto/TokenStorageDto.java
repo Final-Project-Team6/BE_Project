@@ -1,4 +1,4 @@
-package com.fastcampus.aptner.member.dto.reqeust;
+package com.fastcampus.aptner.jwt.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,13 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginMemberResponse {
-    private String accessToken;
+@Builder
+public class TokenStorageDto {
     private String refreshToken;
-
     private Long memberId;
-    private String nickname;
 }

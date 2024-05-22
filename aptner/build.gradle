@@ -59,8 +59,11 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
-	//7. aws cloud
+	// 7. aws cloud
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	// 8. 레디스 추가하기
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 }
 
