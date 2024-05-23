@@ -5,9 +5,7 @@ import com.fastcampus.aptner.post.opinion.domain.Comment;
 import com.fastcampus.aptner.post.opinion.domain.CommentType;
 import com.fastcampus.aptner.post.opinion.dto.CommentDTO;
 import com.fastcampus.aptner.post.opinion.repository.CommentRepository;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

@@ -3,6 +3,7 @@ package com.fastcampus.aptner.post.opinion.service;
 import com.fastcampus.aptner.global.error.RestAPIException;
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
+import com.fastcampus.aptner.member.service.MemberCommonService;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.service.AnnouncementCommonService;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
@@ -11,7 +12,6 @@ import com.fastcampus.aptner.post.opinion.domain.Comment;
 import com.fastcampus.aptner.post.opinion.domain.Vote;
 import com.fastcampus.aptner.post.opinion.domain.VoteType;
 import com.fastcampus.aptner.post.opinion.repository.VoteRepository;
-import com.fastcampus.aptner.member.service.MemberCommonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ import static com.fastcampus.aptner.post.common.error.VoteErrorCode.ALREADY_EXiS
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class VoteServiceImpl implements VoteService{
+public class VoteServiceImpl implements VoteService {
 
     private final VoteRepository voteRepository;
     private final MemberCommonService memberCommonService;
@@ -35,13 +35,13 @@ public class VoteServiceImpl implements VoteService{
     private final ComplaintCommonService complaintCommonService;
 
     @Override
-    public ResponseEntity<HttpStatus> voteToPost(JWTMemberInfoDTO token, Long postId, VoteType voteType, Boolean opinion){
+    public ResponseEntity<HttpStatus> voteToPost(JWTMemberInfoDTO token, Long postId, VoteType voteType, Boolean opinion) {
         Member member = memberCommonService.getUserByToken(token);
         Vote vote = null;
-        switch (voteType){
+        switch (voteType) {
             case ANNOUNCEMENT -> {
                 Announcement announcement = announcementCommonService.getAnnouncementEntity(postId);
-                if (voteRepository.existsByAnnouncementIdAndMemberId(announcement,member)){
+                if (voteRepository.existsByAnnouncementIdAndMemberId(announcement, member)) {
                     throw new RestAPIException(ALREADY_EXiSTS);
                 }
                 vote = Vote.builder()
@@ -52,7 +52,7 @@ public class VoteServiceImpl implements VoteService{
             }
             case COMMENT -> {
                 Comment comment = commentCommonService.getCommentEntity(postId);
-                if (voteRepository.existsByCommentIdAndMemberId(comment,member)){
+                if (voteRepository.existsByCommentIdAndMemberId(comment, member)) {
                     throw new RestAPIException(ALREADY_EXiSTS);
                 }
                 vote = Vote.builder()
@@ -63,7 +63,7 @@ public class VoteServiceImpl implements VoteService{
             }
             case COMPLAINT -> {
                 Complaint complaint = complaintCommonService.getComplaintEntity(postId);
-                if (voteRepository.existsByComplaintIdAndMemberId(complaint,member)){
+                if (voteRepository.existsByComplaintIdAndMemberId(complaint, member)) {
                     throw new RestAPIException(ALREADY_EXiSTS);
                 }
                 vote = Vote.builder()
@@ -74,7 +74,7 @@ public class VoteServiceImpl implements VoteService{
             }
             //todo 소통
         }
-        if (vote!=null){
+        if (vote != null) {
             voteRepository.save(vote);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
@@ -83,21 +83,21 @@ public class VoteServiceImpl implements VoteService{
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> deleteVote(JWTMemberInfoDTO token, Long postId, VoteType voteType){
+    public ResponseEntity<HttpStatus> deleteVote(JWTMemberInfoDTO token, Long postId, VoteType voteType) {
         Member member = memberCommonService.getUserByToken(token);
         Vote vote = null;
-        switch (voteType){
-            case ANNOUNCEMENT ->{
+        switch (voteType) {
+            case ANNOUNCEMENT -> {
                 Announcement announcement = announcementCommonService.getAnnouncementEntity(postId);
-                vote = voteRepository.findByAnnouncementIdAndMemberId(announcement,member).orElseThrow(NoSuchElementException::new);
+                vote = voteRepository.findByAnnouncementIdAndMemberId(announcement, member).orElseThrow(NoSuchElementException::new);
             }
             case COMMENT -> {
                 Comment comment = commentCommonService.getCommentEntity(postId);
-                vote = voteRepository.findByCommentIdAndMemberId(comment,member).orElseThrow(NoSuchElementException::new);
+                vote = voteRepository.findByCommentIdAndMemberId(comment, member).orElseThrow(NoSuchElementException::new);
             }
             //todo 민원, 소통
         }
-        if (vote!=null){
+        if (vote != null) {
             voteRepository.delete(vote);
             return new ResponseEntity<>(HttpStatus.OK);
         }

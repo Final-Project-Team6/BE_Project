@@ -4,7 +4,6 @@ import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
-import com.fastcampus.aptner.post.common.enumType.BoardType;
 import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.communication.domain.Communication;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
@@ -88,26 +87,26 @@ public class Comment extends BaseTimeEntity {
         this.parentId = parentId;
     }
 
-    public VoteDTO.VoteRespDTO aboutVote(JWTMemberInfoDTO request){
+    public VoteDTO.VoteRespDTO aboutVote(JWTMemberInfoDTO request) {
         int agreeCnt = getAgreeCount();
         int total = voteList.size();
-        return new VoteDTO.VoteRespDTO(total,agreeCnt,total-agreeCnt,yourVote(request));
+        return new VoteDTO.VoteRespDTO(total, agreeCnt, total - agreeCnt, yourVote(request));
     }
 
-    public int getAgreeCount(){
-        int cnt =0;
-        for(Vote v : voteList){
-            if (v.isOpinion()){
+    public int getAgreeCount() {
+        int cnt = 0;
+        for (Vote v : voteList) {
+            if (v.isOpinion()) {
                 cnt++;
             }
         }
         return cnt;
     }
 
-    public Boolean yourVote(JWTMemberInfoDTO request){
-        if (request==null)return null;
-        for(Vote v : voteList){
-            if (v.getMemberId().getMemberId().equals(request.getMemberId())){
+    public Boolean yourVote(JWTMemberInfoDTO request) {
+        if (request == null) return null;
+        for (Vote v : voteList) {
+            if (v.getMemberId().getMemberId().equals(request.getMemberId())) {
                 return v.isOpinion();
             }
         }

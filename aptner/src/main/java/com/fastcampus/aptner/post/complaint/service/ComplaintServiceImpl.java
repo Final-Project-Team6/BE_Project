@@ -71,8 +71,8 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Transactional
     public ResponseEntity<?> getComplaint(JWTMemberInfoDTO request, Long complaintId) {
         Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(NoSuchElementException::new);
-        if (complaint.isSecret()){
-            requestHasRole(request,complaint);
+        if (complaint.isSecret()) {
+            requestHasRole(request, complaint);
         }
         List<CommentDTO.ViewComments> comments = commentCommonService.getComments(complaintId, CommentType.COMPLAINT, request);
         ComplaintDTO.ComplaintRespDTO resp = new ComplaintDTO.ComplaintRespDTO(complaint, request, comments);
@@ -110,16 +110,16 @@ public class ComplaintServiceImpl implements ComplaintService {
         }
     }
 
-    private static void requestHasRole(JWTMemberInfoDTO userToken, Complaint complaint){
-        if (userToken==null){
+    private static void requestHasRole(JWTMemberInfoDTO userToken, Complaint complaint) {
+        if (userToken == null) {
             throw new RestAPIException(MUST_AUTHORIZE);
         }
-        if (userToken.getMemberId()!=complaint.getMemberId().getMemberId()){
+        if (userToken.getMemberId() != complaint.getMemberId().getMemberId()) {
             System.out.println(userToken.getRoleName());
-            if (userToken.getRoleName().equals("USER")){
+            if (userToken.getRoleName().equals("USER")) {
                 throw new RestAPIException(NOT_SAME_USER);
             }
-            if (userToken.getApartmentId()!=complaint.getComplaintCategoryId().getApartmentId().getApartmentId()){
+            if (userToken.getApartmentId() != complaint.getComplaintCategoryId().getApartmentId().getApartmentId()) {
                 throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
             }
         }

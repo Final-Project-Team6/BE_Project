@@ -1,7 +1,6 @@
 package com.fastcampus.aptner.post.announcement.controller.admin;
 
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
-import com.fastcampus.aptner.member.domain.RoleName;
 import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
 import com.fastcampus.aptner.post.announcement.service.admin.AnnouncementCategoryAdminService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,37 +18,40 @@ import org.springframework.web.bind.annotation.*;
 public class AnnouncementCategoryAdminController {
 
     private final AnnouncementCategoryAdminService announcementCategoryAdminService;
+
     @Operation(
             summary = "공지사항 카테고리 생성 API",
             description = "Schema -> 공지사항 카테고리 생성 \n\n apartmentId : 현재 사용중인 아파트 ID "
     )
-    @PostMapping(value ="/{apartmentId}")
+    @PostMapping(value = "/{apartmentId}")
     public ResponseEntity<HttpStatus> createAnnouncementCategory(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long apartmentId,
-            @RequestBody AnnouncementDTO.AnnouncementCategoryReqDTO dto){
-        return  announcementCategoryAdminService.createAnnouncementCategory(memberToken,apartmentId,dto);
+            @RequestBody AnnouncementDTO.AnnouncementCategoryReqDTO dto) {
+        return announcementCategoryAdminService.createAnnouncementCategory(memberToken, apartmentId, dto);
     }
+
     @Operation(
             summary = "공지사항 카테고리 수정 API",
             description = "Schema -> 공지사항 카테고리 수정 \n\n apartmentId : 현재 사용중인 아파트 ID\n\n announcementCategoryId : 수정하려는 공지사항 카테고리 ID"
     )
-    @PatchMapping(value ="/{announcementCategoryId}")
+    @PatchMapping(value = "/{announcementCategoryId}")
     public ResponseEntity<HttpStatus> updateAnnouncementCategory(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long announcementCategoryId,
-            @RequestBody AnnouncementDTO.AnnouncementCategoryReqDTO dto){
-        return  announcementCategoryAdminService.updateAnnouncementCategory(memberToken,announcementCategoryId,dto);
+            @RequestBody AnnouncementDTO.AnnouncementCategoryReqDTO dto) {
+        return announcementCategoryAdminService.updateAnnouncementCategory(memberToken, announcementCategoryId, dto);
     }
+
     @Operation(
             summary = "공지사항 카테고리 삭제 API",
             description = "apartmentId : 현재 사용중인 아파트 ID\n\n announcementId : 삭제하려는 공지사항 ID"
     )
-    @DeleteMapping(value ="/{announcementCategoryId}")
+    @DeleteMapping(value = "/{announcementCategoryId}")
     public ResponseEntity<HttpStatus> deleteAnnouncementCategory(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
-            @PathVariable Long announcementCategoryId){
-        return  announcementCategoryAdminService.deleteAnnouncementCategory(memberToken,announcementCategoryId);
+            @PathVariable Long announcementCategoryId) {
+        return announcementCategoryAdminService.deleteAnnouncementCategory(memberToken, announcementCategoryId);
     }
 
 }

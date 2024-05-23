@@ -27,10 +27,10 @@ public class AnnouncementCategory {
     private Apartment apartmentId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type",length = 10, nullable = false)
+    @Column(name = "type", length = 10, nullable = false)
     private AnnouncementType type;
 
-    @Column(name = "name",length = 20, nullable = false)
+    @Column(name = "name", length = 20, nullable = false)
     private String name;
 
     @JsonIgnore
@@ -44,14 +44,15 @@ public class AnnouncementCategory {
         this.name = name;
     }
 
-    public static AnnouncementCategory from(Apartment apartment, AnnouncementDTO.AnnouncementCategoryReqDTO dto){
+    public static AnnouncementCategory from(Apartment apartment, AnnouncementDTO.AnnouncementCategoryReqDTO dto) {
         return AnnouncementCategory.builder()
                 .apartmentId(apartment)
                 .type(dto.type())
                 .name(dto.name())
                 .build();
     }
-    public void updateCategory( AnnouncementDTO.AnnouncementCategoryReqDTO dto){
+
+    public void updateCategory(AnnouncementDTO.AnnouncementCategoryReqDTO dto) {
         this.name = dto.name();
         this.type = dto.type();
     }

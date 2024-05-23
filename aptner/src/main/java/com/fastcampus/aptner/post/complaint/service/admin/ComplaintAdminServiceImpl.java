@@ -19,6 +19,7 @@ import java.util.NoSuchElementException;
 public class ComplaintAdminServiceImpl implements ComplaintAdminService {
 
     private final ComplaintRepository complaintRepository;
+
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> updateComplaintStatus(JWTMemberInfoDTO token, Long complaintId, ComplaintStatus complaintStatus) {

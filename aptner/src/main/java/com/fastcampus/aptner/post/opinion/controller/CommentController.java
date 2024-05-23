@@ -29,8 +29,8 @@ public class CommentController {
     public ResponseEntity<?> getComments(
             @isLogin JWTMemberInfoDTO request,
             @PathVariable Long postId,
-            @RequestParam CommentType commentType){
-        return commentService.getCommentsResp(postId,commentType,request);
+            @RequestParam CommentType commentType) {
+        return commentService.getCommentsResp(postId, commentType, request);
     }
 
     @Operation(
@@ -42,8 +42,8 @@ public class CommentController {
     public ResponseEntity<HttpStatus> uploadComment(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long postId,
-            @RequestBody CommentDTO.UploadCommentReqDTO dto){
-        return commentService.uploadComment(memberToken,postId,dto);
+            @RequestBody CommentDTO.UploadCommentReqDTO dto) {
+        return commentService.uploadComment(memberToken, postId, dto);
     }
 
     @Operation(
@@ -55,8 +55,8 @@ public class CommentController {
     public ResponseEntity<HttpStatus> updateComment(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long commentId,
-            @RequestBody CommentDTO.UpdateComment contents){
-        return commentService.updateComment(memberToken,commentId,contents.contents());
+            @RequestBody CommentDTO.UpdateComment contents) {
+        return commentService.updateComment(memberToken, commentId, contents.contents());
     }
 
     @Operation(
@@ -66,7 +66,7 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<HttpStatus> deleteComment(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
-            @PathVariable Long commentId){
-        return commentService.deleteComment(memberToken,commentId);
+            @PathVariable Long commentId) {
+        return commentService.deleteComment(memberToken, commentId);
     }
 }

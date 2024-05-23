@@ -1,7 +1,6 @@
 package com.fastcampus.aptner.post.complaint.controller;
 
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
-import com.fastcampus.aptner.member.domain.RoleName;
 import com.fastcampus.aptner.post.complaint.dto.ComplaintDTO;
 import com.fastcampus.aptner.post.complaint.service.admin.ComplaintCategoryAdminService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,9 +28,10 @@ public class ComplaintCategoryAdminController {
     public ResponseEntity<HttpStatus> createComplaintCategory(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long apartmentId,
-            @RequestBody ComplaintDTO.ComplaintCategoryReqDTO dto){
-        return complaintCategoryAdminService.createComplaintCategory(memberToken,apartmentId,dto);
+            @RequestBody ComplaintDTO.ComplaintCategoryReqDTO dto) {
+        return complaintCategoryAdminService.createComplaintCategory(memberToken, apartmentId, dto);
     }
+
     @Operation(
             summary = "민원 카테고리 수정 API",
             description = "Schema -> 민원 카테고리 생성 \n\n" +
@@ -41,9 +41,10 @@ public class ComplaintCategoryAdminController {
     public ResponseEntity<HttpStatus> updateComplaintCategory(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long complaintCategoryId,
-            @RequestBody ComplaintDTO.ComplaintCategoryReqDTO dto){
-        return complaintCategoryAdminService.updateComplaintCategory(memberToken,complaintCategoryId,dto);
+            @RequestBody ComplaintDTO.ComplaintCategoryReqDTO dto) {
+        return complaintCategoryAdminService.updateComplaintCategory(memberToken, complaintCategoryId, dto);
     }
+
     @Operation(
             summary = "민원 카테고리 삭제 API",
             description = "complaintCategoryId : 삭제 하려는 민원 카테고리 ID "
@@ -51,8 +52,8 @@ public class ComplaintCategoryAdminController {
     @DeleteMapping("/{complaintCategoryId}")
     public ResponseEntity<HttpStatus> deleteComplaintCategory(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
-            @PathVariable Long complaintCategoryId){
-        return complaintCategoryAdminService.deleteComplaintCategory(memberToken,complaintCategoryId);
+            @PathVariable Long complaintCategoryId) {
+        return complaintCategoryAdminService.deleteComplaintCategory(memberToken, complaintCategoryId);
     }
 
 }
