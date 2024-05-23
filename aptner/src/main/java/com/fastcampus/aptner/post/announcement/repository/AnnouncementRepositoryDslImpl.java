@@ -6,6 +6,7 @@ import com.fastcampus.aptner.post.announcement.domain.AnnouncementType;
 import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
 import com.fastcampus.aptner.post.common.enumType.OrderBy;
 import com.fastcampus.aptner.post.common.enumType.OrderType;
+import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.common.enumType.SearchType;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -44,7 +45,8 @@ public class AnnouncementRepositoryDslImpl extends QuerydslRepositorySupport imp
                         searchByKeyword(reqDTO.getKeyword(),reqDTO.getSearchType()),
                         targetType(reqDTO.getAnnouncementType()),
                         targetCategory(reqDTO.getCategoryId()),
-                        importantAnnouncement(reqDTO.getImportant())
+                        importantAnnouncement(reqDTO.getImportant()),
+                        isPublished()
                 )
                 .orderBy(sort(reqDTO));
         List<Announcement> announcementList = this.getQuerydsl().applyPagination(reqDTO.getPageable(),query).fetch();
@@ -131,7 +133,7 @@ public class AnnouncementRepositoryDslImpl extends QuerydslRepositorySupport imp
         return announcement.contents.contains(keyword);
     }
     private BooleanExpression titleContainsKeyword(String keyword){
-       return announcement.title.contains(keyword);
+        return announcement.title.contains(keyword);
     }
 
     private BooleanExpression targetCategory(Long categoryId){
@@ -156,6 +158,10 @@ public class AnnouncementRepositoryDslImpl extends QuerydslRepositorySupport imp
         } else {
             return announcement.important.eq(0);
         }
+    }
+
+    private BooleanExpression isPublished(){
+        return announcement.status.eq(PostStatus.PUBLISHED);
     }
 
 

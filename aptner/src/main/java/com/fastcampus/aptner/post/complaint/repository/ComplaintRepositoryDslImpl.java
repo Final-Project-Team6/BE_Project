@@ -4,6 +4,7 @@ import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.post.announcement.domain.AnnouncementType;
 import com.fastcampus.aptner.post.common.enumType.OrderBy;
 import com.fastcampus.aptner.post.common.enumType.OrderType;
+import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.common.enumType.SearchType;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import com.fastcampus.aptner.post.complaint.domain.ComplaintType;
@@ -45,12 +46,13 @@ public class ComplaintRepositoryDslImpl extends QuerydslRepositorySupport implem
                 .leftJoin(complaint.voteList,vote)
                 .groupBy(complaint.complaintId)
                 .where(searchByKeyword(reqDTO.getKeyword(),
-                        reqDTO.getSearchType()),
+                                reqDTO.getSearchType()),
                         chooseApartment(reqDTO.getApartmentId()),
                         targetCategory(reqDTO.getCategoryId()),
                         targetType(reqDTO.getComplaintType()),
                         aboutSecretComplaint(memberToken),
-                        onlyMyComplaint(memberToken,reqDTO.getMyComplaint())
+                        onlyMyComplaint(memberToken,reqDTO.getMyComplaint()),
+                        isPublished()
                 )
                 .orderBy(sort(reqDTO.getOrderType(),reqDTO.getOrderBy()));
         List<Complaint> complaintList = this.getQuerydsl().applyPagination(reqDTO.getPageable(),query).fetch();
@@ -165,5 +167,9 @@ public class ComplaintRepositoryDslImpl extends QuerydslRepositorySupport implem
         if (myComplaint){
             return complaint.memberId.memberId.eq(memberToken.getMemberId());
         }else return null;
+    }
+
+    private BooleanExpression isPublished(){
+        return complaint.status.eq(PostStatus.PUBLISHED);
     }
 }
