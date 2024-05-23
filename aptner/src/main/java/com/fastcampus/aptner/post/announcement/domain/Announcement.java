@@ -1,13 +1,12 @@
 package com.fastcampus.aptner.post.announcement.domain;
 
-import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
+import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.opinion.domain.Comment;
 import com.fastcampus.aptner.post.opinion.domain.Vote;
-import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.opinion.dto.VoteDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,7 +38,7 @@ public class Announcement extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member memberId;
 
-    @Column(name = "title", length = 255 , nullable = false)
+    @Column(name = "title", length = 255, nullable = false)
     private String title;
 
     @Column(name = "contents", columnDefinition = "TEXT", nullable = false)
@@ -68,6 +67,7 @@ public class Announcement extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "announcementId", fetch = FetchType.LAZY)
     private List<Vote> voteList = new ArrayList<>();
+
     @Builder
     public Announcement(AnnouncementCategory announcementCategoryId, Member memberId, String title, String contents, PostStatus status, Long view, Integer important) {
         this.announcementCategoryId = announcementCategoryId;
@@ -80,7 +80,7 @@ public class Announcement extends BaseTimeEntity {
     }
 
 
-    public static Announcement from(Member member,AnnouncementCategory announcementCategory, AnnouncementDTO.AnnouncementPostReqDTO dto){
+    public static Announcement from(Member member, AnnouncementCategory announcementCategory, AnnouncementDTO.AnnouncementPostReqDTO dto) {
         return Announcement.builder()
                 .announcementCategoryId(announcementCategory)
                 .memberId(member)
@@ -92,7 +92,7 @@ public class Announcement extends BaseTimeEntity {
                 .build();
     }
 
-    public void updateAnnouncement(AnnouncementCategory announcementCategory,AnnouncementDTO.AnnouncementPostReqDTO dto){
+    public void updateAnnouncement(AnnouncementCategory announcementCategory, AnnouncementDTO.AnnouncementPostReqDTO dto) {
         this.title = dto.title();
         this.contents = dto.contents();
         this.important = dto.important();
@@ -100,43 +100,47 @@ public class Announcement extends BaseTimeEntity {
         this.status = dto.status();
     }
 
-    public void deleteAnnouncement(){
+    public void deleteAnnouncement() {
         this.status = PostStatus.DELETED;
     }
-    public void hideAnnouncement(){this.status = PostStatus.HIDDEN;}
 
-    public VoteDTO.VoteRespDTO aboutVote(JWTMemberInfoDTO request){
-        int agreeCnt = getAgreeCount();
-        int total = voteList.size();
-        return new VoteDTO.VoteRespDTO(total,agreeCnt,total-agreeCnt,yourVote(request));
-    }
-    public VoteDTO.VoteRespDTO aboutVoteWithoutMember(){
-        int agreeCnt = getAgreeCount();
-        int total = voteList.size();
-        return new VoteDTO.VoteRespDTO(total,agreeCnt,total-agreeCnt,null);
+    public void hideAnnouncement() {
+        this.status = PostStatus.HIDDEN;
     }
 
-    public int getAgreeCount(){
-        int cnt =0;
-        for(Vote v : voteList){
-            if (v.isOpinion()){
+    public VoteDTO.VoteRespDTO aboutVote(JWTMemberInfoDTO request) {
+        int agreeCnt = getAgreeCount();
+        int total = voteList.size();
+        return new VoteDTO.VoteRespDTO(total, agreeCnt, total - agreeCnt, yourVote(request));
+    }
+
+    public VoteDTO.VoteRespDTO aboutVoteWithoutMember() {
+        int agreeCnt = getAgreeCount();
+        int total = voteList.size();
+        return new VoteDTO.VoteRespDTO(total, agreeCnt, total - agreeCnt, null);
+    }
+
+    public int getAgreeCount() {
+        int cnt = 0;
+        for (Vote v : voteList) {
+            if (v.isOpinion()) {
                 cnt++;
             }
         }
         return cnt;
     }
 
-    public Boolean yourVote(JWTMemberInfoDTO request){
-        if (request==null) return null;
-        for(Vote v : voteList){
-            if (Objects.equals(v.getMemberId().getMemberId(), request.getMemberId())){
+    public Boolean yourVote(JWTMemberInfoDTO request) {
+        if (request == null) return null;
+        for (Vote v : voteList) {
+            if (Objects.equals(v.getMemberId().getMemberId(), request.getMemberId())) {
                 return v.isOpinion();
             }
         }
         return null;
     }
 
-    public void addViewCount(){
+    public void addViewCount() {
         this.view++;
     }
 }

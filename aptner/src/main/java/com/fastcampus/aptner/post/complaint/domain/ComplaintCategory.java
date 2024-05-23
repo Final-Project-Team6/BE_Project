@@ -1,10 +1,6 @@
 package com.fastcampus.aptner.post.complaint.domain;
 
 import com.fastcampus.aptner.apartment.domain.Apartment;
-import com.fastcampus.aptner.member.domain.Member;
-import com.fastcampus.aptner.post.announcement.domain.Announcement;
-import com.fastcampus.aptner.post.announcement.domain.AnnouncementCategory;
-import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
 import com.fastcampus.aptner.post.complaint.dto.ComplaintDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -31,15 +27,16 @@ public class ComplaintCategory {
     private Apartment apartmentId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type",length = 10, nullable = false)
+    @Column(name = "type", length = 10, nullable = false)
     private ComplaintType type;
 
-    @Column(name = "name",length = 20, nullable = false)
+    @Column(name = "name", length = 20, nullable = false)
     private String name;
 
     @JsonIgnore
     @OneToMany(mappedBy = "complaintCategoryId")
     private List<Complaint> complaintList = new ArrayList<>();
+
     @Builder
     public ComplaintCategory(Apartment apartmentId, ComplaintType type, String name) {
         this.apartmentId = apartmentId;
@@ -47,7 +44,7 @@ public class ComplaintCategory {
         this.name = name;
     }
 
-    public static ComplaintCategory from(ComplaintDTO.ComplaintCategoryReqDTO dto, Apartment apartment){
+    public static ComplaintCategory from(ComplaintDTO.ComplaintCategoryReqDTO dto, Apartment apartment) {
         return ComplaintCategory.builder()
                 .apartmentId(apartment)
                 .type(dto.type())
@@ -55,7 +52,7 @@ public class ComplaintCategory {
                 .build();
     }
 
-    public void updateComplaintCategory(ComplaintDTO.ComplaintCategoryReqDTO dto){
+    public void updateComplaintCategory(ComplaintDTO.ComplaintCategoryReqDTO dto) {
         this.name = dto.name();
         this.type = dto.type();
     }

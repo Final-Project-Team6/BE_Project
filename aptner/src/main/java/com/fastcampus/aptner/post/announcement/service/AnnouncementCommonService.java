@@ -9,7 +9,9 @@ import java.util.List;
 public interface AnnouncementCommonService {
 
     AnnouncementCategory getAnnouncementCategory(Long announcementCategoryId);
+
     List<AnnouncementCategory> getAnnouncementCategoryEntityList(Apartment apartment);
+
     Announcement getAnnouncementEntity(Long announcementId);
 
 }

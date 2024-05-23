@@ -2,10 +2,6 @@ package com.fastcampus.aptner.post.complaint.controller;
 
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.jwt.util.isLogin;
-import com.fastcampus.aptner.member.domain.RoleName;
-import com.fastcampus.aptner.post.announcement.domain.AnnouncementType;
-import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
-import com.fastcampus.aptner.post.common.dto.PageResponseDTO;
 import com.fastcampus.aptner.post.common.enumType.OrderBy;
 import com.fastcampus.aptner.post.common.enumType.OrderType;
 import com.fastcampus.aptner.post.common.enumType.SearchType;
@@ -32,12 +28,12 @@ public class ComplaintController {
             summary = "민원 생성 API",
             description = "Schema -> 민원 생성 \n\n apartmentId : 현재 사용중인 아파트 ID "
     )
-    @PostMapping(value ="/{apartmentId}")
+    @PostMapping(value = "/{apartmentId}")
     public ResponseEntity<HttpStatus> uploadComplaint(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long apartmentId,
-            @RequestBody ComplaintDTO.ComplaintReqDTO dto){
-        return  complaintService.uploadComplaint(memberToken,apartmentId,dto);
+            @RequestBody ComplaintDTO.ComplaintReqDTO dto) {
+        return complaintService.uploadComplaint(memberToken, apartmentId, dto);
     }
 
     @Operation(
@@ -48,8 +44,8 @@ public class ComplaintController {
     public ResponseEntity<HttpStatus> updateComplaint(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long complaintId,
-            @RequestBody ComplaintDTO.ComplaintReqDTO dto){
-        return  complaintService.updateComplaint(memberToken,complaintId,dto);
+            @RequestBody ComplaintDTO.ComplaintReqDTO dto) {
+        return complaintService.updateComplaint(memberToken, complaintId, dto);
     }
 
     @Operation(
@@ -59,9 +55,10 @@ public class ComplaintController {
     @DeleteMapping(value = "/{complaintId}")
     public ResponseEntity<HttpStatus> deleteComplaint(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
-            @PathVariable Long complaintId){
-        return complaintService.deleteComplaint(memberToken,complaintId);
+            @PathVariable Long complaintId) {
+        return complaintService.deleteComplaint(memberToken, complaintId);
     }
+
     @Operation(
             summary = "민원 조회 API",
             description = "complaintId : 조회하려는 민원 ID"
@@ -69,9 +66,10 @@ public class ComplaintController {
     @GetMapping("/{complaintId}")
     public ResponseEntity<?> getComplaint(
             @isLogin JWTMemberInfoDTO request,
-            @PathVariable Long complaintId){
-        return complaintService.getComplaint(request,complaintId);
+            @PathVariable Long complaintId) {
+        return complaintService.getComplaint(request, complaintId);
     }
+
     @Operation(
             summary = "민원 목록 조회 API",
             description = "apartmentId : 현재 사용중인 아파트 ID \n\n" +
@@ -98,7 +96,7 @@ public class ComplaintController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) ComplaintType complaintType,
             @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) Boolean myComplaint){
+            @RequestParam(required = false) Boolean myComplaint) {
         ComplaintDTO.ComplaintSearchReqDTO reqDTO = ComplaintDTO.ComplaintSearchReqDTO.builder()
                 .pageNumber(pageNumber)
                 .pageSize(pageSize)
@@ -111,7 +109,7 @@ public class ComplaintController {
                 .categoryId(categoryId)
                 .myComplaint(myComplaint)
                 .build();
-        return complaintService.searchComplaint(reqDTO,memberToken);
+        return complaintService.searchComplaint(reqDTO, memberToken);
     }
 
 }

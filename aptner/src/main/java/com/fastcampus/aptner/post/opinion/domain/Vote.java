@@ -2,7 +2,6 @@ package com.fastcampus.aptner.post.opinion.domain;
 
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
-import com.fastcampus.aptner.post.common.enumType.BoardType;
 import com.fastcampus.aptner.post.communication.domain.Communication;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import jakarta.persistence.*;
