@@ -108,10 +108,10 @@ public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
     }
 
     private UserAndAPT getUserAndAPT(JWTMemberInfoDTO userToken, Long apartmentId){
-        Member member = memberCommonService.getUserByToken(userToken);
         if (!Objects.equals(userToken.getApartmentId(), apartmentId)){
             throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
         }
+        Member member = memberCommonService.getUserByToken(userToken);
         Apartment apartment = apartmentCommonService.getApartmentById(apartmentId);
         return new UserAndAPT(member, apartment);
     }
