@@ -1,5 +1,6 @@
 package com.fastcampus.aptner.member.controller;
 
+import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.apartment.service.FindApartmentService;
 import com.fastcampus.aptner.jwt.domain.TokenStorage;
 import com.fastcampus.aptner.jwt.service.RefreshTokenService;
@@ -37,7 +38,7 @@ public class LoginMemberController {
             summary = "회원 로그인 API",
             description = "username: 회원 아이디(필수)\n\n" +
                     "password: 회원 비밀번호(필수)\n\n" +
-                    "apartmentName: 회원 아파트 이름(필수)"
+                    "apartmentId: 회원 아파트 이름(필수)\n\n"
     )
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginMemberRequest request, BindingResult bindingResult) {
@@ -52,12 +53,12 @@ public class LoginMemberController {
         }
 
         // 회원 아이디, 아파트로 권한 찾기
-        Long apartmentId = apartmentService.findApartmentByName(request.getApartmentName()).getApartmentId();
-        String memberRole = memberRoleService.getMemberRole(member.getMemberId(), apartmentService.findApartmentByName(request.getApartmentName()).getApartmentId()).toString();
+        Apartment apartment = apartmentService.findApartmentById(request.getApartmentId());
+        String memberRole = memberRoleService.getMemberRole(member.getMemberId(), apartmentService.findApartmentByName(apartment.getName()).getApartmentId()).toString();
 
         // JWT 토큰 생성하는 시점.
-        String accessToken = jwtTokenizer.createAccessToken(member.getMemberId(), member.getUsername(), memberRole, request.getApartmentName(), apartmentId);
-        String refreshToken = jwtTokenizer.createRefreshToken(member.getMemberId(), member.getUsername(), memberRole, request.getApartmentName(), apartmentId);
+        String accessToken = jwtTokenizer.createAccessToken(member.getMemberId(), member.getUsername(), memberRole, apartment.getName(), apartment.getApartmentId());
+        String refreshToken = jwtTokenizer.createRefreshToken(member.getMemberId(), member.getUsername(), memberRole, apartment.getName(), apartment.getApartmentId());
 
         // TODO: RefreshToken 을 MySQL 에 저장. -> Redis 으로 저장 필요하다.
         TokenStorage refreshTokenEntity = TokenStorage.builder()

@@ -1,9 +1,9 @@
 package com.fastcampus.aptner.post.complaint.service;
 
 import com.fastcampus.aptner.apartment.domain.Apartment;
+import com.fastcampus.aptner.apartment.service.ApartmentCommonService;
 import com.fastcampus.aptner.post.complaint.dto.ComplaintDTO;
 import com.fastcampus.aptner.post.complaint.repository.ComplaintCategoryRepository;
-import com.fastcampus.aptner.apartment.service.ApartmentCommonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +19,7 @@ public class ComplaintCategoryServiceImpl implements ComplaintCategoryService {
 
     private final ComplaintCategoryRepository complaintCategoryRepository;
     private final ApartmentCommonService apartmentCommonService;
+
     @Override
     public ResponseEntity<?> getComplaintCategoryList(Long apartmentId) {
         Apartment apartment = apartmentCommonService.getApartmentById(apartmentId);

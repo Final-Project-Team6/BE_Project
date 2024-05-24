@@ -1,7 +1,6 @@
 package com.fastcampus.aptner.post.complaint.controller;
 
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
-import com.fastcampus.aptner.member.domain.RoleName;
 import com.fastcampus.aptner.post.complaint.domain.ComplaintStatus;
 import com.fastcampus.aptner.post.complaint.service.admin.ComplaintAdminService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +28,7 @@ public class ComplaintAdminController {
     public ResponseEntity<HttpStatus> updateComplaintStatus(
             @AuthenticationPrincipal JWTMemberInfoDTO token,
             @PathVariable Long complaintId,
-            @RequestParam ComplaintStatus complaintStatus){
-        return complaintAdminService.updateComplaintStatus(token,complaintId,complaintStatus);
+            @RequestParam ComplaintStatus complaintStatus) {
+        return complaintAdminService.updateComplaintStatus(token, complaintId, complaintStatus);
     }
 }

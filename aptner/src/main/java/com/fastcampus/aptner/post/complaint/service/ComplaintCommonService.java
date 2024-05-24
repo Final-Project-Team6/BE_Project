@@ -6,5 +6,6 @@ import com.fastcampus.aptner.post.complaint.domain.ComplaintCategory;
 public interface ComplaintCommonService {
 
     Complaint getComplaintEntity(Long complaintId);
+
     ComplaintCategory getComplaintCategoryEntity(Long complaintCategoryId);
 }

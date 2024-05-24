@@ -1,10 +1,10 @@
 package com.fastcampus.aptner.post.announcement.service;
 
 import com.fastcampus.aptner.apartment.domain.Apartment;
+import com.fastcampus.aptner.apartment.service.ApartmentCommonService;
 import com.fastcampus.aptner.post.announcement.domain.AnnouncementCategory;
 import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
 import com.fastcampus.aptner.post.announcement.repository.AnnouncementCategoryRepository;
-import com.fastcampus.aptner.apartment.service.ApartmentCommonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

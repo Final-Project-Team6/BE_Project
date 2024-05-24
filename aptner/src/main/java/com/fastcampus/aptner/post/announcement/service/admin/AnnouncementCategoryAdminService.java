@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 
 public interface AnnouncementCategoryAdminService {
 
-    ResponseEntity<HttpStatus> createAnnouncementCategory(JWTMemberInfoDTO userToken , Long apartmentId, AnnouncementDTO.AnnouncementCategoryReqDTO dto);
-    ResponseEntity<HttpStatus> updateAnnouncementCategory(JWTMemberInfoDTO userToken ,Long announcementCategoryId, AnnouncementDTO.AnnouncementCategoryReqDTO dto);
-    ResponseEntity<HttpStatus> deleteAnnouncementCategory(JWTMemberInfoDTO userToken , Long announcementCategoryId);
+    ResponseEntity<HttpStatus> createAnnouncementCategory(JWTMemberInfoDTO userToken, Long apartmentId, AnnouncementDTO.AnnouncementCategoryReqDTO dto);
+
+    ResponseEntity<HttpStatus> updateAnnouncementCategory(JWTMemberInfoDTO userToken, Long announcementCategoryId, AnnouncementDTO.AnnouncementCategoryReqDTO dto);
+
+    ResponseEntity<HttpStatus> deleteAnnouncementCategory(JWTMemberInfoDTO userToken, Long announcementCategoryId);
 }

@@ -18,12 +18,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Pageable;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class ComplaintDTO {
 
-    @Schema(name = "민원 카테고리 생성",description = "민원 카테고리 생성 요청 Body")
+    @Schema(name = "민원 카테고리 생성", description = "민원 카테고리 생성 요청 Body")
     public record ComplaintCategoryReqDTO(
             @Schema(description = "민원 카테고리 이름")
             String name,
@@ -31,16 +32,18 @@ public class ComplaintDTO {
                     "    RESIDENTS_COMMITTEE(입주자 대표회의)")
             ComplaintType type) {
     }
-    @Schema(name = "민원 카테고리 응답",description = "민원 카테고리 응답값")
+
+    @Schema(name = "민원 카테고리 응답", description = "민원 카테고리 응답값")
     public record ComplaintCategoryRespDTO(
             Long complaintCategory,
             String name,
-            ComplaintType type){
-        public ComplaintCategoryRespDTO(ComplaintCategory complaintCategory){
-            this(complaintCategory.getComplaintCategoryId(),complaintCategory.getName(),complaintCategory.getType());
+            ComplaintType type) {
+        public ComplaintCategoryRespDTO(ComplaintCategory complaintCategory) {
+            this(complaintCategory.getComplaintCategoryId(), complaintCategory.getName(), complaintCategory.getType());
         }
     }
-    @Schema(name = "민원 생성",description = "민원 생성 요청 Body")
+
+    @Schema(name = "민원 생성", description = "민원 생성 요청 Body")
     public record ComplaintReqDTO(
             @Schema(description = "민원 카테고리 ID")
             Long complaintCategoryId,
@@ -49,7 +52,8 @@ public class ComplaintDTO {
             @Schema(description = "민원 내용")
             String contents,
             @Schema(description = "비밀글 여부")
-            boolean secret){}
+            boolean secret) {
+    }
 
     @AllArgsConstructor
     @Getter
@@ -74,7 +78,7 @@ public class ComplaintDTO {
             VoteDTO.VoteRespDTO voteRespDTO = complaint.aboutVote(request);
             this.complaintId = complaint.getComplaintId();
             this.complaintCategoryRespDTO = new ComplaintDTO.ComplaintCategoryRespDTO(complaint.getComplaintCategoryId());
-            this.complaintStatus =complaint.getComplaintStatus();
+            this.complaintStatus = complaint.getComplaintStatus();
             this.writer = new PostMemberResponse(complaint.getMemberId());
             this.title = complaint.getTitle();
             this.createdAt = complaint.getCreatedAt();
@@ -107,7 +111,7 @@ public class ComplaintDTO {
             VoteDTO.VoteRespDTO voteRespDTO = complaint.aboutVoteWithoutMember();
             this.complaintId = complaint.getComplaintId();
             this.complaintCategoryRespDTO = new ComplaintDTO.ComplaintCategoryRespDTO(complaint.getComplaintCategoryId());
-            this.complaintStatus =complaint.getComplaintStatus();
+            this.complaintStatus = complaint.getComplaintStatus();
             this.writer = new PostMemberResponse(complaint.getMemberId());
             this.title = complaint.getTitle();
             this.createdAt = complaint.getCreatedAt();
@@ -121,7 +125,7 @@ public class ComplaintDTO {
     @Builder
     @Getter
     @Setter
-    public static class ComplaintSearchReqDTO{
+    public static class ComplaintSearchReqDTO {
         private int pageNumber;
         private int pageSize;
         private Pageable pageable;

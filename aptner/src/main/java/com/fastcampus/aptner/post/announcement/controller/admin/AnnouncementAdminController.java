@@ -1,11 +1,9 @@
 package com.fastcampus.aptner.post.announcement.controller.admin;
 
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
-import com.fastcampus.aptner.member.domain.RoleName;
 import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
 import com.fastcampus.aptner.post.announcement.service.admin.AnnouncementAdminService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,12 +22,12 @@ public class AnnouncementAdminController {
             summary = "공지사항 생성 API",
             description = "Schema -> 공지사항 생성 \n\n apartmentId : 현재 사용중인 아파트 ID "
     )
-    @PostMapping(value ="/{apartmentId}")
+    @PostMapping(value = "/{apartmentId}")
     public ResponseEntity<HttpStatus> uploadAnnouncement(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long apartmentId,
-            @RequestBody AnnouncementDTO.AnnouncementPostReqDTO dto){
-        return  announcementService.uploadAnnouncement(memberToken,apartmentId,dto);
+            @RequestBody AnnouncementDTO.AnnouncementPostReqDTO dto) {
+        return announcementService.uploadAnnouncement(memberToken, apartmentId, dto);
     }
 
     @Operation(
@@ -40,9 +38,10 @@ public class AnnouncementAdminController {
     public ResponseEntity<HttpStatus> updateAnnouncement(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long announcementId,
-            @RequestBody AnnouncementDTO.AnnouncementPostReqDTO dto){
-        return  announcementService.updateAnnouncement(memberToken,announcementId,dto);
+            @RequestBody AnnouncementDTO.AnnouncementPostReqDTO dto) {
+        return announcementService.updateAnnouncement(memberToken, announcementId, dto);
     }
+
     @Operation(
             summary = "공지사항 삭제 API",
             description = "apartmentId : 현재 사용중인 아파트 ID\n\n announcementId : 삭제하려는 공지사항 ID"
@@ -50,9 +49,10 @@ public class AnnouncementAdminController {
     @DeleteMapping(value = "/{announcementId}")
     public ResponseEntity<HttpStatus> deleteAnnouncement(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
-            @PathVariable Long announcementId){
-        return announcementService.deleteAnnouncement(memberToken,announcementId);
+            @PathVariable Long announcementId) {
+        return announcementService.deleteAnnouncement(memberToken, announcementId);
     }
+
     @Operation(
             summary = "공지사항 숨기기 API",
             description = "apartmentId : 현재 사용중인 아파트 ID\n\n announcementId : 숨기려는 공지사항 ID"
@@ -60,8 +60,8 @@ public class AnnouncementAdminController {
     @PatchMapping(value = "/hide/{announcementId}")
     public ResponseEntity<HttpStatus> hideAnnouncement(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
-            @PathVariable Long announcementId){
-        return announcementService.hideAnnouncement(memberToken,announcementId);
+            @PathVariable Long announcementId) {
+        return announcementService.hideAnnouncement(memberToken, announcementId);
     }
 
 }

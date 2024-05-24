@@ -10,15 +10,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface VoteRepository extends JpaRepository<Vote,Long> {
+public interface VoteRepository extends JpaRepository<Vote, Long> {
     Optional<Vote> findByAnnouncementIdAndMemberId(Announcement announcement, Member member);
-    Optional<Vote> findByComplaintIdAndMemberId(Complaint complaint,Member member);
+
+    Optional<Vote> findByComplaintIdAndMemberId(Complaint complaint, Member member);
+
     Optional<Vote> findByCommunicationIdAndMemberId(Communication communication, Member member);
-    Optional<Vote> findByCommentIdAndMemberId(Comment comment,Member member);
+
+    Optional<Vote> findByCommentIdAndMemberId(Comment comment, Member member);
 
 
-    Boolean existsByAnnouncementIdAndMemberId(Announcement announcement,Member member);
+    Boolean existsByAnnouncementIdAndMemberId(Announcement announcement, Member member);
+
     Boolean existsByComplaintIdAndMemberId(Complaint complaint, Member member);
+
     Boolean existsByCommunicationIdAndMemberId(Communication communication, Member member);
-    Boolean existsByCommentIdAndMemberId(Comment comment,Member member);
+
+    Boolean existsByCommentIdAndMemberId(Comment comment, Member member);
 }

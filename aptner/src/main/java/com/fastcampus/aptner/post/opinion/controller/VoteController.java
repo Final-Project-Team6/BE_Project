@@ -30,8 +30,8 @@ public class VoteController {
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long postId,
             @RequestParam VoteType voteType,
-            @RequestParam Boolean opinion){
-        return voteService.voteToPost(memberToken,postId,voteType,opinion);
+            @RequestParam Boolean opinion) {
+        return voteService.voteToPost(memberToken, postId, voteType, opinion);
     }
 
     @Operation(
@@ -43,7 +43,7 @@ public class VoteController {
     public ResponseEntity<HttpStatus> deleteVote(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long postId,
-            @RequestParam VoteType voteType){
-        return voteService.deleteVote(memberToken,postId,voteType);
+            @RequestParam VoteType voteType) {
+        return voteService.deleteVote(memberToken, postId, voteType);
     }
 }

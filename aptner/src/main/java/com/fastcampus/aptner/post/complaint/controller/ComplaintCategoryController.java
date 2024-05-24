@@ -17,13 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class ComplaintCategoryController {
 
     private final ComplaintCategoryService complaintCategoryService;
+
     @Operation(
             summary = "민원 카테고리 조회 API",
             description = "apartmentId : 현재 사용중인 아파트 ID "
     )
     @GetMapping("{apartmentId}")
     public ResponseEntity<?> getComplaintCategoryList(
-            @PathVariable Long apartmentId){
+            @PathVariable Long apartmentId) {
         return complaintCategoryService.getComplaintCategoryList(apartmentId);
     }
 }

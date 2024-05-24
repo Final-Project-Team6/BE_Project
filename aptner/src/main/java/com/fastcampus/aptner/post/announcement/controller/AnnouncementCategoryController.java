@@ -19,13 +19,14 @@ import java.util.List;
 @Tag(name = "공지사항 카테고리(사용자)", description = "공지사항 카테고리 조회")
 public class AnnouncementCategoryController {
     private final AnnouncementCategoryService announcementCategoryService;
+
     @Operation(
             summary = "공지사항 카테고리 조회 API",
             description = "apartmentId : 현재 사용중인 아파트 ID "
     )
     @GetMapping("/{apartmentId}")
     public ResponseEntity<List<AnnouncementDTO.AnnouncementCategoryRespDTO>> getAnnouncementCategoryList(
-            @PathVariable Long apartmentId){
+            @PathVariable Long apartmentId) {
         return announcementCategoryService.getAnnouncementCategoryList(apartmentId);
     }
 }
