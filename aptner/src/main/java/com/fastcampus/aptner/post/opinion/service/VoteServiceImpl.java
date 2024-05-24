@@ -41,6 +41,9 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public ResponseEntity<HttpStatus> voteToPost(JWTMemberInfoDTO token, Long postId, VoteType voteType, Boolean opinion) {
         Member member = memberCommonService.getUserByToken(token);
+        if (opinion==null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         Vote vote = null;
         switch (voteType) {
             case ANNOUNCEMENT -> {
