@@ -6,6 +6,8 @@ import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.member.service.MemberCommonService;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.service.AnnouncementCommonService;
+import com.fastcampus.aptner.post.communication.domain.Communication;
+import com.fastcampus.aptner.post.communication.service.CommunicationCommonService;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import com.fastcampus.aptner.post.complaint.service.ComplaintCommonService;
 import com.fastcampus.aptner.post.opinion.domain.Comment;
@@ -34,6 +36,7 @@ public class VoteServiceImpl implements VoteService {
     private final AnnouncementCommonService announcementCommonService;
     private final CommentCommonService commentCommonService;
     private final ComplaintCommonService complaintCommonService;
+    private final CommunicationCommonService communicationCommonService;
 
     @Override
     public ResponseEntity<HttpStatus> voteToPost(JWTMemberInfoDTO token, Long postId, VoteType voteType, Boolean opinion) {
@@ -73,7 +76,17 @@ public class VoteServiceImpl implements VoteService {
                         .complaintId(complaint)
                         .build();
             }
-            //todo 소통
+            case COMMUNICATION -> {
+                Communication communication = communicationCommonService.getCommunicationEntity(postId);
+                if (voteRepository.existsByCommunicationIdAndMemberId(communication,member)){
+                    throw new RestAPIException(ALREADY_EXiSTS);
+                }
+                vote = Vote.builder()
+                        .opinion(opinion)
+                        .memberId(member)
+                        .communicationId(communication)
+                        .build();
+            }
         }
         if (vote != null) {
             voteRepository.save(vote);
@@ -100,7 +113,10 @@ public class VoteServiceImpl implements VoteService {
                 Complaint complaint = complaintCommonService.getComplaintEntity(postId);
                 vote = voteRepository.findByComplaintIdAndMemberId(complaint,member).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
             }
-            //todo 소통
+            case COMMUNICATION -> {
+                Communication communication = communicationCommonService.getCommunicationEntity(postId);
+                vote = voteRepository.findByCommunicationIdAndMemberId(communication,member).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+            }
         }
         if (vote != null) {
             voteRepository.delete(vote);
