@@ -38,7 +38,7 @@ public class LoginMemberController {
             summary = "회원 로그인 API",
             description = "username: 회원 아이디(필수)\n\n" +
                     "password: 회원 비밀번호(필수)\n\n" +
-                    "apartmentId: 회원 아파트 이름(필수)\n\n"
+                    "apartmentId: 회원 아파트 아이디(필수)\n\n"
     )
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginMemberRequest request, BindingResult bindingResult) {
