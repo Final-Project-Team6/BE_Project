@@ -21,7 +21,7 @@ public class ComplaintCategoryServiceImpl implements ComplaintCategoryService {
     private final ApartmentCommonService apartmentCommonService;
 
     @Override
-    public ResponseEntity<?> getComplaintCategoryList(Long apartmentId) {
+    public ResponseEntity<List<ComplaintDTO.ComplaintCategoryRespDTO>> getComplaintCategoryList(Long apartmentId) {
         Apartment apartment = apartmentCommonService.getApartmentById(apartmentId);
         List<ComplaintDTO.ComplaintCategoryRespDTO> list = complaintCategoryRepository
                 .findAllByApartmentId(apartment).stream()

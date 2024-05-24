@@ -1,6 +1,7 @@
 package com.fastcampus.aptner.post.announcement.service;
 
 import com.fastcampus.aptner.apartment.domain.Apartment;
+import com.fastcampus.aptner.global.error.RestAPIException;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.domain.AnnouncementCategory;
 import com.fastcampus.aptner.post.announcement.repository.AnnouncementCategoryRepository;
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_CATEGORY;
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 
 @Service
 @Slf4j
@@ -23,7 +27,7 @@ public class AnnouncementCommonServiceImpl implements AnnouncementCommonService 
 
     @Override
     public AnnouncementCategory getAnnouncementCategory(Long announcementCategoryId) {
-        return announcementCategoryRepository.findById(announcementCategoryId).orElseThrow(NoSuchElementException::new);
+        return announcementCategoryRepository.findById(announcementCategoryId).orElseThrow(()->new RestAPIException(NO_SUCH_CATEGORY));
     }
 
     @Override
@@ -33,6 +37,6 @@ public class AnnouncementCommonServiceImpl implements AnnouncementCommonService 
 
     @Override
     public Announcement getAnnouncementEntity(Long announcementId) {
-        return announcementRepository.findById(announcementId).orElseThrow(NoSuchElementException::new);
+        return announcementRepository.findById(announcementId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
     }
 }

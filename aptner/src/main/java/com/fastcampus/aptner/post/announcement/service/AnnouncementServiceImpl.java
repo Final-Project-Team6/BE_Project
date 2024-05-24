@@ -1,5 +1,6 @@
 package com.fastcampus.aptner.post.announcement.service;
 
+import com.fastcampus.aptner.global.error.RestAPIException;
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
@@ -19,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_CATEGORY;
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 
 
 @Service
@@ -54,7 +58,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     @Transactional
     public ResponseEntity<AnnouncementDTO.AnnouncementRespDTO> getAnnouncement(Long announcementId, JWTMemberInfoDTO request) {
-        Announcement announcement = announcementRepository.findById(announcementId).orElseThrow(NoSuchElementException::new);
+        Announcement announcement = announcementRepository.findById(announcementId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
         AnnouncementDTO.AnnouncementRespDTO resp = new AnnouncementDTO.AnnouncementRespDTO(announcement, request);
         List<CommentDTO.ViewComments> comments = commentCommonService.getComments(announcementId, CommentType.ANNOUNCEMENT, request);
         resp.setComments(comments);

@@ -18,6 +18,7 @@ public class CreateApartmentServiceImpl implements CreateApartmentService {
     public void createApartment(CreateApartmentRequest request) {
         Apartment apartment = Apartment.builder()
                 .name(request.getName())
+                .engName(request.getEngName())
                 .sido(request.getSido())
                 .gugun(request.getGugun())
                 .road(request.getRoad())

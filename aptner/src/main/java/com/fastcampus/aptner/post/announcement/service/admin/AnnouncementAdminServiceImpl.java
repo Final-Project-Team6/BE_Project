@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -62,7 +64,7 @@ public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> updateAnnouncement(JWTMemberInfoDTO userToken, Long announcementId, AnnouncementDTO.AnnouncementPostReqDTO dto) {
-        Announcement announcement = announcementRepository.findById(announcementId).orElseThrow(NoSuchElementException::new);
+        Announcement announcement = getAnnouncement(announcementId);
         checkApartmentByAnnouncement(userToken, announcement);
         AnnouncementCategory announcementCategory = announcementCommonService.getAnnouncementCategory(dto.announcementCategoryId());
         //Todo 권한 확인
@@ -80,7 +82,7 @@ public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> deleteAnnouncement(JWTMemberInfoDTO userToken, Long announcementId) {
-        Announcement announcement = announcementRepository.findById(announcementId).orElseThrow(NoSuchElementException::new);
+        Announcement announcement = getAnnouncement(announcementId);
         checkApartmentByAnnouncement(userToken, announcement);
         //Todo 권한 확인
         //Todo 예외처리
@@ -97,7 +99,7 @@ public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> hideAnnouncement(JWTMemberInfoDTO userToken, Long announcementId) {
-        Announcement announcement = announcementRepository.findById(announcementId).orElseThrow(NoSuchElementException::new);
+        Announcement announcement = getAnnouncement(announcementId);
         checkApartmentByAnnouncement(userToken, announcement);
         //Todo 권한 확인
         //Todo 예외처리
@@ -124,5 +126,9 @@ public class AnnouncementAdminServiceImpl implements AnnouncementAdminService {
         if (!Objects.equals(userToken.getApartmentId(), announcement.getAnnouncementCategoryId().getApartmentId().getApartmentId())) {
             throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
         }
+    }
+
+    private Announcement getAnnouncement(Long announcementId){
+        return  announcementRepository.findById(announcementId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
     }
 }

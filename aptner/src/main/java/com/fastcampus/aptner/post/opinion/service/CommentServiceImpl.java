@@ -7,6 +7,8 @@ import com.fastcampus.aptner.member.service.MemberCommonService;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.service.AnnouncementCommonService;
 import com.fastcampus.aptner.post.common.enumType.PostStatus;
+import com.fastcampus.aptner.post.communication.domain.Communication;
+import com.fastcampus.aptner.post.communication.service.CommunicationCommonService;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import com.fastcampus.aptner.post.complaint.service.ComplaintCommonService;
 import com.fastcampus.aptner.post.opinion.domain.Comment;
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static com.fastcampus.aptner.post.common.error.PostErrorCode.NOT_SAME_USER;
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 
 @Service
 @Slf4j
@@ -36,6 +39,7 @@ public class CommentServiceImpl implements CommentService {
     private final MemberCommonService memberCommonService;
     private final AnnouncementCommonService announcementCommonService;
     private final ComplaintCommonService complaintCommonService;
+    private final CommunicationCommonService communicationCommonService;
 
 
     @Override
@@ -74,7 +78,12 @@ public class CommentServiceImpl implements CommentService {
                 commentRepository.save(comment);
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }
-            //todo 소통 댓글 구현
+            case COMMUNICATION -> {
+                Communication communication = communicationCommonService.getCommunicationEntity(postId);
+                comment.setCommunicationId(communication);
+                commentRepository.save(comment);
+                return new ResponseEntity<>(HttpStatus.CREATED);
+            }
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -83,7 +92,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public ResponseEntity<HttpStatus> updateComment(JWTMemberInfoDTO token, Long commentId, String contents) {
         Member member = memberCommonService.getUserByToken(token);
-        Comment comment = commentRepository.findById(commentId).orElseThrow(NoSuchElementException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
         if (member.getMemberId() != comment.getMemberId().getMemberId()) {
             throw new RestAPIException(NOT_SAME_USER);
         }
@@ -95,7 +104,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public ResponseEntity<HttpStatus> deleteComment(JWTMemberInfoDTO token, Long commentId) {
         Member member = memberCommonService.getUserByToken(token);
-        Comment comment = commentRepository.findById(commentId).orElseThrow(NoSuchElementException::new);
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
         if (member.getMemberId() != comment.getMemberId().getMemberId()) {
             throw new RestAPIException(NOT_SAME_USER);
         }
