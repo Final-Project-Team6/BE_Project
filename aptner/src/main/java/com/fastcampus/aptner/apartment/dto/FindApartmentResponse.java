@@ -1,5 +1,6 @@
 package com.fastcampus.aptner.apartment.dto;
 
+import com.fastcampus.aptner.apartment.domain.Apartment;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,9 @@ public class FindApartmentResponse {
 
     @Schema(description = "name: 아파트 이름")
     private String name;
+
+    @Schema(description = "name: 아파트 영어 이름")
+    private String engName;
 
     @Schema(description = "sido: 아파트 시(도)")
     private String sido;
@@ -40,9 +44,10 @@ public class FindApartmentResponse {
     private String dutyTime;
 
     @Builder
-    public FindApartmentResponse(Long apartmentId, String name, String sido, String gugun, String road, String zipcode, String icon, String banner, String tel, String dutyTime) {
+    public FindApartmentResponse(Long apartmentId, String name, String engName,String sido, String gugun, String road, String zipcode, String icon, String banner, String tel, String dutyTime) {
         this.apartmentId = apartmentId;
         this.name = name;
+        this.engName=engName;
         this.sido = sido;
         this.gugun = gugun;
         this.road = road;
@@ -51,5 +56,19 @@ public class FindApartmentResponse {
         this.banner = banner;
         this.tel = tel;
         this.dutyTime = dutyTime;
+    }
+
+    public FindApartmentResponse(Apartment apartment){
+        this.apartmentId = apartment.getApartmentId();
+        this.name = apartment.getName();
+        this.engName = apartment.getEngName();
+        this.sido = apartment.getSido();
+        this.gugun = apartment.getGugun();
+        this.road = apartment.getRoad();
+        this.zipcode = apartment.getZipcode();
+        this.icon = apartment.getIcon();
+        this.banner = apartment.getBanner();
+        this.tel = apartment.getTel();
+        this.dutyTime = apartment.getDutyTime();
     }
 }
