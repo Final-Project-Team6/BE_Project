@@ -9,6 +9,7 @@ import lombok.Getter;
 public class CreateApartmentRequest {
 
     private final String name;
+    private final String engName;
     private final String sido;
     private final String gugun;
     private final String road;
@@ -19,8 +20,9 @@ public class CreateApartmentRequest {
     private final String dutyTime;
 
     @Builder
-    public CreateApartmentRequest(String name, String sido, String gugun, String road, String zipcode, String icon, String banner, String tel, String dutyTime) {
+    public CreateApartmentRequest(String name,String engName ,String sido, String gugun, String road, String zipcode, String icon, String banner, String tel, String dutyTime) {
         this.name = name;
+        this.engName =engName;
         this.sido = sido;
         this.gugun = gugun;
         this.road = road;

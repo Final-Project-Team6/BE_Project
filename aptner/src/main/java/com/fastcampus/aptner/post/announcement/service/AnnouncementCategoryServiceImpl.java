@@ -26,6 +26,9 @@ public class AnnouncementCategoryServiceImpl implements AnnouncementCategoryServ
     public ResponseEntity<List<AnnouncementDTO.AnnouncementCategoryRespDTO>> getAnnouncementCategoryList(Long apartmentId) {
         Apartment apartment = apartmentService.getApartmentById(apartmentId);
         List<AnnouncementCategory> list = announcementCategoryRepository.findAllByApartmentId(apartment);
+        if (list.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         List<AnnouncementDTO.AnnouncementCategoryRespDTO> resp = list.stream().map(AnnouncementDTO.AnnouncementCategoryRespDTO::new).toList();
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }

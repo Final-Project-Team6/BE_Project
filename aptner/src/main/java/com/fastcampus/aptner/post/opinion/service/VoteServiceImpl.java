@@ -6,6 +6,8 @@ import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.member.service.MemberCommonService;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.service.AnnouncementCommonService;
+import com.fastcampus.aptner.post.communication.domain.Communication;
+import com.fastcampus.aptner.post.communication.service.CommunicationCommonService;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
 import com.fastcampus.aptner.post.complaint.service.ComplaintCommonService;
 import com.fastcampus.aptner.post.opinion.domain.Comment;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 import static com.fastcampus.aptner.post.common.error.VoteErrorCode.ALREADY_EXiSTS;
 
 @Service
@@ -33,10 +36,14 @@ public class VoteServiceImpl implements VoteService {
     private final AnnouncementCommonService announcementCommonService;
     private final CommentCommonService commentCommonService;
     private final ComplaintCommonService complaintCommonService;
+    private final CommunicationCommonService communicationCommonService;
 
     @Override
     public ResponseEntity<HttpStatus> voteToPost(JWTMemberInfoDTO token, Long postId, VoteType voteType, Boolean opinion) {
         Member member = memberCommonService.getUserByToken(token);
+        if (opinion==null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         Vote vote = null;
         switch (voteType) {
             case ANNOUNCEMENT -> {
@@ -72,7 +79,17 @@ public class VoteServiceImpl implements VoteService {
                         .complaintId(complaint)
                         .build();
             }
-            //todo 소통
+            case COMMUNICATION -> {
+                Communication communication = communicationCommonService.getCommunicationEntity(postId);
+                if (voteRepository.existsByCommunicationIdAndMemberId(communication,member)){
+                    throw new RestAPIException(ALREADY_EXiSTS);
+                }
+                vote = Vote.builder()
+                        .opinion(opinion)
+                        .memberId(member)
+                        .communicationId(communication)
+                        .build();
+            }
         }
         if (vote != null) {
             voteRepository.save(vote);
@@ -89,13 +106,20 @@ public class VoteServiceImpl implements VoteService {
         switch (voteType) {
             case ANNOUNCEMENT -> {
                 Announcement announcement = announcementCommonService.getAnnouncementEntity(postId);
-                vote = voteRepository.findByAnnouncementIdAndMemberId(announcement, member).orElseThrow(NoSuchElementException::new);
+                vote = voteRepository.findByAnnouncementIdAndMemberId(announcement, member).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
             }
             case COMMENT -> {
                 Comment comment = commentCommonService.getCommentEntity(postId);
-                vote = voteRepository.findByCommentIdAndMemberId(comment, member).orElseThrow(NoSuchElementException::new);
+                vote = voteRepository.findByCommentIdAndMemberId(comment, member).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
             }
-            //todo 민원, 소통
+            case COMPLAINT -> {
+                Complaint complaint = complaintCommonService.getComplaintEntity(postId);
+                vote = voteRepository.findByComplaintIdAndMemberId(complaint,member).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+            }
+            case COMMUNICATION -> {
+                Communication communication = communicationCommonService.getCommunicationEntity(postId);
+                vote = voteRepository.findByCommunicationIdAndMemberId(communication,member).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+            }
         }
         if (vote != null) {
             voteRepository.delete(vote);

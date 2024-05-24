@@ -24,6 +24,9 @@ public class Apartment {
     private String name;
 
     @Column(length = 100)
+    private String engName;
+
+    @Column(length = 100)
     private String sido;
 
     @Column(length = 100)
@@ -54,8 +57,9 @@ public class Apartment {
     private List<MemberRole> memberRoles = new ArrayList<>();
 
     @Builder
-    public Apartment(String name, String sido, String gugun, String road, String zipcode, String icon, String banner, String tel, String dutyTime) {
+    public Apartment(String name, String engName, String sido, String gugun, String road, String zipcode, String icon, String banner, String tel, String dutyTime) {
         this.name = name;
+        this.engName =engName;
         this.sido = sido;
         this.gugun = gugun;
         this.road = road;

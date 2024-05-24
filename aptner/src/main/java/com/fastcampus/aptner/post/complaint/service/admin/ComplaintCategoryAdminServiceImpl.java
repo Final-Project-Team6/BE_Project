@@ -17,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_CATEGORY;
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -37,7 +40,7 @@ public class ComplaintCategoryAdminServiceImpl implements ComplaintCategoryAdmin
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> updateComplaintCategory(JWTMemberInfoDTO token, Long complaintCategoryId, ComplaintDTO.ComplaintCategoryReqDTO dto) {
-        ComplaintCategory complaintCategory = complaintCategoryRepository.findById(complaintCategoryId).orElseThrow(NoSuchElementException::new);
+        ComplaintCategory complaintCategory = complaintCategoryRepository.findById(complaintCategoryId).orElseThrow(()->new RestAPIException(NO_SUCH_CATEGORY));
         complaintCategory.updateComplaintCategory(dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -45,7 +48,7 @@ public class ComplaintCategoryAdminServiceImpl implements ComplaintCategoryAdmin
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> deleteComplaintCategory(JWTMemberInfoDTO token, Long complaintCategoryId) {
-        ComplaintCategory complaintCategory = complaintCategoryRepository.findById(complaintCategoryId).orElseThrow(NoSuchElementException::new);
+        ComplaintCategory complaintCategory = complaintCategoryRepository.findById(complaintCategoryId).orElseThrow(()->new RestAPIException(NO_SUCH_CATEGORY));
         complaintCategoryRepository.delete(complaintCategory);
         return new ResponseEntity<>(HttpStatus.OK);
     }
