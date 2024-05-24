@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 import static com.fastcampus.aptner.post.common.error.VoteErrorCode.ALREADY_EXiSTS;
 
 @Service
@@ -89,13 +90,17 @@ public class VoteServiceImpl implements VoteService {
         switch (voteType) {
             case ANNOUNCEMENT -> {
                 Announcement announcement = announcementCommonService.getAnnouncementEntity(postId);
-                vote = voteRepository.findByAnnouncementIdAndMemberId(announcement, member).orElseThrow(NoSuchElementException::new);
+                vote = voteRepository.findByAnnouncementIdAndMemberId(announcement, member).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
             }
             case COMMENT -> {
                 Comment comment = commentCommonService.getCommentEntity(postId);
-                vote = voteRepository.findByCommentIdAndMemberId(comment, member).orElseThrow(NoSuchElementException::new);
+                vote = voteRepository.findByCommentIdAndMemberId(comment, member).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
             }
-            //todo 민원, 소통
+            case COMPLAINT -> {
+                Complaint complaint = complaintCommonService.getComplaintEntity(postId);
+                vote = voteRepository.findByComplaintIdAndMemberId(complaint,member).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+            }
+            //todo 소통
         }
         if (vote != null) {
             voteRepository.delete(vote);

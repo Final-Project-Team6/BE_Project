@@ -1,5 +1,6 @@
 package com.fastcampus.aptner.post.opinion.service;
 
+import com.fastcampus.aptner.global.error.RestAPIException;
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.post.opinion.domain.Comment;
 import com.fastcampus.aptner.post.opinion.domain.CommentType;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 
 @Service
 @Slf4j
@@ -30,6 +33,6 @@ public class CommentCommonServiceImpl implements CommentCommonService {
 
     @Override
     public Comment getCommentEntity(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(NoSuchElementException::new);
+        return commentRepository.findById(commentId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
     }
 }

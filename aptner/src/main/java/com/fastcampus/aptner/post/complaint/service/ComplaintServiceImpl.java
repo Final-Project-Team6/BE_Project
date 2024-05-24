@@ -27,6 +27,7 @@ import java.util.NoSuchElementException;
 
 import static com.fastcampus.aptner.global.error.CommonErrorCode.MUST_AUTHORIZE;
 import static com.fastcampus.aptner.post.common.error.PostErrorCode.NOT_SAME_USER;
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 
 @Service
 @Slf4j
@@ -51,7 +52,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> updateComplaint(JWTMemberInfoDTO userToken, Long complaintId, ComplaintDTO.ComplaintReqDTO dto) {
-        Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(NoSuchElementException::new);
+        Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
         isSameUser(complaint.getMemberId().getMemberId(), userToken);
         ComplaintCategory category = complaintCommonService.getComplaintCategoryEntity(dto.complaintCategoryId());
         complaint.updateComplaint(dto, category);
@@ -61,7 +62,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> deleteComplaint(JWTMemberInfoDTO userToken, Long complaintId) {
-        Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(NoSuchElementException::new);
+        Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
         isSameUser(complaint.getMemberId().getMemberId(), userToken);
         complaint.deleteComplaint();
         return new ResponseEntity<>(HttpStatus.OK);
@@ -70,7 +71,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     @Transactional
     public ResponseEntity<?> getComplaint(JWTMemberInfoDTO request, Long complaintId) {
-        Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(NoSuchElementException::new);
+        Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
         if (complaint.isSecret()) {
             requestHasRole(request, complaint);
         }
