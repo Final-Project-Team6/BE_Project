@@ -97,6 +97,7 @@ public class Communication {
     }
 
     public void deleteCommunication(){this.status=PostStatus.DELETED;}
+    public void deleteCommunicationAdmin(){this.status=PostStatus.FORCE_DELETED;}
     public void hideCommunication(){this.status=PostStatus.HIDDEN;}
 
     public VoteDTO.VoteRespDTO aboutVote(JWTMemberInfoDTO token) {

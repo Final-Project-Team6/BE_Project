@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 
@@ -20,6 +21,7 @@ public class CommunicationCommonServiceImpl implements CommunicationCommonServic
     CommunicationRepository communicationRepository;
 
     @Override
+    @Transactional
     public Communication getCommunicationEntity(Long communicationId) {
         return communicationRepository.findById(communicationId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
     }

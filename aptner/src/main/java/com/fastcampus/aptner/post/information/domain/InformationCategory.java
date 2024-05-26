@@ -29,12 +29,17 @@ public class InformationCategory {
     @Column(name = "name",length = 10)
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", length = 10, nullable = false)
+    private InformationType type;
+
     @JsonIgnore
     @OneToMany(mappedBy = "informationCategoryId")
     private List<Information> informationList = new ArrayList<>();
     @Builder
-    public InformationCategory(Apartment apartmentId, String name) {
+    public InformationCategory(Apartment apartmentId,InformationType type, String name) {
         this.apartmentId = apartmentId;
+        this.type = type;
         this.name = name;
     }
 
@@ -42,11 +47,13 @@ public class InformationCategory {
     public static InformationCategory from(Apartment apartment, InformationDTO.InformationCategoryReqDTO dto) {
         return InformationCategory.builder()
                 .apartmentId(apartment)
+                .type(dto.type())
                 .name(dto.name())
                 .build();
     }
     public void updateCategory(InformationDTO.InformationCategoryReqDTO dto) {
         this.name = dto.name();
+        this.type = dto.type();
     }
 
 }

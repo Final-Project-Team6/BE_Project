@@ -1,10 +1,10 @@
 package com.fastcampus.aptner.post.communication.controller;
 
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
-import com.fastcampus.aptner.member.domain.RoleName;
 import com.fastcampus.aptner.post.common.enumType.OrderBy;
 import com.fastcampus.aptner.post.common.enumType.OrderType;
 import com.fastcampus.aptner.post.common.enumType.SearchType;
+import com.fastcampus.aptner.post.communication.domain.CommunicationType;
 import com.fastcampus.aptner.post.communication.dto.CommunicationDTO;
 import com.fastcampus.aptner.post.communication.service.CommunicationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,11 +18,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/post/communication")
-@Tag(name = "소통공간", description = "소통글 생성, 소통글 수정, 소통글 삭제, 소통글 목록 조회, 소통글 조회")
+@Tag(name = "소통공간(사용자)", description = "소통글 생성, 소통글 수정, 소통글 삭제, 소통글 목록 조회, 소통글 조회")
 public class CommunicationController {
     private final CommunicationService communicationService;
-
-    //TODO Member 개발 완료시 지우기
 
     @Operation(
             summary = "소통글 생성 API",
@@ -60,6 +58,19 @@ public class CommunicationController {
     }
 
 
+    @Operation(
+            summary = "소통글 목록 조회 API",
+            description = "apartmentId : 현재 사용중인 아파트 ID \n\n" +
+                    "pageNumber : 조회 페이지 번호\n\n" +
+                    "pageSize : 페이지당 내용 개수\n\n" +
+                    "searchType : 검색어 검색 조건 => TITLE(제목), CONTENTS(내용), TITLE_CONTENTS(제목+내용);\n\n" +
+                    "orderType : 정렬 조건 => VIEW(조회수), COMMENT(댓글), VOTE(공감수), DATE(날짜)\n\n" +
+                    "orderBy : 정렬 차순 => ASC(오름차순), DESC(내림차순)\n\n" +
+                    "keyword : 검색어\n\n" +
+                    "communicationType : USER_COMMU(입주민 소통공간),REPRESENT_COMMU(입대의 소통공간);\n\n" +
+                    "categoryId : 소통글 카테고리 ID\n\n" +
+                    "apartmentId 를 제외한 나머지 값은 필수가 아니며, 포함하지 않으면 기본조건으로 처리하거나 영향을 주지 않습니다."
+    )
     @GetMapping("/search/{apartmentId}")
     public ResponseEntity<?> searchCommunication(
             @PathVariable Long apartmentId,
@@ -69,6 +80,7 @@ public class CommunicationController {
             @RequestParam(required = false, defaultValue = "DATE") OrderType orderType,
             @RequestParam(required = false, defaultValue = "DESC") OrderBy orderBy,
             @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) CommunicationType communicationType,
             @RequestParam(required = false) Long categoryId){
         CommunicationDTO.CommunicationSearchReqDTO reqDTO = CommunicationDTO.CommunicationSearchReqDTO.builder()
                 .apartmentId(apartmentId)
@@ -78,8 +90,20 @@ public class CommunicationController {
                 .orderType(orderType)
                 .orderBy(orderBy)
                 .keyword(keyword)
+                .communicationType(communicationType)
                 .categoryId(categoryId)
                 .build();
-        return null;
+        return communicationService.searchCommunication(reqDTO);
+    }
+
+    @Operation(
+            summary = "소통글 조회 API",
+            description = "announcementId : 조회하려는 소통글 ID"
+    )
+    @GetMapping("/{communicationId}")
+    public ResponseEntity<?> getCommunication(
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
+            @PathVariable Long communicationId){
+        return communicationService.getCommunication(communicationId,memberToken);
     }
 }
