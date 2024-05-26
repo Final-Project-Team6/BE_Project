@@ -49,9 +49,6 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, length = 13)
     private String phone; // 회원 휴대전화번호
 
-    @Column(nullable = false, length = 20)
-    private String phoneCarrier; // 회원 통신사
-
     @Column(nullable = false, length = 6)
     private String birthFirst; // 회원 주민등록번호 앞자리
 
@@ -116,7 +113,6 @@ public class Member extends BaseTimeEntity {
     public Member(String username,
                   String password,
                   String phone,
-                  String phoneCarrier,
                   String birthFirst,
                   String nickname,
                   String fullName,
@@ -124,7 +120,6 @@ public class Member extends BaseTimeEntity {
         this.username = username;
         this.password = password;
         this.phone = phone;
-        this.phoneCarrier = phoneCarrier;
         this.birthFirst = birthFirst;
         this.nickname = nickname;
         this.fullName = fullName;
