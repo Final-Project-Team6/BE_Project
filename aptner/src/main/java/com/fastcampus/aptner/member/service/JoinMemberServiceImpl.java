@@ -68,7 +68,6 @@ public class JoinMemberServiceImpl implements JoinMemberService {
                 .username(request.getUsername())
                 .password(bCryptPasswordEncoder.encode(request.getPassword()))
                 .phone(request.getPhone())
-                .phoneCarrier(request.getPhoneCarrier())
                 .birthFirst(request.getBirthFirst())
                 .nickname(request.getNickname())
                 .fullName(request.getFullName())

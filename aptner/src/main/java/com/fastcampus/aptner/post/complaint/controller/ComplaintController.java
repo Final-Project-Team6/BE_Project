@@ -1,7 +1,6 @@
 package com.fastcampus.aptner.post.complaint.controller;
 
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
-import com.fastcampus.aptner.jwt.util.isLogin;
 import com.fastcampus.aptner.post.common.enumType.OrderBy;
 import com.fastcampus.aptner.post.common.enumType.OrderType;
 import com.fastcampus.aptner.post.common.enumType.SearchType;
@@ -65,7 +64,7 @@ public class ComplaintController {
     )
     @GetMapping("/{complaintId}")
     public ResponseEntity<?> getComplaint(
-            @isLogin JWTMemberInfoDTO request,
+            @AuthenticationPrincipal JWTMemberInfoDTO request,
             @PathVariable Long complaintId) {
         return complaintService.getComplaint(request, complaintId);
     }
