@@ -21,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
 
 import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 import static com.fastcampus.aptner.post.common.error.VoteErrorCode.ALREADY_EXiSTS;
@@ -102,6 +101,30 @@ public class VoteServiceImpl implements VoteService {
     @Transactional
     public ResponseEntity<HttpStatus> deleteVote(JWTMemberInfoDTO token, Long postId, VoteType voteType) {
         Member member = memberCommonService.getUserByToken(token);
+        Vote vote = getVoteByVoteType(postId,voteType,member);
+        if (vote != null) {
+            voteRepository.delete(vote);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<HttpStatus> updateVote(JWTMemberInfoDTO token, Long postId, VoteType voteType, Boolean opinion){
+        Member member = memberCommonService.getUserByToken(token);
+        if (opinion==null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        Vote vote = getVoteByVoteType(postId,voteType,member);
+        if (vote != null) {
+            vote.setOpinion(opinion);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    private Vote getVoteByVoteType(Long postId, VoteType voteType,Member member){
         Vote vote = null;
         switch (voteType) {
             case ANNOUNCEMENT -> {
@@ -121,10 +144,6 @@ public class VoteServiceImpl implements VoteService {
                 vote = voteRepository.findByCommunicationIdAndMemberId(communication,member).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
             }
         }
-        if (vote != null) {
-            voteRepository.delete(vote);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return vote;
     }
 }

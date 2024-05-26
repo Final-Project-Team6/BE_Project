@@ -29,7 +29,6 @@ public class JoinMemberController {
                     "fullName: 회원 이름\n\n" +
                     "birthFirst: 회원 주민등록번호 앞자리(본인인증없이 가입된 회원은 선택입니다.)\n\n" +
                     "gender: 회원 성별(본인인증없이 가입된 회원은 선택입니다.)\n\n" +
-                    "phoneCarrier: 회원 통신사(본인인증없이 가입된 회원은 선택입니다.)\n\n" +
                     "phone: 회원 휴대전화번호(필수)\n\n" +
                     "username: 회원 아이디(필수)\n\n" +
                     "password: 회원 비밀번호(필수)\n\n" +

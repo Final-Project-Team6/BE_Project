@@ -1,6 +1,5 @@
 package com.fastcampus.aptner.security.config;
 
-import com.fastcampus.aptner.jwt.util.isLoginArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -25,9 +24,4 @@ public class WebConfig implements WebMvcConfigurer {
 //                .allowCredentials(true);
     }
 
-
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new isLoginArgumentResolver());
-    }
 }

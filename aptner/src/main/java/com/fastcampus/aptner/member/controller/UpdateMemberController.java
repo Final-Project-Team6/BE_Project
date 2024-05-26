@@ -1,7 +1,6 @@
 package com.fastcampus.aptner.member.controller;
 
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
-import com.fastcampus.aptner.jwt.util.isLogin;
 import com.fastcampus.aptner.member.dto.HttpResponse;
 import com.fastcampus.aptner.member.dto.reqeust.UpdateNicknameRequest;
 import com.fastcampus.aptner.member.service.UpdateMemberServiceImpl;
@@ -11,8 +10,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "회원 정보 수정(사용자)", description = "회원 닉네임 수정, 회원 인증상태 수정")
 @RequiredArgsConstructor
@@ -29,7 +32,7 @@ public class UpdateMemberController {
                     "TODO: 구현 중인 API"
     )
     @PutMapping("/member-status")
-    public ResponseEntity<?> updateMemberStatus(@isLogin JWTMemberInfoDTO request,
+    public ResponseEntity<?> updateMemberStatus(@AuthenticationPrincipal JWTMemberInfoDTO request,
                                                 @RequestBody boolean authenticationStatus,
                                                 BindingResult bindingResult) {
         memberService.updateByAuthenticationStatus(request.getMemberId(), authenticationStatus);
@@ -44,7 +47,7 @@ public class UpdateMemberController {
     )
     @PreAuthorize("hasAnyRole('USER', 'MANAGER', 'ADMIN')")
     @PutMapping("/member-nickname")
-    public ResponseEntity<?> updateMemberNickname(@isLogin JWTMemberInfoDTO request,
+    public ResponseEntity<?> updateMemberNickname(@AuthenticationPrincipal JWTMemberInfoDTO request,
                                                   @RequestBody UpdateNicknameRequest nicknameRequest,
                                                   BindingResult bindingResult) {
 

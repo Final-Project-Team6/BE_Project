@@ -72,7 +72,6 @@ public class AnnouncementController {
     public ResponseEntity<?> getAnnouncement(
             @AuthenticationPrincipal JWTMemberInfoDTO request,
             @PathVariable Long announcementId) {
-        System.out.println("=====================\n\n" + request.getMemberId() + request.getApartmentName());
         return announcementService.getAnnouncement(announcementId, request);
     }
 }

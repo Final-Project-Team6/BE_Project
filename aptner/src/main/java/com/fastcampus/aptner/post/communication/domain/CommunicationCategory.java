@@ -25,6 +25,10 @@ public class CommunicationCategory {
     @JoinColumn(name = "apartment_id")
     private Apartment apartmentId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", length = 10, nullable = false)
+    private CommunicationType type;
+
     @Column(name = "name",length = 50)
     private String name;
 
@@ -32,18 +36,21 @@ public class CommunicationCategory {
     @OneToMany(mappedBy = "communicationCategoryId")
     private List<Communication> communicationList = new ArrayList<>();
     @Builder
-    public CommunicationCategory(Apartment apartmentId, String name) {
+    public CommunicationCategory(Apartment apartmentId,CommunicationType type, String name) {
         this.apartmentId = apartmentId;
+        this.type = type;
         this.name = name;
     }
 
     public static CommunicationCategory from(Apartment apartment, CommunicationDTO.CommunicationCategoryReqDTO dto) {
         return CommunicationCategory.builder()
                 .apartmentId(apartment)
+                .type(dto.type())
                 .name(dto.name())
                 .build();
     }
     public void updateCategory(CommunicationDTO.CommunicationCategoryReqDTO dto) {
         this.name = dto.name();
+        this.type = dto.type();
     }
 }

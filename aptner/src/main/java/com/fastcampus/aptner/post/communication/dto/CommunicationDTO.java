@@ -8,14 +8,12 @@ import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.common.enumType.SearchType;
 import com.fastcampus.aptner.post.communication.domain.Communication;
 import com.fastcampus.aptner.post.communication.domain.CommunicationCategory;
+import com.fastcampus.aptner.post.communication.domain.CommunicationType;
 import com.fastcampus.aptner.post.opinion.dto.CommentDTO;
 import com.fastcampus.aptner.post.opinion.dto.VoteDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
@@ -37,33 +35,35 @@ public class CommunicationDTO {
     @Schema(name = "소통공간 카테고리 생성",description = "소통공간 카테고리 생성 요청 Body")
     public record CommunicationCategoryReqDTO(
             @Schema(description = "소통공간 카테고리 이름")
-            String name
-    ){
+            String name,
+            @Schema(description = "소통공간 카테고리 타입 => USER_COMMU(입주민 소통공간),\n" +
+                    "    REPRESENT_COMMU(입대의 소통공간)")
+            CommunicationType type){
     }
 
     @Schema(name = "소통공간 카테고리 응답",description = "소통공간 카테고리 응답값")
     public record CommunicationCategoryRespDTO(
-            @Schema(description = "소통공간 카테고리 ID")
             Long communicationCategoryId,
-            @Schema(description = "소통공간 카테고리 이름")
-            String name
+            String name,
+            CommunicationType type
             ){
         public CommunicationCategoryRespDTO(CommunicationCategory communicationCategory){
-            this(communicationCategory.getCommunicationCategoryId(), communicationCategory.getName());
+            this(communicationCategory.getCommunicationCategoryId(), communicationCategory.getName(),communicationCategory.getType());
         }
     }
+    @AllArgsConstructor
     @Getter
     public static class CommunicationListRespDTO{
-        private Long communicationId;
-        private CommunicationCategoryRespDTO communicationCategory;
-        private PostMemberResponse writer;
-        private String title;
+        private final Long communicationId;
+        private final CommunicationCategoryRespDTO communicationCategory;
+        private final PostMemberResponse writer;
+        private final String title;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-        private LocalDateTime createdAt;
-        private Long view;
-        private int commentCnt;
-        private int agreeCnt;
-        private int disagreeCnt;
+        private final LocalDateTime createdAt;
+        private final Long view;
+        private final int commentCnt;
+        private final int agreeCnt;
+        private final int disagreeCnt;
         public CommunicationListRespDTO(Communication communication){
             VoteDTO.VoteRespDTO voteRespDTO=communication.aboutVoteWithoutMember();
             this.communicationId = communication.getCommunicationId();
@@ -123,6 +123,8 @@ public class CommunicationDTO {
         private OrderType orderType;
         private OrderBy orderBy;
         private String keyword;
+        private PostStatus status;
+        private CommunicationType communicationType;
         private Long categoryId;
     }
 }

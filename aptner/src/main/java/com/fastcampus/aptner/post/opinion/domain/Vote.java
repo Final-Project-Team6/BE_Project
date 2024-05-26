@@ -42,6 +42,7 @@ public class Vote {
     @JoinColumn(name = "comment_id")
     private Comment commentId;
 
+    @Setter
     @Column(name = "opinion")
     private boolean opinion;
 

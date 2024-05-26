@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "JWT 리프레시 토큰 발행(사용자, 관리자)", description = "JWT 토큰 발행")
+@Tag(name = "JWT 리프레시 토큰 재발급(사용자, 관리자)", description = "JWT AccessToken, RefreshToken 토큰 재발급")
 @RequiredArgsConstructor
 @RequestMapping("/api/refresh-token")
 @RestController
@@ -43,11 +43,9 @@ public class RefreshTokenController {
     */
 
     @Operation(
-            summary = "JWT 리프레시 토큰 발행 API",
-            description = "새로운 액세스 토큰, 리프레시 토큰을 발행한다. \n\n +" +
-                    "        1. 전달받은 유저의 아이디로 유저가 존재하는지 확인한다.\n\n" +
-                    "        2. 리프레시 토큰이 유효한지 체크한다.\n\n" +
-                    "        3. 액세스 토큰을 발급하여 기존 리프레시 토큰과 함께 응답한다."
+            summary = "액세스, 리프레시 토큰 재생성 API",
+            description = "Schema -> JWT AccessToken, RefreshToken 재발급 \n\n " +
+                    "refreshToken : 이전에 사용한 리프레시 토큰 입력(필수)"
     )
     @PostMapping("/publish")
     public ResponseEntity<?> requestRefresh(@RequestBody RefreshTokenRequest request) {

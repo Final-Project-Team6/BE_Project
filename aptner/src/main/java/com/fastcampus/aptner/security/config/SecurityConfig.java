@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -73,18 +72,15 @@ public class SecurityConfig {
                     CustomResponseUtil.fail(response, "권한이 없습니다.", HttpStatus.FORBIDDEN);
                 }));
 
-        // TODO: 임시로 모든 요청에 허용한 상태이다.
+        // TODO: 임시로 모든 요청에 허용한 상태이다. -> 게시판 추가가 필요하다.
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // Preflight 요청은 허용
-                                .requestMatchers("/api/join/**", "/api/refresh-token", "/api/login/**").permitAll()
+                                .requestMatchers("/api/member/**").permitAll()
                                 .requestMatchers("/api/apartment/**").permitAll()
                                 .requestMatchers("/api/update/**").hasAnyRole("USER", "MANAGER", "ADMIN")
-                                .requestMatchers("/hello").hasAnyRole("ADMIN")
-                                .anyRequest().permitAll()
-                )
-                .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
-                        httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(customAuthenticationEntryPoint));
+                                .anyRequest().authenticated()
+                );
 
         // TODO: JWT 인증 필터 주석 작성하기.
         http.addFilterBefore(new JwtAuthenticationFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)

@@ -28,9 +28,6 @@ public class JoinMemberRequest {
     @Size(max = 1)
     private final String gender;  // 본인인증없이 가입된 회원은 선택입니다.
 
-    @Pattern(regexp = "^[a-zA-Z가-힣]+$", message = "통신사: 통신사를 선택하세요.")
-    @Size(min = 2, max = 10)
-    private final String phoneCarrier; // 본인인증없이 가입된 회원은 선택입니다.
 
     @NotBlank(message = "휴대전화번호: 필수 정보입니다.")
     @Pattern(regexp = "^[0-9]{10,11}$", message = "휴대전화번호: 숫자만 입력해주세요.")
@@ -71,14 +68,13 @@ public class JoinMemberRequest {
 
 
     @Builder
-    public JoinMemberRequest(Boolean termsService, Boolean privateInformationCollection, Boolean snsMarketingInformationReceive, String fullName, String birthFirst, String gender, String phoneCarrier, String phone, String username, String password, String nickname, String dong, String ho, String apartmentName) {
+    public JoinMemberRequest(Boolean termsService, Boolean privateInformationCollection, Boolean snsMarketingInformationReceive, String fullName, String birthFirst, String gender, String phone, String username, String password, String nickname, String dong, String ho, String apartmentName) {
         this.termsService = termsService;
         this.privateInformationCollection = privateInformationCollection;
         this.snsMarketingInformationReceive = snsMarketingInformationReceive;
         this.fullName = fullName;
         this.birthFirst = birthFirst;
         this.gender = gender;
-        this.phoneCarrier = phoneCarrier;
         this.phone = phone;
         this.username = username;
         this.password = password;

@@ -104,4 +104,19 @@ public class SwaggerConfig {
                 .build();
     }
 
+    @Bean
+    public GroupedOpenApi communicationGroup() {
+        return GroupedOpenApi.builder()
+                .group("소통")
+                .pathsToMatch("/api/post/communication/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi informationGroup() {
+        return GroupedOpenApi.builder()
+                .group("정보")
+                .pathsToMatch("/api/post/information/**")
+                .build();
+    }
 }
