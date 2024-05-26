@@ -79,7 +79,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/member/**").permitAll()
                                 .requestMatchers("/api/apartment/**").permitAll()
                                 .requestMatchers("/api/update/**").hasAnyRole("USER", "MANAGER", "ADMIN")
-                                .requestMatchers("https://aptner.shop/swagger-ui/index.html").permitAll()
+                                .requestMatchers("/swagger/**", "/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**").permitAll()
                                 .anyRequest().authenticated()
                 );
 
