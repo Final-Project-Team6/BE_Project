@@ -13,6 +13,7 @@ import com.fastcampus.aptner.member.service.FindMemberRoleServiceImpl;
 import com.fastcampus.aptner.member.service.loginMemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class LoginMemberController {
                     "apartmentId: 회원 아파트 아이디(필수)\n\n"
     )
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginMemberRequest request, BindingResult bindingResult) {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginMemberRequest request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(new HttpResponse<>(-1, "잘못된 요청 입니다.", null), HttpStatus.BAD_REQUEST);
         }
