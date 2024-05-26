@@ -3,9 +3,6 @@ package com.fastcampus.aptner.post.information.domain;
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.information.dto.InformationDTO;
-import com.fastcampus.aptner.post.opinion.domain.Comment;
-import com.fastcampus.aptner.post.opinion.domain.Vote;
-import com.fastcampus.aptner.post.opinion.dto.VoteDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,9 +10,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

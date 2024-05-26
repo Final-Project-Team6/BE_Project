@@ -1,12 +1,11 @@
-package com.fastcampus.aptner.post.information.service;
+package com.fastcampus.aptner.post.information.service.admin;
 
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
-import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.information.dto.InformationDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public interface InformationService {
+public interface InformationAdminService {
 
     ResponseEntity<HttpStatus> uploadInformation(JWTMemberInfoDTO userToken, Long apartmentId, InformationDTO.InformationPostReqDTO dto);
 

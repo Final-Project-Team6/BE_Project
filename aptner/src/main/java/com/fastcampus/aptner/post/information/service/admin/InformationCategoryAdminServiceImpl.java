@@ -1,4 +1,4 @@
-package com.fastcampus.aptner.post.information.service;
+package com.fastcampus.aptner.post.information.service.admin;
 
 import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.apartment.repository.ApartmentRepository;
@@ -26,7 +26,7 @@ import static com.fastcampus.aptner.post.common.error.PostErrorCode.CANT_DELETE;
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class InformationCategoryServiceImpl implements InformationCategoryService {
+public class InformationCategoryAdminServiceImpl implements InformationCategoryAdminService {
 
     InformationCategoryRepository informationCategoryRepository;
     ApartmentRepository apartmentRepository;

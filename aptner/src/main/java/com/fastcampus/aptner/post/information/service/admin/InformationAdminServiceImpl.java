@@ -1,4 +1,4 @@
-package com.fastcampus.aptner.post.information.service;
+package com.fastcampus.aptner.post.information.service.admin;
 
 import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.global.error.RestAPIException;
@@ -29,7 +29,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class InformationServiceImpl implements InformationService {
+public class InformationAdminServiceImpl implements InformationAdminService {
     InformationRepository informationRepository;
     InformationCategoryRepository informationCategoryRepository;
 
@@ -68,6 +68,7 @@ public class InformationServiceImpl implements InformationService {
         information.deleteInformation();
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
     @AllArgsConstructor
     public static class UserAndAPT{
