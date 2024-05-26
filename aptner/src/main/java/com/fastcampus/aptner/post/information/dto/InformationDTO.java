@@ -56,13 +56,13 @@ public class InformationDTO {
 
     @Getter
     public static class InformationListRespDTO{
-        private Long informationId;
-        private InformationCategoryRespDTO informationCategory;
-        private PostMemberResponse writer;
-        private String title;
+        private final Long informationId;
+        private final InformationCategoryRespDTO informationCategory;
+        private final PostMemberResponse writer;
+        private final String title;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-        private LocalDateTime createdAt;
-        private Long view;
+        private final LocalDateTime createdAt;
+        private final Long view;
         public InformationListRespDTO(Information information){
             this.informationId = information.getInformationId();
             this.informationCategory = new InformationCategoryRespDTO(information.getInformationCategoryId());

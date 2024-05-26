@@ -54,16 +54,16 @@ public class CommunicationDTO {
     @AllArgsConstructor
     @Getter
     public static class CommunicationListRespDTO{
-        private Long communicationId;
-        private CommunicationCategoryRespDTO communicationCategory;
-        private PostMemberResponse writer;
-        private String title;
+        private final Long communicationId;
+        private final CommunicationCategoryRespDTO communicationCategory;
+        private final PostMemberResponse writer;
+        private final String title;
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-        private LocalDateTime createdAt;
-        private Long view;
-        private int commentCnt;
-        private int agreeCnt;
-        private int disagreeCnt;
+        private final LocalDateTime createdAt;
+        private final Long view;
+        private final int commentCnt;
+        private final int agreeCnt;
+        private final int disagreeCnt;
         public CommunicationListRespDTO(Communication communication){
             VoteDTO.VoteRespDTO voteRespDTO=communication.aboutVoteWithoutMember();
             this.communicationId = communication.getCommunicationId();
