@@ -1,7 +1,6 @@
 package com.fastcampus.aptner.post.opinion.controller;
 
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
-import com.fastcampus.aptner.jwt.util.isLogin;
 import com.fastcampus.aptner.post.opinion.domain.CommentType;
 import com.fastcampus.aptner.post.opinion.dto.CommentDTO;
 import com.fastcampus.aptner.post.opinion.service.CommentService;
@@ -27,7 +26,7 @@ public class CommentController {
     )
     @GetMapping("/{postId}")
     public ResponseEntity<?> getComments(
-            @isLogin JWTMemberInfoDTO request,
+            @AuthenticationPrincipal JWTMemberInfoDTO request,
             @PathVariable Long postId,
             @RequestParam CommentType commentType) {
         return commentService.getCommentsResp(postId, commentType, request);
