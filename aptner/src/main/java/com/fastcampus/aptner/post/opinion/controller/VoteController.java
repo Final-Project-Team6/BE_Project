@@ -46,4 +46,19 @@ public class VoteController {
             @RequestParam VoteType voteType) {
         return voteService.deleteVote(memberToken, postId, voteType);
     }
+
+    @Operation(
+            summary = "공감/비공감 수정 API",
+            description = "postId : 공감/비공감 수정하려는 게시글 ID\n\n" +
+                    "voteType : 공감/비공감 하려는 게시글 타입 ANNOUNCEMENT(공지사항 공감), COMPLAINT(민원 공감), COMMUNICATION(소통 공간 공감), COMMENT(댓글 공감)\n\n" +
+                    "opinion : 공감(true) 비공감 (false)"
+    )
+    @PatchMapping("/{postId}")
+    public ResponseEntity<HttpStatus> updateVote(
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
+            @PathVariable Long postId,
+            @RequestParam VoteType voteType,
+            @RequestParam Boolean opinion) {
+        return voteService.updateVote(memberToken, postId, voteType, opinion);
+    }
 }
