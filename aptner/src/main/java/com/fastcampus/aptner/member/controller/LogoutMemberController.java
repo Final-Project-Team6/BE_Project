@@ -30,5 +30,4 @@ public class LogoutMemberController {
         refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
         return new ResponseEntity<>(new HttpResponse<>(1, "로그아웃 되었습니다.", null), HttpStatus.OK);
     }
-
 }

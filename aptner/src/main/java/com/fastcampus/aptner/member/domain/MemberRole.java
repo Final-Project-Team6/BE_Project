@@ -33,6 +33,16 @@ public class MemberRole {
         this.apartmentId = apartmentId;
     }
 
+    public MemberRole(RoleName roleName, Member memberId, Apartment apartmentId) {
+        this.roleName = roleName;
+        this.memberId = memberId;
+        this.apartmentId = apartmentId;
+    }
+
+    public static MemberRole of(RoleName roleName, Member memberId, Apartment apartmentId) {
+        return new MemberRole(roleName, memberId, apartmentId);
+    }
+
     public void changeMember(Member memberId) {
         this.memberId = memberId;
     }

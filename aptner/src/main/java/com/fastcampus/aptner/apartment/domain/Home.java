@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString(exclude = {"apartmentId"})
+@ToString(exclude = {"apartmentId", "memberHomes"})
 @Table(name = "home")
 @Entity
 public class Home {
@@ -44,5 +44,14 @@ public class Home {
 
     public void changeApartment(Apartment apartment) {
         this.apartmentId = apartment;
+    }
+
+
+    public void changeDong(String dong) {
+        this.dong = dong;
+    }
+
+    public void changeHo(String ho) {
+        this.ho = ho;
     }
 }

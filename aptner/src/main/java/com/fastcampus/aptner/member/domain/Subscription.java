@@ -56,4 +56,18 @@ public class Subscription {
         this.memberId = memberId;
     }
 
+    public void changeTermsService(Boolean termsService) {
+        this.termsService = termsService;
+        this.termsServiceAgreementModifiedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    }
+
+    public void changePrivateInformationCollection(Boolean privateInformationCollection) {
+        this.privateInformationCollection = privateInformationCollection;
+        this.privateInformationCollectionModifiedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    }
+
+    public void changeSnsMarketingInformationReceive(Boolean snsMarketingInformationReceive) {
+        this.snsMarketingInformationReceive = snsMarketingInformationReceive;
+        this.snsMarketingInformationReceiveModifiedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    }
 }
