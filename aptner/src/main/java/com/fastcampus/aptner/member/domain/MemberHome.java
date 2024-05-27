@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@ToString(exclude = {"homeId", "memberId"})
 @Table(name = "member_home")
 @Entity
 public class MemberHome {
@@ -26,9 +26,9 @@ public class MemberHome {
     private Member memberId;
 
     @Builder
-    public MemberHome(Home home, Member member) {
-        this.homeId = home;
-        this.memberId = member;
+    public MemberHome(Home homeId, Member memberId) {
+        this.homeId = homeId;
+        this.memberId = memberId;
     }
 
     public void changeMember(Member member) {
