@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/post/announcement/admin")
+@RequestMapping("/api/admin/post/announcement")
 @Tag(name = "공지사항(관리자)", description = "공지사항 생성, 공지사항 수정, 공지사항 삭제, 공지사항 숨기기")
 public class AnnouncementAdminController {
     private final AnnouncementAdminService announcementService;
