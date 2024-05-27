@@ -51,7 +51,7 @@ public class SwaggerConfig {
     public GroupedOpenApi postGroup() {
         return GroupedOpenApi.builder()
                 .group("게시글 전체")
-                .pathsToMatch("/api/post/**")
+                .pathsToMatch("/api/post/**","/api/admin/post/**")
                 .build();
     }
 
@@ -59,15 +59,15 @@ public class SwaggerConfig {
     public GroupedOpenApi announcementGroup() {
         return GroupedOpenApi.builder()
                 .group("공지사항")
-                .pathsToMatch("/api/post/announcement/**")
+                .pathsToMatch("/api/post/announcement/**","/api/admin/post/announcement/**")
                 .build();
     }
 
     @Bean
     public GroupedOpenApi commentGroup() {
         return GroupedOpenApi.builder()
-                .group("댓글")
-                .pathsToMatch("/api/post/comment/**")
+                .group("댓글, 공감")
+                .pathsToMatch("/api/post/comment/**","/api/post/vote/**")
                 .build();
     }
 
@@ -75,7 +75,7 @@ public class SwaggerConfig {
     public GroupedOpenApi complaintGroup() {
         return GroupedOpenApi.builder()
                 .group("민원 게시판")
-                .pathsToMatch("/api/post/complaint/**")
+                .pathsToMatch("/api/post/complaint/**","/api/admin/post/complaint/**")
                 .build();
     }
 

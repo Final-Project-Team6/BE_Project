@@ -42,6 +42,7 @@ public class ComplaintServiceImpl implements ComplaintService {
 
     @Override
     public ResponseEntity<HttpStatus> uploadComplaint(JWTMemberInfoDTO userToken, Long apartmentId, ComplaintDTO.ComplaintReqDTO dto) {
+        if (userToken==null) throw new RestAPIException(MUST_AUTHORIZE);
         Member member = memberCommonService.getUserByToken(userToken);
         isCorrectApartment(userToken, apartmentId);
         ComplaintCategory category = complaintCommonService.getComplaintCategoryEntity(dto.complaintCategoryId());
@@ -63,7 +64,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Transactional
     public ResponseEntity<HttpStatus> deleteComplaint(JWTMemberInfoDTO userToken, Long complaintId) {
         Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
-        isSameUser(complaint.getMemberId().getMemberId(), userToken);
+        requestHasRole(userToken, complaint);
         complaint.deleteComplaint();
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -81,6 +82,7 @@ public class ComplaintServiceImpl implements ComplaintService {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
+    @Override
     public ResponseEntity<PageResponseDTO> searchComplaint(ComplaintDTO.ComplaintSearchReqDTO reqDTO, JWTMemberInfoDTO memberToken) {
         PageRequest pageable = PageRequest.of(reqDTO.getPageNumber() - 1, reqDTO.getPageSize());
         reqDTO.setPageable(pageable);
@@ -106,6 +108,9 @@ public class ComplaintServiceImpl implements ComplaintService {
     }
 
     private static void isSameUser(Long memberId, JWTMemberInfoDTO userToken) {
+        if (userToken==null) {
+            throw new RestAPIException(MUST_AUTHORIZE);
+        }
         if (userToken.getMemberId() != memberId) {
             throw new RestAPIException(NOT_SAME_USER);
         }
@@ -116,7 +121,6 @@ public class ComplaintServiceImpl implements ComplaintService {
             throw new RestAPIException(MUST_AUTHORIZE);
         }
         if (userToken.getMemberId() != complaint.getMemberId().getMemberId()) {
-            System.out.println(userToken.getRoleName());
             if (userToken.getRoleName().equals("USER")) {
                 throw new RestAPIException(NOT_SAME_USER);
             }
