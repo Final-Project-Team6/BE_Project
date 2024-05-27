@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/post/communication/category")
-@Tag(name = "소통공간(사용자)", description = "소통공간 카테고리 조회")
+@Tag(name = "소통공간 카테고리(사용자)", description = "소통공간 카테고리 조회")
 public class CommunicationCategoryController {
 
     private final CommunicationCategoryService communicationCategoryService;
