@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static com.fastcampus.aptner.global.error.CommonErrorCode.MUST_AUTHORIZE;
 import static com.fastcampus.aptner.post.common.error.PostErrorCode.NOT_SAME_USER;
 import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 
@@ -53,7 +54,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public ResponseEntity<HttpStatus> uploadComment(JWTMemberInfoDTO token, Long postId, CommentDTO.UploadCommentReqDTO dto) {
-        Member member = memberCommonService.getUserByToken(token);
+        Member member = getMember(token);
         Comment comment = Comment.builder()
                 .memberId(member)
                 .contents(dto.contents())
@@ -91,7 +92,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> updateComment(JWTMemberInfoDTO token, Long commentId, String contents) {
-        Member member = memberCommonService.getUserByToken(token);
+        Member member = getMember(token);
         Comment comment = commentRepository.findById(commentId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
         if (member.getMemberId() != comment.getMemberId().getMemberId()) {
             throw new RestAPIException(NOT_SAME_USER);
@@ -103,12 +104,19 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> deleteComment(JWTMemberInfoDTO token, Long commentId) {
-        Member member = memberCommonService.getUserByToken(token);
+        Member member = getMember(token);
         Comment comment = commentRepository.findById(commentId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
         if (member.getMemberId() != comment.getMemberId().getMemberId()) {
             throw new RestAPIException(NOT_SAME_USER);
         }
         comment.setStatus(PostStatus.DELETED);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private Member getMember(JWTMemberInfoDTO token){
+        if (token==null){
+            throw new RestAPIException(MUST_AUTHORIZE);
+        }
+        return memberCommonService.getUserByToken(token);
     }
 }
