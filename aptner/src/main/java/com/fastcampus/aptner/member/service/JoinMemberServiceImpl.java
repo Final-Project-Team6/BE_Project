@@ -92,8 +92,8 @@ public class JoinMemberServiceImpl implements JoinMemberService {
 
         // MemberHome 엔티티 설정하기
         MemberHome memberHome = MemberHome.builder()
-                .home(home)
-                .member(member)
+                .homeId(home)
+                .memberId(member)
                 .build();
 
         // [연관 관계 메서드]: Member, MemberHome
