@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/post/announcement/category/admin")
+@RequestMapping("/api/admin/post/announcement/category")
 @Tag(name = "공지사항 카테고리(관리자)", description = "공지사항 카테고리 생성, 수정, 삭제")
 public class AnnouncementCategoryAdminController {
 
