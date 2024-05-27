@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/post/information/category/admin")
-@Tag(name = "정보공간(관리자)", description = "정보공간 카테고리 생성, 수정, 삭제")
+@Tag(name = "정보공간 카테고리(관리자)", description = "정보공간 카테고리 생성, 수정, 삭제")
 public class InformationCategoryAdminController {
 
     private final InformationCategoryAdminService informationCategoryAdminService;
