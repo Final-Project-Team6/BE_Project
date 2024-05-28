@@ -80,7 +80,9 @@ public class SecurityConfig {
                                 .requestMatchers("/api/apartment/**").permitAll()
                                 .requestMatchers("/api/update/**").hasAnyRole("USER", "MANAGER", "ADMIN")
                                 .requestMatchers("/api/admin/**").hasAnyRole("MANAGER","ADMIN")
-                                .requestMatchers("/api/post/**").permitAll()
+                                .requestMatchers("/api/post/**").hasAnyRole("USER", "MANAGER", "ADMIN")
+                                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
+                                .requestMatchers("/api/refresh-token/**").hasAnyRole("USER", "MANAGER", "ADMIN")
                                 .requestMatchers("/swagger/**","/api-docs/**", "/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**", "/").permitAll()
                                 .anyRequest().authenticated()
                 );

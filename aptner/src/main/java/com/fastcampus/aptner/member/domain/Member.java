@@ -71,7 +71,7 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MemberStatus status; // 회원 상태여부
 
-    private String profileImage; // TODO: 회원 프로필 이미지
+//    private String profileImage; // TODO: 회원 프로필 이미지
 
     @JsonIgnore
     @OneToMany(mappedBy = "memberRoleId", cascade = {CascadeType.ALL})
