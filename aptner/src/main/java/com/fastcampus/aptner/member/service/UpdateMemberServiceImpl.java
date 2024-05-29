@@ -9,6 +9,7 @@ import com.fastcampus.aptner.global.handler.exception.CustomDuplicationKeyExcept
 import com.fastcampus.aptner.member.domain.*;
 import com.fastcampus.aptner.member.dto.SubscriptionDTO;
 import com.fastcampus.aptner.member.dto.reqeust.InsertMemberHomeRequest;
+import com.fastcampus.aptner.member.dto.reqeust.UpdateMemberProfileRequest;
 import com.fastcampus.aptner.member.repository.MemberHomeRepository;
 import com.fastcampus.aptner.member.repository.MemberRepository;
 import com.fastcampus.aptner.member.repository.MemberRoleRepository;
@@ -206,5 +207,15 @@ public class UpdateMemberServiceImpl implements UpdateMemberService {
                 subscription.getPrivateInformationCollection(),
                 subscription.getSnsMarketingInformationReceive()
         );
+    }
+
+    @Override
+    public void updateMemberProfileImage(Long memberId, String profileImage) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomDataNotFoundException("회원이 존재하지 않습니다."));
+
+        member.updateMemberProfileImage(profileImage);
+
+        memberRepository.save(member);
     }
 }
