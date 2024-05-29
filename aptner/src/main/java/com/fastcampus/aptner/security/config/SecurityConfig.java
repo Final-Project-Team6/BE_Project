@@ -83,8 +83,9 @@ public class SecurityConfig {
                                 .requestMatchers(GET,"/api/post/**").permitAll() 
                                 .requestMatchers("/api/member/**", "/api/apartment/**", "/api/refresh-token/**").hasAnyRole("USER", "MANAGER", "ADMIN")
                                 .requestMatchers("/api/admin/**").hasAnyRole("MANAGER","ADMIN")
-                                .requestMatchers("/api/post/communication/admin/", "/api/post/communication/category/admin/").hasAnyRole("MANAGER","ADMIN")
-                                .requestMatchers("/api/post/information/admin/", "/api/post/information/category/admin/" ).hasAnyRole("MANAGER","ADMIN")
+                                .requestMatchers(HttpMethod.GET,"/api/post/**").permitAll()
+                                .requestMatchers("/api/post/**").hasAnyRole("USER", "MANAGER", "ADMIN")
+                                .requestMatchers("/api/refresh-token/**").hasAnyRole("USER", "MANAGER", "ADMIN")
                                 .requestMatchers("/swagger/**","/api-docs/**", "/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui/**", "/webjars/**", "/").permitAll()
                                 .anyRequest().authenticated()
                 );
