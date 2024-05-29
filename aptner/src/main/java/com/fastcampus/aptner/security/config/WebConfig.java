@@ -19,9 +19,10 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:3000") // 프론트엔드 포트
                 .allowedOrigins("http://localhost:8080") // 백엔드 포트1
                 .allowedOrigins("http://localhost:8081") // 백엔드 포트2
-                .allowedOrigins("https://aptner.shop")
                 .allowedOrigins("https://aptner.shop/swagger-ui/**")
                 .allowedOrigins("https://aptner.shop/**")
+                .allowedOrigins("http://aptner.shop/**")
+                .allowedOrigins("https://fe-project-tau.vercel.app/seoul-signiel/**")
                 .allowedMethods("GET", "POST", "PATCH", "PUT", "OPTIONS", "DELETE");
 //                .allowCredentials(true);
     }
