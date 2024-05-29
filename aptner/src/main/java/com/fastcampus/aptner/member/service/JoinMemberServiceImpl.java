@@ -84,7 +84,7 @@ public class JoinMemberServiceImpl implements JoinMemberService {
 
         // TODO: 예외 생성하기
         // Apartment 엔티티 가져오기
-        Apartment apartment = apartmentRepository.findApartmentByName(request.getApartmentName())
+        Apartment apartment = apartmentRepository.findApartmentByApartmentId(request.getApartmentId())
                 .orElseThrow(() -> new CustomAPIException("아파트가 존재하지 않습니다."));
 
         // [연관 관계 메서드]: Home, Apartment
