@@ -63,12 +63,10 @@ public class JoinMemberRequest {
     @Size(min = 1, max = 8)
     private final String ho;
 
-    @Size(min = 2, max = 24)
-    private final String apartmentName;
-
+    private Long apartmentId;
 
     @Builder
-    public JoinMemberRequest(Boolean termsService, Boolean privateInformationCollection, Boolean snsMarketingInformationReceive, String fullName, String birthFirst, String gender, String phone, String username, String password, String nickname, String dong, String ho, String apartmentName) {
+    public JoinMemberRequest(Boolean termsService, Boolean privateInformationCollection, Boolean snsMarketingInformationReceive, String fullName, String birthFirst, String gender, String phone, String username, String password, String nickname, String dong, String ho, Long apartmentId) {
         this.termsService = termsService;
         this.privateInformationCollection = privateInformationCollection;
         this.snsMarketingInformationReceive = snsMarketingInformationReceive;
@@ -81,6 +79,6 @@ public class JoinMemberRequest {
         this.nickname = nickname;
         this.dong = dong;
         this.ho = ho;
-        this.apartmentName = apartmentName;
+        this.apartmentId = apartmentId;
     }
 }

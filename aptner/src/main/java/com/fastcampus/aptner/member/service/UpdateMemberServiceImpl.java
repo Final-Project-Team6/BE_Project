@@ -4,7 +4,6 @@ import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.apartment.domain.Home;
 import com.fastcampus.aptner.apartment.repository.ApartmentRepository;
 import com.fastcampus.aptner.apartment.repository.HomeRepository;
-import com.fastcampus.aptner.global.handler.exception.CustomAPIException;
 import com.fastcampus.aptner.global.handler.exception.CustomDataNotFoundException;
 import com.fastcampus.aptner.global.handler.exception.CustomDuplicationKeyException;
 import com.fastcampus.aptner.member.domain.*;

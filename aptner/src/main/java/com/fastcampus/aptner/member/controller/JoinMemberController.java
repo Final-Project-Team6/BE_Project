@@ -34,8 +34,7 @@ public class JoinMemberController {
                     "password: 회원 비밀번호(필수)\n\n" +
                     "nickname: 회원 닉네임(필수)\n\n" +
                     "dong: 회원 아파트 동(필수)\n\n" +
-                    "ho: 회원 아파트 호(필수)\n\n" +
-                    "apartmentName: 회원 아파트 이름(필수)"
+                    "ho: 회원 아파트 호(필수)\n\n"
     )
     @PostMapping("/join")
     public ResponseEntity<?> joinMember(@RequestBody @Valid JoinMemberRequest request, BindingResult result) {
