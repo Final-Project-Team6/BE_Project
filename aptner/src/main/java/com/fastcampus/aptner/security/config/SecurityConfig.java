@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -26,6 +27,8 @@ import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
+
+import static org.springframework.http.HttpMethod.*;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -77,7 +80,7 @@ public class SecurityConfig {
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // Preflight 요청은 허용
                                 .requestMatchers("/api/member/join", "/api/member/login", "/api/member/logout").permitAll()
-                                .requestMatchers("/api/post/**").permitAll() // TODO: 인기글, 소통글 중요 혹은 최신글 반영 이슈 때문에 PERMITALL 으로 열어두자.
+                                .requestMatchers(GET,"/api/post/**").permitAll() 
                                 .requestMatchers("/api/member/**", "/api/apartment/**", "/api/refresh-token/**").hasAnyRole("USER", "MANAGER", "ADMIN")
                                 .requestMatchers("/api/admin/**").hasAnyRole("MANAGER","ADMIN")
                                 .requestMatchers("/api/post/communication/admin/", "/api/post/communication/category/admin/").hasAnyRole("MANAGER","ADMIN")
