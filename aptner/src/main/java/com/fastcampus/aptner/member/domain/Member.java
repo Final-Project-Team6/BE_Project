@@ -71,6 +71,8 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MemberStatus status; // 회원 상태여부
 
+    private String profileImage; // TODO: 회원 프로필 이미지
+
     @JsonIgnore
     @OneToMany(mappedBy = "memberRoleId", cascade = {CascadeType.ALL})
     private List<MemberRole> memberRole = new ArrayList<>(); // 회원 권한
@@ -156,5 +158,10 @@ public class Member extends BaseTimeEntity {
     // 회원 닉네임 변경하기
     public void updateMemberNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    // 회원 활성화 여부 변경하기
+    public void updateMemberStatus(String status) {
+         this.status = MemberStatus.valueOf(status);
     }
 }

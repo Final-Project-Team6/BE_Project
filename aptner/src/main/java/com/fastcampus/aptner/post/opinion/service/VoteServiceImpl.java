@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import static com.fastcampus.aptner.global.error.CommonErrorCode.MUST_AUTHORIZE;
 import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 import static com.fastcampus.aptner.post.common.error.VoteErrorCode.ALREADY_EXiSTS;
 
@@ -39,7 +40,7 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public ResponseEntity<HttpStatus> voteToPost(JWTMemberInfoDTO token, Long postId, VoteType voteType, Boolean opinion) {
-        Member member = memberCommonService.getUserByToken(token);
+        Member member = getMember(token);
         if (opinion==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -100,7 +101,7 @@ public class VoteServiceImpl implements VoteService {
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> deleteVote(JWTMemberInfoDTO token, Long postId, VoteType voteType) {
-        Member member = memberCommonService.getUserByToken(token);
+        Member member = getMember(token);
         Vote vote = getVoteByVoteType(postId,voteType,member);
         if (vote != null) {
             voteRepository.delete(vote);
@@ -112,7 +113,7 @@ public class VoteServiceImpl implements VoteService {
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> updateVote(JWTMemberInfoDTO token, Long postId, VoteType voteType, Boolean opinion){
-        Member member = memberCommonService.getUserByToken(token);
+        Member member = getMember(token);
         if (opinion==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -145,5 +146,12 @@ public class VoteServiceImpl implements VoteService {
             }
         }
         return vote;
+    }
+
+    private Member getMember(JWTMemberInfoDTO token){
+        if (token==null){
+            throw new RestAPIException(MUST_AUTHORIZE);
+        }
+        return memberCommonService.getUserByToken(token);
     }
 }
