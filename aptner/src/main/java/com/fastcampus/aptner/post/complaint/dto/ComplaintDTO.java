@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -137,5 +138,6 @@ public class ComplaintDTO {
         private ComplaintType complaintType;
         private Long categoryId;
         private Boolean myComplaint;
+        private LocalDate period;
     }
 }

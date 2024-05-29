@@ -4,9 +4,11 @@ import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
+import com.fastcampus.aptner.post.common.enumType.BoardType;
 import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.communication.domain.Communication;
 import com.fastcampus.aptner.post.complaint.domain.Complaint;
+import com.fastcampus.aptner.post.opinion.dto.CommentDTO;
 import com.fastcampus.aptner.post.opinion.dto.VoteDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -111,5 +113,41 @@ public class Comment extends BaseTimeEntity {
             }
         }
         return null;
+    }
+
+    public CommentDTO.Post getPost() {
+        Comment first = getFirst();
+        CommentDTO.Post post = null;
+        if (first.communicationId != null) {
+            post = CommentDTO.Post.builder()
+                    .postId(first.communicationId.getCommunicationId())
+                    .postTitle(first.communicationId.getTitle())
+                    .boardType(BoardType.COMMUNICATION)
+                    .build();
+
+        } else if (first.complaintId != null) {
+            post = CommentDTO.Post.builder()
+                    .postId(first.complaintId.getComplaintId())
+                    .postTitle(first.complaintId.getTitle())
+                    .boardType(BoardType.COMPLAINT)
+                    .build();
+        } else if (first.announcementId != null) {
+            post = CommentDTO.Post.builder()
+                    .postId(first.announcementId.getAnnouncementId())
+                    .postTitle(first.announcementId.getTitle())
+                    .boardType(BoardType.ANNOUNCEMENT)
+                    .build();
+        } else {
+            throw new RuntimeException();
+        }
+        return post;
+    }
+
+    public Comment getFirst() {
+        if (parentId != null) {
+            return parentId.getFirst();
+        } else {
+            return this;
+        }
     }
 }

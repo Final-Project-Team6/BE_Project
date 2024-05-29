@@ -9,6 +9,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.Arrays;
@@ -42,6 +45,16 @@ public class CommentRepositoryDslImpl extends QuerydslRepositorySupport implemen
         return query.fetch();
     }
 
+    @Override
+    public Page<Comment> getMyComments(Long memberId, Pageable pageable) {
+        JPAQuery<Comment> query = queryFactory.selectFrom(comment)
+                .groupBy(comment.commentId)
+                .where(myComment(memberId))
+                .orderBy(sortByDay());
+        List<Comment> informationList = this.getQuerydsl().applyPagination(pageable, query).fetch();
+        return new PageImpl<>(informationList, pageable, query.fetchCount());
+    }
+
     private BooleanExpression setWithoutParent() {
         return comment.parentId.isNull();
     }
@@ -71,5 +84,9 @@ public class CommentRepositoryDslImpl extends QuerydslRepositorySupport implemen
 
     private OrderSpecifier<?> sortByDay() {
         return new OrderSpecifier<>(Order.ASC, comment.createdAt);
+    }
+
+    private BooleanExpression myComment(Long memberId) {
+        return comment.memberId.memberId.eq(memberId);
     }
 }
