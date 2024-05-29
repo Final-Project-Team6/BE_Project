@@ -24,18 +24,18 @@ public class JoinMemberController {
             summary = "회원 가입 API",
             description =
                     "termsService: 서비스 이용 약관 동의(필수) \n\n" +
-                    "privateInformationCollection: 개인 정보 수집 동의(필수)\n\n" +
-                    "snsMarketingInformationReceive: SNS 마케팅 정보 수신 동의(선택)\n\n" +
-                    "fullName: 회원 이름\n\n" +
-                    "birthFirst: 회원 주민등록번호 앞자리(본인인증없이 가입된 회원은 선택입니다.)\n\n" +
-                    "gender: 회원 성별(본인인증없이 가입된 회원은 선택입니다.)\n\n" +
-                    "phone: 회원 휴대전화번호(필수)\n\n" +
-                    "username: 회원 아이디(필수)\n\n" +
-                    "password: 회원 비밀번호(필수)\n\n" +
-                    "nickname: 회원 닉네임(필수)\n\n" +
-                    "dong: 회원 아파트 동(필수)\n\n" +
-                    "ho: 회원 아파트 호(필수)\n\n" +
-                    "apartmentName: 회원 아파트 이름(필수)"
+                            "privateInformationCollection: 개인 정보 수집 동의(필수)\n\n" +
+                            "snsMarketingInformationReceive: SNS 마케팅 정보 수신 동의(선택)\n\n" +
+                            "fullName: 회원 이름\n\n" +
+                            "birthFirst: 회원 주민등록번호 앞자리(본인인증없이 가입된 회원은 선택입니다.)\n\n" +
+                            "gender: 회원 성별(본인인증없이 가입된 회원은 선택입니다.)\n\n" +
+                            "phone: 회원 휴대전화번호(필수)\n\n" +
+                            "username: 회원 아이디(필수)\n\n" +
+                            "password: 회원 비밀번호(필수)\n\n" +
+                            "nickname: 회원 닉네임(필수)\n\n" +
+                            "dong: 회원 아파트 동(필수)\n\n" +
+                            "ho: 회원 아파트 호(필수)\n\n" +
+                            "apartmentId: 회원 아파트 고유 식별 번호(필수)"
     )
     @PostMapping("/join")
     public ResponseEntity<?> joinMember(@RequestBody @Valid JoinMemberRequest request, BindingResult result) {
