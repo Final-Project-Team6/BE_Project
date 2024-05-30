@@ -15,8 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
 import java.util.Objects;
+
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 
 @Service
 @Slf4j
@@ -29,15 +30,17 @@ public class CommunicationAdminServiceImpl implements CommunicationAdminService{
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> deleteCommunicationAdmin(JWTMemberInfoDTO userToken, Long communicationId) {
-        Communication communication = communicationRepository.findById(communicationId).orElseThrow(NoSuchElementException::new);
+        Communication communication = communicationRepository.findById(communicationId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
         checkApartmentByCommunication(userToken, communication);
-
-        if (userToken.getRoleName().equals(RoleName.ADMIN.getRoleName())) {
+        /*if (userToken.getRoleName().equals(RoleName.ADMIN.getRoleName())) {
             communication.deleteCommunicationAdmin();
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        }*/
+        //강제삭제 버튼(나중에 삭제할 것)
+        communication.deleteCommunication();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private void checkApartmentByCommunication(JWTMemberInfoDTO userToken,Communication communication){
