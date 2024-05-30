@@ -58,6 +58,9 @@ public class Communication {
     @Column(name = "status", nullable = false)
     private PostStatus status;
 
+    @Column(name = "secret", nullable = false)
+    private boolean secret;
+
     @Column
     private Long view;
 
@@ -67,7 +70,7 @@ public class Communication {
     @OneToMany(mappedBy = "communicationId", fetch = FetchType.LAZY)
     private List<Vote> voteList = new ArrayList<>();
     @Builder
-    public Communication(Member memberId, CommunicationCategory communicationCategoryId, String title, String contents, LocalDateTime createdAt, LocalDateTime modifiedAt, PostStatus status, Long view) {
+    public Communication(Member memberId, CommunicationCategory communicationCategoryId, String title, String contents, LocalDateTime createdAt, LocalDateTime modifiedAt, PostStatus status, Long view,boolean secret) {
         this.memberId = memberId;
         this.communicationCategoryId = communicationCategoryId;
         this.title = title;
@@ -76,9 +79,11 @@ public class Communication {
         this.modifiedAt = modifiedAt;
         this.status = status;
         this.view = view;
+        this.secret = secret;
     }
 
     public static Communication from(Member member, CommunicationCategory communicationCategory, CommunicationDTO.CommunicationPostReqDTO dto){
+        boolean secretValue = dto.secret() != null ? dto.secret() : false;
         return Communication.builder()
                 .communicationCategoryId(communicationCategory)
                 .memberId(member)
@@ -86,6 +91,7 @@ public class Communication {
                 .contents(dto.contents())
                 .status(dto.status())
                 .view(0L)
+                .secret(secretValue)
                 .build();
     }
 

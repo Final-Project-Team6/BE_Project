@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/post/information/category/admin")
-@Tag(name = "정보공간(관리자)", description = "정보공간 카테고리 생성, 수정, 삭제")
+@Tag(name = "정보공간 카테고리(관리자)", description = "정보공간 카테고리 생성, 수정, 삭제")
 public class InformationCategoryAdminController {
 
     private final InformationCategoryAdminService informationCategoryAdminService;
@@ -33,7 +33,7 @@ public class InformationCategoryAdminController {
 
     @Operation(
             summary = "정보공간 카테고리 수정 API",
-            description = "Schema -> 정보공간 카테고리 수정 \n\n apartmentId : 현재 사용중인 아파트 ID\n\n informationCategoryId : 수정하려는 정보공간 카테고리 ID"
+            description = "Schema -> 정보공간 카테고리 수정 \n\n informationCategoryId : 수정하려는 정보공간 카테고리 ID"
     )
     @PatchMapping(value = "/{informationCategoryId}")
     public ResponseEntity<HttpStatus> updateInformationCategory(
@@ -45,7 +45,7 @@ public class InformationCategoryAdminController {
 
     @Operation(
             summary = "정보공간 카테고리 삭제 API",
-            description = "apartmentId : 현재 사용중인 아파트 ID\n\n informationCategoryId : 삭제하려는 정보공간 ID"
+            description = "informationCategoryId : 삭제하려는 정보공간 카테고리 ID"
     )
     @DeleteMapping(value ="/{informationCategoryId}")
     public ResponseEntity<HttpStatus> deleteCommunicationCategory(

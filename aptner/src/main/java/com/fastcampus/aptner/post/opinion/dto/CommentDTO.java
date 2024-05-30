@@ -2,6 +2,7 @@ package com.fastcampus.aptner.post.opinion.dto;
 
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.dto.response.PostMemberResponse;
+import com.fastcampus.aptner.post.common.enumType.BoardType;
 import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.opinion.domain.Comment;
 import com.fastcampus.aptner.post.opinion.domain.CommentType;
@@ -62,5 +63,35 @@ public class CommentDTO {
 
     @Schema(name = "댓글 수정", description = "댓글 수정 요청 Body")
     public record UpdateComment(String contents) {
+    }
+
+    @Getter
+    public static class MyCommentResp {
+        private final Long commentId;
+        private final String contents;
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+        private final LocalDateTime createdAt;
+        private final BoardType boardType;
+        private final Long postId;
+        private final String postTitle;
+
+        public MyCommentResp(Comment comment) {
+            Post post = comment.getPost();
+            this.commentId = comment.getCommentId();
+            this.contents = comment.getContents();
+            this.createdAt = comment.getCreatedAt();
+            this.boardType = post.boardType;
+            this.postId = post.postId;
+            this.postTitle = post.postTitle;
+        }
+    }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class Post {
+        private Long postId;
+        private String postTitle;
+        private BoardType boardType;
     }
 }

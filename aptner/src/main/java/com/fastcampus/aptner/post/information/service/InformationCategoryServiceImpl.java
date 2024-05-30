@@ -2,6 +2,7 @@ package com.fastcampus.aptner.post.information.service;
 
 import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.apartment.repository.ApartmentRepository;
+import com.fastcampus.aptner.global.handler.exception.CustomAPIException;
 import com.fastcampus.aptner.post.information.domain.InformationCategory;
 import com.fastcampus.aptner.post.information.dto.InformationDTO;
 import com.fastcampus.aptner.post.information.repository.InformationCategoryRepository;
@@ -28,9 +29,11 @@ public class InformationCategoryServiceImpl implements InformationCategoryServic
     @Override
     @Transactional
     public ResponseEntity<List<InformationDTO.InformationCategoryRespDTO>> getInformationCategoryList(Long apartmentId) {
-        Apartment apartment = apartmentRepository.findApartmentByApartmentId(apartmentId).get();
+        Apartment apartment = apartmentRepository.findApartmentByApartmentId(apartmentId).orElseThrow(() -> new CustomAPIException("아파트가 존재하지 않습니다."));
         List<InformationCategory> list = informationCategoryRepository.findAllByApartmentId(apartment);
         List<InformationDTO.InformationCategoryRespDTO> resp = list.stream().map(InformationDTO.InformationCategoryRespDTO::new).toList();
+        if(list.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 }

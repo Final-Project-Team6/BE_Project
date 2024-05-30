@@ -30,7 +30,7 @@ public class UpdateMemberController {
             description = "USER, MANAGER, ADMIN 권한 필수\n\n" +
                     "authenticationStatus: 회원 인증 상태 여부(필수)"
     )
-    @PatchMapping("/update/authentication-status")
+    @PatchMapping("/authentication-status")
     public ResponseEntity<?> updateMemberStatus(@AuthenticationPrincipal JWTMemberInfoDTO request,
                                                 @RequestBody @Valid UpdateAuthenticationStatusRequest statusRequest) {
         memberService.updateAuthenticationStatusById(request.getMemberId(), statusRequest.getAuthenticationStatus());
@@ -40,11 +40,11 @@ public class UpdateMemberController {
 
     @Operation(
             summary = "회원 닉네임 수정 API",
-            description = "액세스 토큰(필수, Headers(Authorization)) \n\n" +
+            description = "USER, MANAGER, ADMIN 권한 필수\n\n" +
                     "nickname: 회원 닉네임 수정(필수)"
     )
     @PreAuthorize("hasAnyRole('USER', 'MANAGER', 'ADMIN')")
-    @PatchMapping("/update/nickname")
+    @PatchMapping("/nickname")
     public ResponseEntity<?> updateMemberNickname(@AuthenticationPrincipal JWTMemberInfoDTO request,
                                                   @RequestBody @Valid UpdateNicknameRequest nicknameRequest,
                                                   BindingResult bindingResult) {
@@ -57,11 +57,11 @@ public class UpdateMemberController {
 
     @Operation(
             summary = "회원 휴대전화번호 수정 API",
-            description = "액세스 토큰(필수, Headers(Authorization)) \n\n" +
+            description = "USER, MANAGER, ADMIN 권한 필수\n\n" +
                     "phone: 회원 휴대전화번호 수정(필수)"
     )
     @PreAuthorize("hasAnyRole('USER', 'MANAGER', 'ADMIN')")
-    @PatchMapping("/update/phone")
+    @PatchMapping("/phone")
     public ResponseEntity<?> updateMemberPhone(@AuthenticationPrincipal JWTMemberInfoDTO request,
                                                @RequestBody @Valid UpdatePhoneRequest phoneRequest,
                                                BindingResult bindingResult) {
@@ -74,11 +74,11 @@ public class UpdateMemberController {
 
     @Operation(
             summary = "회원 비밀번호 수정 API",
-            description = "액세스 토큰(필수, Headers(Authorization)) \n\n" +
+            description = "USER, MANAGER, ADMIN 권한 필수\n\n" +
                     "password: 회원 비밀번호 수정(필수)"
     )
     @PreAuthorize("hasAnyRole('USER', 'MANAGER', 'ADMIN')")
-    @PatchMapping("/update/password")
+    @PatchMapping("/password")
     public ResponseEntity<?> updateMemberPassword(@AuthenticationPrincipal JWTMemberInfoDTO request,
                                                   @RequestBody @Valid UpdatePasswordRequest passwordRequest,
                                                   BindingResult bindingResult) {
@@ -91,11 +91,11 @@ public class UpdateMemberController {
 
     @Operation(
             summary = "회원 권한 수정 API",
-            description = "액세스 토큰(필수, Headers(Authorization)) \n\n" +
+            description = "USER, MANAGER, ADMIN 권한 필수\n\n" +
                     "roleName: 회원 권한 수정(필수)"
     )
     @PreAuthorize("hasAnyRole('USER', 'MANAGER', 'ADMIN')")
-    @PatchMapping("/update/role")
+    @PatchMapping("/role")
     public ResponseEntity<?> updateMemberRole(@AuthenticationPrincipal JWTMemberInfoDTO request,
                                               @RequestBody @Valid UpdateMemberRoleRequest roleRequest,
                                               BindingResult bindingResult) {
@@ -108,12 +108,12 @@ public class UpdateMemberController {
 
     @Operation(
             summary = "회원 자택 추가 API",
-            description = "액세스 토큰(필수, Headers(Authorization)) \n\n" +
+            description = "USER, MANAGER, ADMIN 권한 필수\n\n" +
                     "dong: 회원 아파트 동 추가(필수)\n\n" +
                     "ho: 회원 아파트 호 추가(필수)"
     )
     @PreAuthorize("hasAnyRole('USER', 'MANAGER', 'ADMIN')")
-    @PostMapping("/insert/home")
+    @PostMapping("/home")
     public ResponseEntity<?> insertMemberHome(@AuthenticationPrincipal JWTMemberInfoDTO request,
                                               @RequestBody @Valid InsertMemberHomeRequest homeRequest,
                                               BindingResult bindingResult) {
@@ -127,11 +127,11 @@ public class UpdateMemberController {
 
     @Operation(
             summary = "회원 자택 삭제 API",
-            description = "액세스 토큰(필수, Headers(Authorization)) \n\n" +
+            description = "USER, MANAGER, ADMIN 권한 필수\n\n" +
                     "homeId: 자택 고유 식별 번호"
     )
     @PreAuthorize("hasAnyRole('USER', 'MANAGER', 'ADMIN')")
-    @DeleteMapping("/delete/home/{homeId}")
+    @DeleteMapping("/home/{homeId}")
     public ResponseEntity<?> deleteMemberHome(@AuthenticationPrincipal JWTMemberInfoDTO request,
                                               @PathVariable(name = "homeId") Long homeId) {
 
@@ -143,13 +143,13 @@ public class UpdateMemberController {
 
     @Operation(
             summary = "회원 자택 수정 API",
-            description = "액세스 토큰(필수, Headers(Authorization)) \n\n" +
+            description = "USER, MANAGER, ADMIN 권한 필수\n\n" +
                     "homeId: 자택 고유 식별 번호\n\n" +
                     "newDong: 아파트 동\n\n" +
                     "newHo: 아파트 호"
     )
     @PreAuthorize("hasAnyRole('USER', 'MANAGER', 'ADMIN')")
-    @PutMapping("/update/home/{homeId}")
+    @PutMapping("/home/{homeId}")
     public ResponseEntity<?> updateMemberHome(@AuthenticationPrincipal JWTMemberInfoDTO request,
                                               @PathVariable(name = "homeId") Long homeId,
                                               @RequestParam(name = "dong") String dong,
@@ -163,11 +163,11 @@ public class UpdateMemberController {
 
     @Operation(
             summary = "회원 활성화 상태 변경 API",
-            description = "액세스 토큰(필수, Headers(Authorization)) \n\n" +
+            description = "USER, MANAGER, ADMIN 권한 필수\n\n" +
                     "status: 회원 활성화 상태(ACTIVATE, DEACTIVATE)\n\n"
     )
     @PreAuthorize("hasAnyRole('USER', 'MANAGER', 'ADMIN')")
-    @PatchMapping("/update/status")
+    @PatchMapping("/status")
     public ResponseEntity<?> updateMemberStatus(@AuthenticationPrincipal JWTMemberInfoDTO request,
                                                 @RequestBody UpdateMemberStatusRequest status) {
 
@@ -179,7 +179,7 @@ public class UpdateMemberController {
 
     @Operation(
             summary = "회원 구독 정보 수정 API",
-            description = "액세스 토큰(필수, Headers(Authorization)) \n\n" +
+            description = "USER, MANAGER, ADMIN 권한 필수\n\n" +
                     "termsService: 서비스 이용 약관 동의(필수)\n\n" +
                     "privateInformationCollection: 개인 정보 수집 동의(필수)" +
                     "snsMarketingInformationReceive: SNS 마케팅 정보 수신 동의(선택)"
@@ -201,5 +201,19 @@ public class UpdateMemberController {
         SubscriptionDTO subscriptionDTO = memberService.getMemberSubscription(memberToken.getMemberId());
 
         return new ResponseEntity<>(new HttpResponse<>(1, "회원의 구독 정보입니다.", subscriptionDTO), HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "회원 프로필 수정 API",
+            description = "USER, MANAGER, ADMIN 권한 필수\n\n" +
+                    "profileImage: 회원 이미지(필수)"
+    )
+    @PatchMapping("/profile")
+    public ResponseEntity<?> updateMemberProfileImage(
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
+            @RequestBody UpdateMemberProfileRequest request) {
+        memberService.updateMemberProfileImage(memberToken.getMemberId(), request.getProfileImage());
+
+        return new ResponseEntity<>(new HttpResponse<>(1, "회원 이미지가 변경됐습니다.", null), HttpStatus.OK);
     }
 }
