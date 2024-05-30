@@ -23,8 +23,8 @@ public class CommunicationController {
     private final CommunicationService communicationService;
 
     @Operation(
-            summary = "소통글 생성 API",
-            description = "Schema -> 소통글 생성 \n\n apartmentId : 현재 사용중인 아파트 ID "
+            summary = "소통공간 생성 API",
+            description = "Schema -> 소통공간 생성 \n\n apartmentId : 현재 사용중인 아파트 ID "
     )
     @PostMapping(value = "/{apartmentId}")
     public ResponseEntity<HttpStatus> uploadCommunication(
@@ -35,8 +35,8 @@ public class CommunicationController {
     }
 
     @Operation(
-            summary = "소통글 수정 API",
-            description = "Schema -> 소통글 생성\n\n apartmentId : 현재 사용중인 아파트 ID\n\n communicationId : 수정하려는 소통글 ID"
+            summary = "소통공간 수정 API",
+            description = "Schema -> 소통공간 생성\n\n apartmentId : 현재 사용중인 아파트 ID\n\n communicationId : 수정하려는 소통글 ID"
     )
     @PatchMapping(value = "/{communicationId}")
     public ResponseEntity<HttpStatus> updateCommunication(
@@ -47,8 +47,8 @@ public class CommunicationController {
     }
 
     @Operation(
-            summary = "소통글 삭제 API",
-            description = "apartmentId : 현재 사용중인 아파트 ID\n\n communicationId : 삭제하려는 소통글 ID"
+            summary = "소통공간 삭제 API",
+            description = "communicationId : 삭제하려는 소통글 ID"
     )
     @DeleteMapping(value = "/{communicationId}")
     public ResponseEntity<HttpStatus> deleteCommunication(
@@ -57,22 +57,22 @@ public class CommunicationController {
         return communicationService.deleteCommunication(memberToken, communicationId);
     }
 
-
     @Operation(
-            summary = "소통글 목록 조회 API",
-            description = "apartmentId : 현재 사용중인 아파트 ID \n\n" +
+            summary = "소통공간 목록 조회 API",
+            description = "apartmentId : 현재 사용중인 아파트 ID\n\n" +
                     "pageNumber : 조회 페이지 번호\n\n" +
                     "pageSize : 페이지당 내용 개수\n\n" +
-                    "searchType : 검색어 검색 조건 => TITLE(제목), CONTENTS(내용), TITLE_CONTENTS(제목+내용);\n\n" +
+                    "searchType : 검색어 검색 조건 => TITLE(제목), CONTENTS(내용), TITLE_CONTENTS(제목+내용)\n\n" +
                     "orderType : 정렬 조건 => VIEW(조회수), COMMENT(댓글), VOTE(공감수), DATE(날짜)\n\n" +
                     "orderBy : 정렬 차순 => ASC(오름차순), DESC(내림차순)\n\n" +
                     "keyword : 검색어\n\n" +
-                    "communicationType : USER_COMMU(입주민 소통공간),REPRESENT_COMMU(입대의 소통공간);\n\n" +
+                    "communicationType : USER_COMMU(입주민 소통공간),REPRESENT_COMMU(입대의 소통공간)\n\n" +
                     "categoryId : 소통글 카테고리 ID\n\n" +
                     "apartmentId 를 제외한 나머지 값은 필수가 아니며, 포함하지 않으면 기본조건으로 처리하거나 영향을 주지 않습니다."
     )
     @GetMapping("/search/{apartmentId}")
     public ResponseEntity<?> searchCommunication(
+            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long apartmentId,
             @RequestParam(required = false, defaultValue = "1") int pageNumber,
             @RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -93,12 +93,12 @@ public class CommunicationController {
                 .communicationType(communicationType)
                 .categoryId(categoryId)
                 .build();
-        return communicationService.searchCommunication(reqDTO);
+        return communicationService.searchCommunication(reqDTO,memberToken);
     }
 
     @Operation(
-            summary = "소통글 조회 API",
-            description = "announcementId : 조회하려는 소통글 ID"
+            summary = "소통공간 조회 API",
+            description = "communicationId : 조회하려는 소통글 ID"
     )
     @GetMapping("/{communicationId}")
     public ResponseEntity<?> getCommunication(

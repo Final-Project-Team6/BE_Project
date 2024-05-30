@@ -29,8 +29,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
+
+import static com.fastcampus.aptner.global.error.CommonErrorCode.MUST_AUTHORIZE;
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -47,22 +49,19 @@ public class CommunicationServiceImpl implements CommunicationService {
 
     @Override
     public ResponseEntity<HttpStatus> uploadCommunication(JWTMemberInfoDTO userToken, Long apartmentId, CommunicationDTO.CommunicationPostReqDTO dto) {
+        if(userToken==null) throw new RestAPIException(MUST_AUTHORIZE);
         UserAndAPT userAndAPT = getUserAndAPT(userToken,apartmentId);
-        CommunicationCategory communicationCategory = communicationCategoryRepository.findById(dto.communicationCategoryId()).get();
-        Communication communication = Communication.from(userAndAPT.member,communicationCategory,dto);
-        //Todo 예외처리
-        communicationRepository.save(communication);
+        CommunicationCategory communicationCategory = communicationCategoryRepository.findById(dto.communicationCategoryId()).orElseThrow(()->new RestAPIException(NO_SUCH_CATEGORY));
+        communicationRepository.save(Communication.from(userAndAPT.member,communicationCategory,dto));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> updateCommunication(JWTMemberInfoDTO userToken, Long communicationId, CommunicationDTO.CommunicationPostReqDTO dto) {
-        Communication communication = communicationRepository.findById(communicationId).orElseThrow(NoSuchElementException::new);
-        checkApartmentByCommunication(userToken,communication);
-        CommunicationCategory communicationCategory = communicationCategoryRepository.findById(dto.communicationCategoryId()).get();
-        //Todo 권한 확인
-        //Todo 예외처리
+        Communication communication = communicationRepository.findById(communicationId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+        checkMemberByCommunication(userToken,communication);
+        CommunicationCategory communicationCategory = communicationCategoryRepository.findById(dto.communicationCategoryId()).orElseThrow(()->new RestAPIException(NO_SUCH_CATEGORY));
         communication.updateCommunication(communicationCategory,dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -70,20 +69,18 @@ public class CommunicationServiceImpl implements CommunicationService {
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> deleteCommunication(JWTMemberInfoDTO userToken, Long communicationId) {
-        Communication communication = communicationRepository.findById(communicationId).orElseThrow(NoSuchElementException::new);
-        checkApartmentByCommunication(userToken,communication);
-        //Todo 권한 확인
-        //Todo 예외처리
+        Communication communication = communicationRepository.findById(communicationId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+        requestHasRole(userToken,communication);
         communication.deleteCommunication();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<PageResponseDTO> searchCommunication(CommunicationDTO.CommunicationSearchReqDTO reqDTO) {
+    public ResponseEntity<PageResponseDTO> searchCommunication(CommunicationDTO.CommunicationSearchReqDTO reqDTO,JWTMemberInfoDTO memberToken) {
         PageRequest pageable = PageRequest.of(reqDTO.getPageNumber()-1,reqDTO.getPageSize());
         reqDTO.setPageable(pageable);
-        Page<Communication> result = communicationRepository.searchCommunication(reqDTO);
+        Page<Communication> result = communicationRepository.searchCommunication(reqDTO,memberToken);
         if (result.getContent().isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -101,15 +98,16 @@ public class CommunicationServiceImpl implements CommunicationService {
     @Override
     @Transactional
     public ResponseEntity<CommunicationDTO.CommunicationRespDTO> getCommunication(Long communicationId, JWTMemberInfoDTO token) {
-        Communication communication = communicationRepository.findById(communicationId).orElseThrow(NoSuchElementException::new);
+        Communication communication = communicationRepository.findById(communicationId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+        if (!communication.isSecret()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         CommunicationDTO.CommunicationRespDTO resp = new CommunicationDTO.CommunicationRespDTO(communication,token);
-        List<CommentDTO.ViewComments> comments = commentCommonService.getComments(communicationId, CommentType.ANNOUNCEMENT,token);
+        List<CommentDTO.ViewComments> comments = commentCommonService.getComments(communicationId, CommentType.COMMUNICATION,token);
         resp.setComments(comments);
         communication.addViewCount();
         return new ResponseEntity<>(resp,HttpStatus.OK);
-
     }
-
 
     @AllArgsConstructor
     public static class UserAndAPT{
@@ -126,9 +124,26 @@ public class CommunicationServiceImpl implements CommunicationService {
         return new UserAndAPT(member, apartment);
     }
 
-    private void checkApartmentByCommunication(JWTMemberInfoDTO userToken,Communication communication){
-        if (!Objects.equals(userToken.getApartmentId(), communication.getCommunicationCategoryId().getApartmentId().getApartmentId())){
-            throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
+    private void checkMemberByCommunication(JWTMemberInfoDTO userToken,Communication communication){
+        if (userToken==null) {
+            throw new RestAPIException(MUST_AUTHORIZE);
+        }
+        if (!Objects.equals(userToken.getMemberId(), communication.getMemberId().getMemberId())){
+            throw new RestAPIException(NOT_SAME_USER);
+        }
+    }
+
+    private static void requestHasRole(JWTMemberInfoDTO userToken, Communication communication) {
+        if (userToken == null) {
+            throw new RestAPIException(MUST_AUTHORIZE);
+        }
+        if (userToken.getMemberId() != communication.getMemberId().getMemberId()) {
+            if (userToken.getRoleName().equals("USER")) {
+                throw new RestAPIException(NOT_SAME_USER);
+            }
+            if (userToken.getApartmentId() != communication.getCommunicationCategoryId().getApartmentId().getApartmentId()) {
+                throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
+            }
         }
     }
 

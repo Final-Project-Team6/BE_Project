@@ -23,7 +23,7 @@ public class CommunicationAdminController {
 
     @Operation(
             summary = "소통글 삭제 API",
-            description = "apartmentId : 현재 사용중인 아파트 ID\n\n communicationId : 삭제하려는 소통글 ID"
+            description = "communicationId : 삭제하려는 소통글 ID"
     )
     @DeleteMapping(value = "/{communicationId}")
     public ResponseEntity<HttpStatus> deleteCommunication(
