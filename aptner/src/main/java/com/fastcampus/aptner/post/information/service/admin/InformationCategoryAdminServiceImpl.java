@@ -3,6 +3,7 @@ package com.fastcampus.aptner.post.information.service.admin;
 import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.apartment.repository.ApartmentRepository;
 import com.fastcampus.aptner.global.error.RestAPIException;
+import com.fastcampus.aptner.global.handler.exception.CustomAPIException;
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.post.common.error.PostErrorCode;
 import com.fastcampus.aptner.post.information.domain.InformationCategory;
@@ -17,10 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import static com.fastcampus.aptner.post.common.error.PostErrorCode.CANT_DELETE;
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_CATEGORY;
 
 @Service
 @Slf4j
@@ -34,7 +34,7 @@ public class InformationCategoryAdminServiceImpl implements InformationCategoryA
     @Override
     public ResponseEntity<HttpStatus> createInformationCategory(JWTMemberInfoDTO userToken, Long apartmentId, InformationDTO.InformationCategoryReqDTO dto) {
         isCorrectApartment(userToken,apartmentId);
-        Apartment apartment = apartmentRepository.findApartmentByApartmentId(apartmentId).get();
+        Apartment apartment = apartmentRepository.findApartmentByApartmentId(apartmentId).orElseThrow(() -> new CustomAPIException("아파트가 존재하지 않습니다."));
         informationCategoryRepository.save(InformationCategory.from(apartment,dto));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -42,23 +42,18 @@ public class InformationCategoryAdminServiceImpl implements InformationCategoryA
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> updateInformationCategory(JWTMemberInfoDTO userToken, Long informationCategoryId, InformationDTO.InformationCategoryReqDTO dto) {
-        InformationCategory informationCategory = informationCategoryRepository.findById(informationCategoryId).orElseThrow(NoSuchElementException::new);
+        InformationCategory informationCategory = informationCategoryRepository.findById(informationCategoryId).orElseThrow(()->new RestAPIException(NO_SUCH_CATEGORY));
         checkApartmentByAnnouncementCategory(userToken,informationCategory);
         informationCategory.updateCategory(dto);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> deleteInformationCategory(JWTMemberInfoDTO userToken, Long InformationCategoryId) {
-
-        InformationCategory informationCategory = informationCategoryRepository.findById(InformationCategoryId).orElseThrow(NoSuchElementException::new);
+        InformationCategory informationCategory = informationCategoryRepository.findById(InformationCategoryId).orElseThrow(()->new RestAPIException(NO_SUCH_CATEGORY));
         checkApartmentByAnnouncementCategory(userToken,informationCategory);
-        if(!informationCategory.getInformationList().isEmpty())
-            throw new RestAPIException(CANT_DELETE);
         informationCategoryRepository.delete(informationCategory);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
