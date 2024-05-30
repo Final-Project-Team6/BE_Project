@@ -17,6 +17,6 @@ public class MemberCommonServiceImpl implements MemberCommonService {
 
     @Override
     public Member getUserByToken(JWTMemberInfoDTO dto) {
-        return memberRepository.findById(1L).orElse(null);
+        return memberRepository.findById(dto.getMemberId()).orElse(null);
     }
 }
