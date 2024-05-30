@@ -30,7 +30,12 @@ public class CommunicationDTO {
             @Schema(description = "소통공간 내용")
             String contents,
             @Schema(description = "게시글 상태 => PUBLISHED(게시됨), HIDDEN(숨김), DELETED(삭제됨), FORCE_DELETED(강제 삭제됨)")
-            PostStatus status){
+            PostStatus status,
+            @Schema(description = "비밀 여부 (기본값: false)")
+            Boolean secret){
+        public CommunicationPostReqDTO(Long communicationCategoryId, String title, String contents, PostStatus status) {
+            this(communicationCategoryId, title, contents, status, false);
+        }
     }
     @Schema(name = "소통공간 카테고리 생성",description = "소통공간 카테고리 생성 요청 Body")
     public record CommunicationCategoryReqDTO(
@@ -53,6 +58,7 @@ public class CommunicationDTO {
     }
     @AllArgsConstructor
     @Getter
+    @ToString
     public static class CommunicationListRespDTO{
         private final Long communicationId;
         private final CommunicationCategoryRespDTO communicationCategory;

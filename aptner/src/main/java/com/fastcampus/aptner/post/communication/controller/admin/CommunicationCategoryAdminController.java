@@ -33,7 +33,7 @@ public class CommunicationCategoryAdminController {
 
     @Operation(
             summary = "소통공간 카테고리 수정 API",
-            description = "Schema -> 소통공간 카테고리 수정 \n\n apartmentId : 현재 사용중인 아파트 ID\n\n communicationCategoryId : 수정하려는 소통공간 카테고리 ID"
+            description = "Schema -> 소통공간 카테고리 생성 \n\n communicationCategoryId : 수정하려는 소통공간 카테고리 ID"
     )
     @PatchMapping(value = "/{communicationCategoryId}")
     public ResponseEntity<HttpStatus> updateCommunicationCategory(
@@ -45,7 +45,7 @@ public class CommunicationCategoryAdminController {
 
     @Operation(
             summary = "소통공간 카테고리 삭제 API",
-            description = "apartmentId : 현재 사용중인 아파트 ID\n\n communicationCategoryId : 삭제하려는 소통공간 ID"
+            description = "communicationCategoryId : 삭제하려는 소통공간 ID"
     )
     @DeleteMapping(value ="/{communicationCategoryId}")
     public ResponseEntity<HttpStatus> deleteCommunicationCategory(

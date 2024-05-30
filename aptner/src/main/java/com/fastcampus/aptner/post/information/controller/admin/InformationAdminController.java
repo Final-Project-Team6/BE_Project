@@ -21,7 +21,7 @@ public class InformationAdminController {
 
     @Operation(
             summary = "정보글 생성 API",
-            description = "Schema -> 정보글 생성 \n\n apartmentId : 현재 사용중인 아파트 ID "
+            description = "Schema -> 정보공간 생성 \n\n apartmentId : 현재 사용중인 아파트 ID "
     )
     @PostMapping(value = "/{apartmentId}")
     public ResponseEntity<HttpStatus> uploadInformation(
@@ -33,7 +33,7 @@ public class InformationAdminController {
 
     @Operation(
             summary = "정보글 수정 API",
-            description = "Schema -> 정보글 생성\n\n apartmentId : 현재 사용중인 아파트 ID\n\n informationId : 수정하려는 정보글 ID"
+            description = "Schema -> 정보공간 생성 \n\n informationId : 수정하려는 정보글 ID"
     )
     @PatchMapping(value = "/{informationId}")
     public ResponseEntity<HttpStatus> updateInformation(
@@ -45,7 +45,7 @@ public class InformationAdminController {
 
     @Operation(
             summary = "정보글 삭제 API",
-            description = "apartmentId : 현재 사용중인 아파트 ID\n\n informationId : 삭제하려는 정보글 ID"
+            description = "informationId : 삭제하려는 정보글 ID"
     )
     @DeleteMapping(value = "/{informationId}")
     public ResponseEntity<HttpStatus> deleteCommunication(

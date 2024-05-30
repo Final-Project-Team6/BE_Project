@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/post/information/category")
-@Tag(name = "정보공간(사용자)", description = "정보공간 카테고리 조회")
+@Tag(name = "정보공간 카테고리(사용자)", description = "정보공간 카테고리 조회")
 public class InformationCategoryController {
 
    private final InformationCategoryService informationCategoryService;

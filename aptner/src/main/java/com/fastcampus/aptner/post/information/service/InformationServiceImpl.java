@@ -1,7 +1,8 @@
 package com.fastcampus.aptner.post.information.service;
 
-import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
+import com.fastcampus.aptner.global.error.RestAPIException;
 import com.fastcampus.aptner.post.common.dto.PageResponseDTO;
+import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.information.domain.Information;
 import com.fastcampus.aptner.post.information.dto.InformationDTO;
 import com.fastcampus.aptner.post.information.repository.InformationRepository;
@@ -16,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 
 @Service
 @Slf4j
@@ -48,11 +49,13 @@ public class InformationServiceImpl implements InformationService {
 
     @Override
     @Transactional
-    public ResponseEntity<InformationDTO.InformationRespDTO> getInformation(Long informationId, JWTMemberInfoDTO token) {
-        Information information = informationRepository.findById(informationId).orElseThrow(NoSuchElementException::new);
-        InformationDTO.InformationRespDTO resp = new InformationDTO.InformationRespDTO(information,token);
+    public ResponseEntity<InformationDTO.InformationRespDTO> getInformation(Long informationId) {
+        Information information = informationRepository.findById(informationId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+        if(information.getStatus().equals(PostStatus.DELETED)){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        InformationDTO.InformationRespDTO resp = new InformationDTO.InformationRespDTO(information);
         information.addViewCount();
         return new ResponseEntity<>(resp,HttpStatus.OK);
     }
-
 }

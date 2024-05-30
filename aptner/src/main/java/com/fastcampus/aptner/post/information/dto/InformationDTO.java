@@ -1,6 +1,5 @@
 package com.fastcampus.aptner.post.information.dto;
 
-import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.dto.response.PostMemberResponse;
 import com.fastcampus.aptner.post.common.enumType.OrderBy;
 import com.fastcampus.aptner.post.common.enumType.OrderType;
@@ -85,7 +84,7 @@ public class InformationDTO {
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         private LocalDateTime createdAt;
         private Long view;
-        public InformationRespDTO(Information information, JWTMemberInfoDTO token){
+        public InformationRespDTO(Information information){
             this.informationId = information.getInformationId();
             this.informationCategory = new InformationCategoryRespDTO(information.getInformationCategoryId());
             this.writer = new PostMemberResponse(information.getMemberId());
