@@ -6,6 +6,7 @@ import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.member.service.MemberCommonService;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
 import com.fastcampus.aptner.post.announcement.service.AnnouncementCommonService;
+import com.fastcampus.aptner.post.common.dto.PageResponseDTO;
 import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.communication.domain.Communication;
 import com.fastcampus.aptner.post.communication.service.CommunicationCommonService;
@@ -17,13 +18,14 @@ import com.fastcampus.aptner.post.opinion.dto.CommentDTO;
 import com.fastcampus.aptner.post.opinion.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static com.fastcampus.aptner.global.error.CommonErrorCode.MUST_AUTHORIZE;
 import static com.fastcampus.aptner.post.common.error.PostErrorCode.NOT_SAME_USER;
@@ -50,6 +52,25 @@ public class CommentServiceImpl implements CommentService {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> getMyCommentList(JWTMemberInfoDTO request, Integer pageNumber, Integer pageSize) {
+        if (request == null) throw new RestAPIException(MUST_AUTHORIZE);
+        PageRequest pageable = PageRequest.of(pageNumber - 1, pageSize);
+        Page<Comment> commentList = commentRepository.getMyComments(request.getMemberId(), pageable);
+        if (commentList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        PageResponseDTO resp = new PageResponseDTO(commentList);
+        resp.setContent(
+                commentList
+                        .getContent()
+                        .stream()
+                        .map(CommentDTO.MyCommentResp::new)
+                        .toList()
+        );
+        return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
     @Override
@@ -93,7 +114,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public ResponseEntity<HttpStatus> updateComment(JWTMemberInfoDTO token, Long commentId, String contents) {
         Member member = getMember(token);
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RestAPIException(NO_SUCH_POST));
         if (member.getMemberId() != comment.getMemberId().getMemberId()) {
             throw new RestAPIException(NOT_SAME_USER);
         }
@@ -105,7 +126,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public ResponseEntity<HttpStatus> deleteComment(JWTMemberInfoDTO token, Long commentId) {
         Member member = getMember(token);
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new RestAPIException(NO_SUCH_POST));
         if (member.getMemberId() != comment.getMemberId().getMemberId()) {
             throw new RestAPIException(NOT_SAME_USER);
         }
@@ -113,8 +134,8 @@ public class CommentServiceImpl implements CommentService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private Member getMember(JWTMemberInfoDTO token){
-        if (token==null){
+    private Member getMember(JWTMemberInfoDTO token) {
+        if (token == null) {
             throw new RestAPIException(MUST_AUTHORIZE);
         }
         return memberCommonService.getUserByToken(token);

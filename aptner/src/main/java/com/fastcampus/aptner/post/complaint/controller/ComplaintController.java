@@ -10,10 +10,14 @@ import com.fastcampus.aptner.post.complaint.service.ComplaintService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -81,6 +85,7 @@ public class ComplaintController {
                     "complaintType : 민원 타입 =>  MANAGEMENT_OFFICE(관리사무소), RESIDENTS_COMMITTEE(입주자 대표회의)\n\n" +
                     "categoryId : 공지사항 카테고리 ID\n\n" +
                     "myComplaint : 내 민원글만 보이기 => true 내 민원글만 반환, false & null 조건 처리 X\n\n" +
+                    "period : 선택한 날짜부터 오늘까지의 글만 필터 ex) 2025-05-11\n\n"+
                     "apartmentId 를 제외한 나머지 값은 필수가 아니며, 포함하지 않으면 기본조건으로 처리하거나 영향을 주지 않습니다."
     )
     @GetMapping("/search/{apartmentId}")
@@ -95,7 +100,8 @@ public class ComplaintController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) ComplaintType complaintType,
             @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) Boolean myComplaint) {
+            @RequestParam(required = false) Boolean myComplaint,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate period){
         ComplaintDTO.ComplaintSearchReqDTO reqDTO = ComplaintDTO.ComplaintSearchReqDTO.builder()
                 .pageNumber(pageNumber)
                 .pageSize(pageSize)
@@ -107,6 +113,7 @@ public class ComplaintController {
                 .complaintType(complaintType)
                 .categoryId(categoryId)
                 .myComplaint(myComplaint)
+                .period(period)
                 .build();
         return complaintService.searchComplaint(reqDTO, memberToken);
     }

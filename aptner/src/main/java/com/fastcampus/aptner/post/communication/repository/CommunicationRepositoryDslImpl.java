@@ -1,5 +1,6 @@
 package com.fastcampus.aptner.post.communication.repository;
 
+import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.post.common.enumType.OrderBy;
 import com.fastcampus.aptner.post.common.enumType.OrderType;
 import com.fastcampus.aptner.post.common.enumType.PostStatus;
@@ -33,7 +34,7 @@ public class CommunicationRepositoryDslImpl extends QuerydslRepositorySupport im
     public CommunicationRepositoryDslImpl(){super(Communication.class);}
 
     @Override
-    public Page<Communication> searchCommunication(CommunicationDTO.CommunicationSearchReqDTO reqDTO) {
+    public Page<Communication> searchCommunication(CommunicationDTO.CommunicationSearchReqDTO reqDTO,JWTMemberInfoDTO memberToken) {
         JPAQuery<Communication> query = queryFactory.selectFrom(communication)
                 .leftJoin(communication.communicationCategoryId,communicationCategory)
                 .leftJoin(communication.commentList,comment)
@@ -43,7 +44,8 @@ public class CommunicationRepositoryDslImpl extends QuerydslRepositorySupport im
                         searchByKeyword(reqDTO.getKeyword(),reqDTO.getSearchType()),
                         targetCategory(reqDTO.getCategoryId()),
                         targetType(reqDTO.getCommunicationType()),
-                        isPublished()
+                        isPublished(),
+                        aboutSecretCommunicaton(memberToken)
                         )
                 .orderBy(sort(reqDTO.getOrderType(),reqDTO.getOrderBy()));
         List<Communication> communicationList = this.getQuerydsl().applyPagination(reqDTO.getPageable(),query).fetch();
@@ -126,7 +128,6 @@ public class CommunicationRepositoryDslImpl extends QuerydslRepositorySupport im
         return null;
     }
 
-
     private BooleanExpression targetCategory(Long categoryId){
         if (categoryId==null){
             return null;
@@ -141,8 +142,17 @@ public class CommunicationRepositoryDslImpl extends QuerydslRepositorySupport im
         return communication.communicationCategoryId.type.eq(type);
     }
 
-
     private BooleanExpression isPublished(){
         return communication.status.eq(PostStatus.PUBLISHED);
+    }
+
+    private BooleanExpression notSecretCommunicaton() {
+        return communication.secret.eq(false);
+    }
+    private BooleanExpression aboutSecretCommunicaton(JWTMemberInfoDTO memberToken) {
+        if (memberToken == null) {
+            return notSecretCommunicaton();
+        }
+        return communication.memberId.memberId.eq(memberToken.getMemberId()).or(notSecretCommunicaton());
     }
 }

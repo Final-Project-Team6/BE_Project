@@ -22,8 +22,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.NoSuchElementException;
 import java.util.Objects;
+
+import static com.fastcampus.aptner.global.error.CommonErrorCode.MUST_AUTHORIZE;
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,22 +40,19 @@ public class InformationAdminServiceImpl implements InformationAdminService {
 
     @Override
     public ResponseEntity<HttpStatus> uploadInformation(JWTMemberInfoDTO userToken, Long apartmentId, InformationDTO.InformationPostReqDTO dto) {
+        if(userToken==null) throw new RestAPIException(MUST_AUTHORIZE);
         UserAndAPT userAndAPT = getUserAndAPT(userToken,apartmentId);
-        InformationCategory informationCategory = informationCategoryRepository.findById(dto.informationCategoryId()).get();
-        Information information = Information.from(userAndAPT.member,informationCategory,dto);
-        //Todo 예외처리
-        informationRepository.save(information);
+        InformationCategory informationCategory = informationCategoryRepository.findById(dto.informationCategoryId()).orElseThrow(()->new RestAPIException(NO_SUCH_CATEGORY));
+        informationRepository.save(Information.from(userAndAPT.member,informationCategory,dto));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> updateInformation(JWTMemberInfoDTO userToken, Long informationId, InformationDTO.InformationPostReqDTO dto) {
-        Information information = informationRepository.findById(informationId).orElseThrow(NoSuchElementException::new);
-        checkApartmentByAnnouncement(userToken,information);
-        InformationCategory informationCategory = informationCategoryRepository.findById(dto.informationCategoryId()).get();
-        //Todo 권한 확인
-        //Todo 예외처리
+        Information information = informationRepository.findById(informationId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+        checkMemberByInformation(userToken,information);
+        InformationCategory informationCategory = informationCategoryRepository.findById(dto.informationCategoryId()).orElseThrow(()->new RestAPIException(NO_SUCH_CATEGORY));
         information.updateInformation(informationCategory,dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -61,10 +60,8 @@ public class InformationAdminServiceImpl implements InformationAdminService {
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> deleteInformation(JWTMemberInfoDTO userToken, Long informationId) {
-        Information information = informationRepository.findById(informationId).orElseThrow(NoSuchElementException::new);
-        checkApartmentByAnnouncement(userToken,information);
-        //Todo 권한 확인
-        //Todo 예외처리
+        Information information = informationRepository.findById(informationId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+        checkMemberByInformation(userToken,information);
         information.deleteInformation();
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -83,10 +80,30 @@ public class InformationAdminServiceImpl implements InformationAdminService {
         Apartment apartment = apartmentCommonService.getApartmentById(apartmentId);
         return new UserAndAPT(member, apartment);
     }
-    private void checkApartmentByAnnouncement(JWTMemberInfoDTO userToken,Information information){
-        if (!Objects.equals(userToken.getApartmentId(), information.getInformationCategoryId().getApartmentId().getApartmentId())){
-            throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
+    private void checkMemberByInformation(JWTMemberInfoDTO userToken,Information information){
+        if (userToken==null) {
+            throw new RestAPIException(MUST_AUTHORIZE);
+        }
+        if (!Objects.equals(userToken.getMemberId(), information.getMemberId().getMemberId())){
+            throw new RestAPIException(NOT_SAME_USER);
         }
     }
+    /*
+    //deleteInformation에서 checkMemberByInformation 대신 넣을거 - 여긴 전부다 관리자만 권한이 있는 부분이라,,,
+    //일단 일반 컨트롤러에 전부 기능 구현하고 관리자 기능 따로 만드는 식으로 해놔야 할듯
+    private static void requestHasRole(JWTMemberInfoDTO userToken, Information information) {
+        if (userToken == null) {
+            throw new RestAPIException(MUST_AUTHORIZE);
+        }
+        if (userToken.getMemberId() != information.getMemberId().getMemberId()) {
+            if (userToken.getRoleName().equals("ADMIN")) {
+                throw new RestAPIException(NOT_SAME_USER);
+            }
+            if (userToken.getApartmentId() != information.getInformationCategoryId().getApartmentId().getApartmentId()) {
+                throw new RestAPIException(PostErrorCode.NOT_ALLOWED_APARTMENT);
+            }
+        }
+    }
+    */
 
 }

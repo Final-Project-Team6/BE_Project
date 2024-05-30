@@ -15,7 +15,7 @@ public interface CommunicationService {
 
     ResponseEntity<HttpStatus> deleteCommunication(JWTMemberInfoDTO userToken, Long communicationId);
 
-    ResponseEntity<PageResponseDTO> searchCommunication(CommunicationDTO.CommunicationSearchReqDTO reqDTO);
+    ResponseEntity<PageResponseDTO> searchCommunication(CommunicationDTO.CommunicationSearchReqDTO reqDTO,JWTMemberInfoDTO memberToken);
 
     ResponseEntity<CommunicationDTO.CommunicationRespDTO> getCommunication(Long communicationtId, JWTMemberInfoDTO token);
 

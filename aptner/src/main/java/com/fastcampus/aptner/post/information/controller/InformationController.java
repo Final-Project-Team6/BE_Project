@@ -1,6 +1,5 @@
 package com.fastcampus.aptner.post.information.controller;
 
-import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.post.common.enumType.OrderBy;
 import com.fastcampus.aptner.post.common.enumType.OrderType;
 import com.fastcampus.aptner.post.common.enumType.SearchType;
@@ -11,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,8 +20,8 @@ public class InformationController {
     private final InformationService informationService;
 
     @Operation(
-            summary = "공지사항 목록 조회 API",
-            description = "apartmentId : 현재 사용중인 아파트 ID \n\n" +
+            summary = "정보공간 목록 조회 API",
+            description = "apartmentId : 현재 사용중인 아파트 ID\n\n" +
                     "pageNumber : 조회 페이지 번호\n\n" +
                     "pageSize : 페이지당 내용 개수\n\n" +
                     "searchType : 검색어 검색 조건 => TITLE(제목), CONTENTS(내용), TITLE_CONTENTS(제목+내용);\n\n" +
@@ -65,8 +63,7 @@ public class InformationController {
     )
     @GetMapping("/{informationId}")
     public ResponseEntity<?> getInformation(
-            @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @PathVariable Long informationId){
-        return informationService.getInformation(informationId,memberToken);
+        return informationService.getInformation(informationId);
     }
 }
