@@ -102,7 +102,7 @@ public class CommunicationServiceImpl implements CommunicationService {
     @Transactional
     public ResponseEntity<CommunicationDTO.CommunicationRespDTO> getCommunication(Long communicationId, JWTMemberInfoDTO token) {
         Communication communication = communicationRepository.findById(communicationId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
-        if (communication.isSecret()) {
+        if (communication.isSecret() && !communication.getMemberId().getMemberId().equals(token.getMemberId())) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         CommunicationDTO.CommunicationRespDTO resp = new CommunicationDTO.CommunicationRespDTO(communication,token);
