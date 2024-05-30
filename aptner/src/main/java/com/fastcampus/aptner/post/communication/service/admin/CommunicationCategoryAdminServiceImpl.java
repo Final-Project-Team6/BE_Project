@@ -58,7 +58,6 @@ public class CommunicationCategoryAdminServiceImpl implements CommunicationCateg
         if(!communicationCategory.getCommunicationList().isEmpty())
             throw new RestAPIException(CANT_DELETE);
         communicationCategoryRepository.delete(communicationCategory);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

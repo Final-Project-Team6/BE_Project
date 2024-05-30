@@ -2,6 +2,7 @@ package com.fastcampus.aptner.post.communication.service;
 
 import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.global.error.RestAPIException;
+import com.fastcampus.aptner.global.handler.exception.CustomDataNotFoundException;
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.common.dto.PageResponseDTO;
@@ -62,6 +63,8 @@ public class CommunicationServiceImpl implements CommunicationService {
         Communication communication = communicationRepository.findById(communicationId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
         checkMemberByCommunication(userToken,communication);
         CommunicationCategory communicationCategory = communicationCategoryRepository.findById(dto.communicationCategoryId()).orElseThrow(()->new RestAPIException(NO_SUCH_CATEGORY));
+        if(!Objects.equals(communication.getCommunicationCategoryId().getCommunicationCategoryId(), communicationCategory.getCommunicationCategoryId()))
+            throw new CustomDataNotFoundException("카테고리가 동일하지 않습니다.");
         communication.updateCommunication(communicationCategory,dto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -99,7 +102,7 @@ public class CommunicationServiceImpl implements CommunicationService {
     @Transactional
     public ResponseEntity<CommunicationDTO.CommunicationRespDTO> getCommunication(Long communicationId, JWTMemberInfoDTO token) {
         Communication communication = communicationRepository.findById(communicationId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
-        if (!communication.isSecret()) {
+        if (communication.isSecret()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         CommunicationDTO.CommunicationRespDTO resp = new CommunicationDTO.CommunicationRespDTO(communication,token);
