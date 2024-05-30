@@ -20,6 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.fastcampus.aptner.member.domain.QMember.member;
@@ -53,7 +55,8 @@ public class ComplaintRepositoryDslImpl extends QuerydslRepositorySupport implem
                         targetType(reqDTO.getComplaintType()),
                         aboutSecretComplaint(memberToken),
                         onlyMyComplaint(memberToken, reqDTO.getMyComplaint()),
-                        isPublished()
+                        isPublished(),
+                        period(reqDTO.getPeriod())
                 )
                 .orderBy(sort(reqDTO.getOrderType(), reqDTO.getOrderBy()));
         List<Complaint> complaintList = this.getQuerydsl().applyPagination(reqDTO.getPageable(), query).fetch();
@@ -175,4 +178,13 @@ public class ComplaintRepositoryDslImpl extends QuerydslRepositorySupport implem
     private BooleanExpression isPublished() {
         return complaint.status.eq(PostStatus.PUBLISHED);
     }
+
+    private BooleanExpression period(LocalDate period){
+        if (period==null){
+            return null;
+        }
+        LocalDateTime targetDate = period.atStartOfDay();
+        return complaint.createdAt.after(targetDate);
+    }
+
 }

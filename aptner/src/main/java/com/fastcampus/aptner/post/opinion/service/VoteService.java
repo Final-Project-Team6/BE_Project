@@ -9,5 +9,6 @@ public interface VoteService {
     ResponseEntity<HttpStatus> voteToPost(JWTMemberInfoDTO token, Long postId, VoteType voteType, Boolean opinion);
 
     ResponseEntity<HttpStatus> deleteVote(JWTMemberInfoDTO token, Long postId, VoteType voteType);
+
     ResponseEntity<HttpStatus> updateVote(JWTMemberInfoDTO token, Long postId, VoteType voteType, Boolean opinion);
 }

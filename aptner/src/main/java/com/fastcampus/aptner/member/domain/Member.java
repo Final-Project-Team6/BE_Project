@@ -71,7 +71,7 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MemberStatus status; // 회원 상태여부
 
-//    private String profileImage; // TODO: 회원 프로필 이미지
+    private String profileImage; // 회원 프로필 이미지
 
     @JsonIgnore
     @OneToMany(mappedBy = "memberRoleId", cascade = {CascadeType.ALL})
@@ -129,6 +129,7 @@ public class Member extends BaseTimeEntity {
         this.authenticatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS); // null 대신 생성일자와 동일한 시간 추가하기.
         this.authenticationStatus = false; // 모든 가입 회원은 최초 1회 인증이 반드시 필요하다.
         this.status = MemberStatus.ACTIVATE; // 인증이 안된 상태이더라도 활성화하기.
+        this.profileImage = "https://aptnercl.s3.ap-northeast-2.amazonaws.com/%ED%9A%8C%EC%9B%90/docker-icon-logo_1716957234910.png";
     }
 
     // [연관 관계 메서드]: Member, MemberHome
@@ -163,5 +164,9 @@ public class Member extends BaseTimeEntity {
     // 회원 활성화 여부 변경하기
     public void updateMemberStatus(String status) {
          this.status = MemberStatus.valueOf(status);
+    }
+
+    public void updateMemberProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 }

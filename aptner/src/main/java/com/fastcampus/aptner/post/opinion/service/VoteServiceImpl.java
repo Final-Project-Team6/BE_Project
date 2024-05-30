@@ -21,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import static com.fastcampus.aptner.global.error.CommonErrorCode.MUST_AUTHORIZE;
 import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 import static com.fastcampus.aptner.post.common.error.VoteErrorCode.ALREADY_EXiSTS;
@@ -41,7 +40,7 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public ResponseEntity<HttpStatus> voteToPost(JWTMemberInfoDTO token, Long postId, VoteType voteType, Boolean opinion) {
         Member member = getMember(token);
-        if (opinion==null){
+        if (opinion == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Vote vote = null;
@@ -81,7 +80,7 @@ public class VoteServiceImpl implements VoteService {
             }
             case COMMUNICATION -> {
                 Communication communication = communicationCommonService.getCommunicationEntity(postId);
-                if (voteRepository.existsByCommunicationIdAndMemberId(communication,member)){
+                if (voteRepository.existsByCommunicationIdAndMemberId(communication, member)) {
                     throw new RestAPIException(ALREADY_EXiSTS);
                 }
                 vote = Vote.builder()
@@ -102,7 +101,7 @@ public class VoteServiceImpl implements VoteService {
     @Transactional
     public ResponseEntity<HttpStatus> deleteVote(JWTMemberInfoDTO token, Long postId, VoteType voteType) {
         Member member = getMember(token);
-        Vote vote = getVoteByVoteType(postId,voteType,member);
+        Vote vote = getVoteByVoteType(postId, voteType, member);
         if (vote != null) {
             voteRepository.delete(vote);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -112,12 +111,12 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     @Transactional
-    public ResponseEntity<HttpStatus> updateVote(JWTMemberInfoDTO token, Long postId, VoteType voteType, Boolean opinion){
+    public ResponseEntity<HttpStatus> updateVote(JWTMemberInfoDTO token, Long postId, VoteType voteType, Boolean opinion) {
         Member member = getMember(token);
-        if (opinion==null){
+        if (opinion == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Vote vote = getVoteByVoteType(postId,voteType,member);
+        Vote vote = getVoteByVoteType(postId, voteType, member);
         if (vote != null) {
             vote.setOpinion(opinion);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -125,31 +124,31 @@ public class VoteServiceImpl implements VoteService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    private Vote getVoteByVoteType(Long postId, VoteType voteType,Member member){
+    private Vote getVoteByVoteType(Long postId, VoteType voteType, Member member) {
         Vote vote = null;
         switch (voteType) {
             case ANNOUNCEMENT -> {
                 Announcement announcement = announcementCommonService.getAnnouncementEntity(postId);
-                vote = voteRepository.findByAnnouncementIdAndMemberId(announcement, member).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+                vote = voteRepository.findByAnnouncementIdAndMemberId(announcement, member).orElseThrow(() -> new RestAPIException(NO_SUCH_POST));
             }
             case COMMENT -> {
                 Comment comment = commentCommonService.getCommentEntity(postId);
-                vote = voteRepository.findByCommentIdAndMemberId(comment, member).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+                vote = voteRepository.findByCommentIdAndMemberId(comment, member).orElseThrow(() -> new RestAPIException(NO_SUCH_POST));
             }
             case COMPLAINT -> {
                 Complaint complaint = complaintCommonService.getComplaintEntity(postId);
-                vote = voteRepository.findByComplaintIdAndMemberId(complaint,member).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+                vote = voteRepository.findByComplaintIdAndMemberId(complaint, member).orElseThrow(() -> new RestAPIException(NO_SUCH_POST));
             }
             case COMMUNICATION -> {
                 Communication communication = communicationCommonService.getCommunicationEntity(postId);
-                vote = voteRepository.findByCommunicationIdAndMemberId(communication,member).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+                vote = voteRepository.findByCommunicationIdAndMemberId(communication, member).orElseThrow(() -> new RestAPIException(NO_SUCH_POST));
             }
         }
         return vote;
     }
 
-    private Member getMember(JWTMemberInfoDTO token){
-        if (token==null){
+    private Member getMember(JWTMemberInfoDTO token) {
+        if (token == null) {
             throw new RestAPIException(MUST_AUTHORIZE);
         }
         return memberCommonService.getUserByToken(token);

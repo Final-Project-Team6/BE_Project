@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
 
@@ -33,6 +32,6 @@ public class CommentCommonServiceImpl implements CommentCommonService {
 
     @Override
     public Comment getCommentEntity(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
+        return commentRepository.findById(commentId).orElseThrow(() -> new RestAPIException(NO_SUCH_POST));
     }
 }
