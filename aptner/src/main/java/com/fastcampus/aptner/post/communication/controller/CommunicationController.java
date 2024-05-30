@@ -36,7 +36,7 @@ public class CommunicationController {
 
     @Operation(
             summary = "소통공간 수정 API",
-            description = "Schema -> 소통공간 생성\n\n apartmentId : 현재 사용중인 아파트 ID\n\n communicationId : 수정하려는 소통글 ID"
+            description = "Schema -> 소통공간 생성\n\n communicationId : 수정하려는 소통글 ID"
     )
     @PatchMapping(value = "/{communicationId}")
     public ResponseEntity<HttpStatus> updateCommunication(

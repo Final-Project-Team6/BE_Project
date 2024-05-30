@@ -100,6 +100,7 @@ public class Communication {
         this.contents = dto.contents();
         this.communicationCategoryId= communicationCategory;
         this.status = dto.status();
+        this.secret= dto.secret();
     }
 
     public void deleteCommunication(){this.status=PostStatus.DELETED;}
