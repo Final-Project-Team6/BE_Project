@@ -49,17 +49,17 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false, length = 13)
     private String phone; // 회원 휴대전화번호
 
-    @Column(nullable = false, length = 6)
+    @Column(nullable = true, length = 6)
     private String birthFirst; // 회원 주민등록번호 앞자리
+
+    @Column(nullable = true, updatable = false, length = 1)
+    private String gender; // 회원 성별(M, W)
 
     @Column(nullable = false, length = 16)
     private String nickname; // 회원 닉네임
 
     @Column(nullable = false, unique = true, length = 16)
     private String fullName; // 회원 이름
-
-    @Column(nullable = false, updatable = false, length = 1)
-    private String gender; // 회원 성별(M, W)
 
     @Column(nullable = false)
     private LocalDateTime authenticatedAt; // 회원 인증일자
