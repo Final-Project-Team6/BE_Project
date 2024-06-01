@@ -49,7 +49,7 @@ public class JoinMemberController {
             summary = "회원 휴대전화번호 중복 여부(검증) API",
             description = "phone: 회원 휴대전화번호(필수)"
     )
-    @GetMapping("/check-phone")
+    @GetMapping("/check/phone")
     public ResponseEntity<?> isPhoneAvailable(@RequestParam(name = "phone") String phone) {
         memberService.checkMemberPhoneDuplication(phone);
         return new ResponseEntity<>(new HttpResponse<>(1, "사용 가능한 휴대전화번호 입니다.", null), HttpStatus.OK);
@@ -59,7 +59,7 @@ public class JoinMemberController {
             summary = "회원 닉네임 중복 여부(검증) API",
             description = "nickname: 회원 닉네임(필수)"
     )
-    @GetMapping("/check-nickname")
+    @GetMapping("/check/nickname")
     public ResponseEntity<?> isNicknameAvailable(@RequestParam(name = "nickname") String nickname) {
         memberService.checkMemberNickNameDuplication(nickname);
         return new ResponseEntity<>(new HttpResponse<>(1, "사용 가능한 닉네임 입니다.", null), HttpStatus.OK);
@@ -69,7 +69,7 @@ public class JoinMemberController {
             summary = "회원 아이디 중복 여부(검증) API",
             description = "username: 회원 아이디(필수)"
     )
-    @GetMapping("/check-username")
+    @GetMapping("/check/username")
     public ResponseEntity<?> isUsernameAvailable(@RequestParam(name = "username") String username) {
         memberService.checkMemberNickNameDuplication(username);
         return new ResponseEntity<>(new HttpResponse<>(1, "사용 가능한 아이디 입니다.", null), HttpStatus.OK);
