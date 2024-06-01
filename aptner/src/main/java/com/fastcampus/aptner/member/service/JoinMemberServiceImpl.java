@@ -18,6 +18,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -31,9 +34,25 @@ public class JoinMemberServiceImpl implements JoinMemberService {
     private final MemberRoleRepository memberRoleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private static final String NICKNAME_PATTERN = "^[a-zA-Z0-9가-힣]{2,16}$";
+    private static final String PHONE_PATTERN = "^[0-9]{10,11}$";
+    private static final String USERNAME_PATTERN = "^[a-z0-9_-]{5,20}$";
+
+
 
     @Override
     public void checkMemberPhoneDuplication(String phone) {
+        Pattern phonePattern = Pattern.compile(PHONE_PATTERN);
+        Matcher phoneMatcher = phonePattern.matcher(phone);
+
+        if (phone.isEmpty()) {
+            throw new CustomAPIException("휴대전화번호는 필수 입력입니다.");
+        }
+
+        if (!phoneMatcher.matches()) {
+            throw new CustomAPIException("잘못된 휴대전화번호 입니다.");
+        }
+
         if (memberRepository.existsByPhone(phone)) {
             throw new CustomDuplicationKeyException("이미 존재하는 휴대전화번호 입니다.");
         }
@@ -41,6 +60,17 @@ public class JoinMemberServiceImpl implements JoinMemberService {
 
     @Override
     public void checkMemberNickNameDuplication(String nickname) {
+        Pattern nicknamePattern = Pattern.compile(NICKNAME_PATTERN);
+        Matcher nicknameMatcher = nicknamePattern.matcher(nickname);
+
+        if (nickname.isEmpty()) {
+            throw new CustomAPIException("닉네임은 필수 입력입니다.");
+        }
+
+        if (!nicknameMatcher.matches()) {
+            throw new CustomAPIException("잘못된 닉네임 입니다.");
+        }
+        
         if (memberRepository.existsByNickname(nickname)) {
             throw new CustomDuplicationKeyException("이미 존재하는 닉네임 입니다.");
         }
@@ -48,6 +78,17 @@ public class JoinMemberServiceImpl implements JoinMemberService {
 
     @Override
     public void checkMemberUsernameDuplication(String username) {
+        Pattern usernamePattern = Pattern.compile(USERNAME_PATTERN);
+        Matcher usernameMatcher = usernamePattern.matcher(username);
+
+        if (username.isEmpty()) {
+            throw new CustomAPIException("아이디는 필수 입력입니다.");
+        }
+
+        if (!usernameMatcher.matches()) {
+            throw new CustomAPIException("잘못된 아이디 입니다.");
+        }
+
         if (memberRepository.existsByUsername(username)) {
             throw new CustomDuplicationKeyException("이미 존재하는 아이디 입니다.");
         }
