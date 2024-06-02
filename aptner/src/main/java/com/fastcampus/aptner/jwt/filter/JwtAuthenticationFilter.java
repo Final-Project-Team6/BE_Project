@@ -29,44 +29,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String token = "";
+        String token;
         try {
             token = getToken(request);
             if (StringUtils.hasText(token)) {
                 System.out.println("-------------------------------token = " + token);
                 getAuthentication(token);
             }
+
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
+
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Token has expired. Please refresh your token.");
-            log.error("doFilterInternal: EXPIRED Token // token : {}", token);
-            log.error("doFilterInternal: Set Request Exception Code : {}", JwtExceptionCode.EXPIRED_TOKEN.getCode());
+
         } catch (NullPointerException | IllegalStateException e) {
+
             request.setAttribute("doFilterInternal: exception", JwtExceptionCode.NOT_FOUND_TOKEN.getCode());
-            log.error("doFilterInternal: Not found Token // token : {}", token);
-            log.error("doFilterInternal: Set Request Exception Code : {}", request.getAttribute("exception"));
             throw new BadCredentialsException("doFilterInternal: throw new not found token exception");
+
         } catch (SecurityException | MalformedJwtException e) {
+
             request.setAttribute("doFilterInternal: exception", JwtExceptionCode.INVALID_TOKEN.getCode());
-            log.error("doFilterInternal: Invalid Token // token : {}", token);
-            log.error("doFilterInternal: Set Request Exception Code : {}", request.getAttribute("exception"));
             throw new BadCredentialsException("doFilterInternal: throw new invalid token exception");
+
         } catch (UnsupportedJwtException e) {
+
             request.setAttribute("doFilterInternal: exception", JwtExceptionCode.UNSUPPORTED_TOKEN.getCode());
-            log.error("doFilterInternal: Unsupported Token // token : {}", token);
-            log.error("doFilterInternal: Set Request Exception Code : {}", request.getAttribute("exception"));
             throw new BadCredentialsException("throw new unsupported token exception");
+
         } catch (Exception e) {
-            log.error("========================== doFilterInternal JWT FILTER ERROR MESSAGE ==========================");
-            log.error("doFilterInternal: JwtFilter 에러 발생");
-            log.error("token : {}", token);
-            log.error("Exception Message : {}", e.getMessage());
-            log.error("Exception StackTrace : {");
-            e.printStackTrace();
-            log.error("}");
-            log.error("========================== doFilterInternal JWT FILTER ERROR END ==========================");
+
             throw new BadCredentialsException("throw new exception");
+
         }
     }
 
@@ -74,8 +69,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         JwtAuthenticationToken authenticationToken = new JwtAuthenticationToken(token);
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
-        // 이 객체에는 JWT 안의 내용을 가지고 로그인 아이디, 권한
-        SecurityContextHolder.getContext().setAuthentication(authenticate); // 현재 요청에서 언제든지 인증정보를 꺼낼 수 있도록 해준다.
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
     }
 
     private String getToken(HttpServletRequest request) {

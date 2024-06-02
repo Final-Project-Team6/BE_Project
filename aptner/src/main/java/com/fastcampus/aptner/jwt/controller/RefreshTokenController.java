@@ -1,8 +1,7 @@
 package com.fastcampus.aptner.jwt.controller;
 
-import com.fastcampus.aptner.apartment.service.FindApartmentService;
+import com.fastcampus.aptner.apartment.service.FindApartmentServiceImpl;
 import com.fastcampus.aptner.global.handler.exception.CustomAPIException;
-import com.fastcampus.aptner.jwt.domain.TokenStorage;
 import com.fastcampus.aptner.jwt.dto.RefreshTokenRequest;
 import com.fastcampus.aptner.jwt.dto.TokenStorageDto;
 import com.fastcampus.aptner.jwt.service.RefreshTokenService;
@@ -11,7 +10,7 @@ import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.member.dto.HttpResponse;
 import com.fastcampus.aptner.member.dto.response.LoginMemberResponse;
 import com.fastcampus.aptner.member.service.FindMemberRoleServiceImpl;
-import com.fastcampus.aptner.member.service.loginMemberService;
+import com.fastcampus.aptner.member.service.LoginMemberService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,16 +30,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class RefreshTokenController {
 
     private final JwtTokenizer jwtTokenizer;
-    private final loginMemberService memberService;
+    private final LoginMemberService memberService;
     private final RefreshTokenService refreshTokenService;
     private final FindMemberRoleServiceImpl memberRoleService;
-    private final FindApartmentService apartmentService;
-
-    /*
-        1. 전달받은 유저의 아이디로 유저가 존재하는지 확인한다.
-        2. RefreshToken 이 유효한지 체크한다.
-        3. AccessToken 을 발급하여 기존 RefreshToken 과 함께 응답한다.
-    */
+    private final FindApartmentServiceImpl apartmentService;
 
     @Operation(
             summary = "액세스, 리프레시 토큰 재생성 API",
@@ -49,28 +42,34 @@ public class RefreshTokenController {
     )
     @PostMapping("/publish")
     public ResponseEntity<?> requestRefresh(@RequestBody RefreshTokenRequest request) {
-        TokenStorage refreshToken = refreshTokenService.findRefreshToken(request.getRefreshToken())
-                .orElseThrow(() -> new IllegalArgumentException("리프레시 토큰을 찾을 수 없습니다."));
+        String oldRefreshToken = request.getRefreshToken();
 
         Claims claims;
         try {
-            claims = jwtTokenizer.parseRefreshToken(refreshToken.getRefreshToken());
+            claims = jwtTokenizer.parseRefreshToken(oldRefreshToken);
         } catch (ExpiredJwtException e) {
             return new ResponseEntity<>(new HttpResponse<>(-1, "리프레시 토큰이 만료되었습니다.", null), HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             return new ResponseEntity<>(new HttpResponse<>(-1, "유효하지 않은 리프레시 토큰입니다.", null), HttpStatus.BAD_REQUEST);
         }
 
-        Long memberId = claims.get("memberId", Long.class); // 수정
+        Long memberId = claims.get("memberId", Long.class);
+
+        // 저장된 리프레시 토큰을 확인합니다.
+        String storedRefreshToken = refreshTokenService.findRefreshToken(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("리프레시 토큰을 찾을 수 없습니다."));
+
+        if (!storedRefreshToken.equals(oldRefreshToken)) {
+            return new ResponseEntity<>(new HttpResponse<>(-1, "유효하지 않은 리프레시 토큰입니다.", null), HttpStatus.BAD_REQUEST);
+        }
 
         Member member = memberService.findMemberById(memberId)
                 .orElseThrow(() -> new CustomAPIException("회원이 존재하지 않습니다."));
 
         String username = claims.getSubject();
-        Long apartmentId = claims.get("apartmentId", Long.class); // 수정
-
+        Long apartmentId = claims.get("apartmentId", Long.class);
         String apartmentName = apartmentService.findApartmentById(apartmentId).getName();
-        String memberRole = memberRoleService.getMemberRole(memberId, apartmentId).toString(); // 수정
+        String memberRole = memberRoleService.getMemberRole(memberId, apartmentId).toString();
 
         String newAccessToken = jwtTokenizer.createAccessToken(memberId, username, memberRole, apartmentName, apartmentId);
         String newRefreshToken = jwtTokenizer.createRefreshToken(memberId, username, memberRole, apartmentName, apartmentId);
@@ -80,7 +79,6 @@ public class RefreshTokenController {
                 .refreshToken(newRefreshToken)
                 .build();
 
-        // 새로운 리프레시 토큰 저장 및 이전 토큰 무효화
         refreshTokenService.saveNewRefreshToken(tokenStorageDto);
 
         LoginMemberResponse loginResponse = LoginMemberResponse.builder()
