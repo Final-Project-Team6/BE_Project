@@ -4,7 +4,7 @@ import com.fastcampus.aptner.member.domain.Member;
 
 import java.util.Optional;
 
-public interface loginMemberService {
+public interface LoginMemberService {
 
     Member findByUsername(String username);
     Optional<Member> findMemberById(Long memberId);

@@ -1,6 +1,7 @@
 package com.fastcampus.aptner.jwt.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.security.Keys;
@@ -14,7 +15,6 @@ import java.security.Key;
 import java.util.Date;
 import java.util.UUID;
 
-@Slf4j
 @Component
 public class JwtTokenizer {
 
@@ -29,17 +29,12 @@ public class JwtTokenizer {
         this.refreshSecret = refreshSecret.getBytes(StandardCharsets.UTF_8);
     }
 
-    /**
-     * AccessToken 생성
-     */
     public String createAccessToken(Long memberId,
                                     String username,
                                     String roleName,
                                     String apartmentName,
                                     Long apartmentId) {
-
         Claims claims = Jwts.claims().setSubject(username);
-
         claims.put("roleName", roleName);
         claims.put("memberId", memberId);
         claims.put("username", username);
@@ -54,23 +49,18 @@ public class JwtTokenizer {
                 .compact();
     }
 
-    /**
-     * RefreshToken 생성
-     */
     public String createRefreshToken(Long memberId,
                                      String username,
                                      String roleName,
                                      String apartmentName,
                                      Long apartmentId) {
         Claims claims = Jwts.claims().setSubject(username);
-
         claims.put("roleName", roleName);
         claims.put("memberId", memberId);
         claims.put("username", username);
         claims.put("apartmentName", apartmentName);
         claims.put("apartmentId", apartmentId);
 
-        // 고유한 값을 생성하여 리프레시 토큰의 식별자로 사용
         String uniqueId = UUID.randomUUID().toString();
 
         return Jwts.builder()
@@ -82,56 +72,34 @@ public class JwtTokenizer {
                 .compact();
     }
 
-    /**
-     * 토큰에서 유저 아이디 얻기
-     */
-
-    public Long getMemberIdFromToken(String token) {
-        String[] tokenArr = token.split(" ");
-        token = tokenArr[1];
-        Claims claims = parseToken(token, accessSecret);
-        return claims.get("memberId", Long.class);
-    }
-
-    public String getMemberRoleFromToken(String token) {
-        String[] tokenArr = token.split(" ");
-        token = tokenArr[1];
-        Claims claims = parseToken(token, accessSecret);
-        return claims.get("roleName", String.class);
-    }
-
-
-    public Claims parseAccessToken(String accessToken) {
-        return parseToken(accessToken, accessSecret);
-    }
-
     public Claims parseRefreshToken(String refreshToken) {
         return parseToken(refreshToken, refreshSecret);
     }
 
-
-    public Claims parseToken(String token, byte[] secretKey) {
+    private Claims parseToken(String token, byte[] secretKey) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(getSigningKey(secretKey))
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (DecodingException e) {
-            log.error("JWT 디코딩 오류: {}", e.getMessage());
-            throw e;
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "JWT 토큰이 만료되었습니다.");
         } catch (Exception e) {
-            log.error("JWT 파싱 오류: {}", e.getMessage());
-            throw new BadCredentialsException("Invalid token");
+            throw new BadCredentialsException("유효하지 않은 토큰입니다.");
         }
     }
 
-    /**
-     * @param secretKey - byte형식
-     * @return Key 형식 시크릿 키
-     */
-    public static Key getSigningKey(byte[] secretKey) {
+    private Key getSigningKey(byte[] secretKey) {
         return Keys.hmacShaKeyFor(secretKey);
     }
 
+    public Long getMemberIdFromToken(String token) {
+        Claims claims = parseRefreshToken(token);
+        return claims.get("memberId", Long.class);
+    }
+
+    public Claims parseAccessToken(String accessToken) {
+        return parseToken(accessToken, accessSecret);
+    }
 }
