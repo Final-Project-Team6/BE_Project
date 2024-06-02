@@ -1,45 +1,41 @@
 package com.fastcampus.aptner.jwt.service;
 
-import com.fastcampus.aptner.jwt.domain.TokenStorage;
 import com.fastcampus.aptner.jwt.dto.TokenStorageDto;
-import com.fastcampus.aptner.jwt.repository.RefreshTokenRepository;
+import com.fastcampus.aptner.jwt.util.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final static String REFRESH_TOKEN_PREFIX = "refreshToken:";
 
-    @Transactional
-    public TokenStorage addRefreshToken(TokenStorage tokenStorage) {
-        return refreshTokenRepository.save(tokenStorage);
+    public void addRefreshToken(Long memberId, String refreshToken) {
+        String key = REFRESH_TOKEN_PREFIX + memberId;
+        redisTemplate.opsForValue().set(key, refreshToken, JwtTokenizer.REFRESH_TOKEN_EXPIRE_COUNT, TimeUnit.MILLISECONDS);
     }
 
-    @Transactional
-    public void deleteRefreshToken(String refreshToken) {
-        refreshTokenRepository.findByRefreshToken(refreshToken).ifPresent(refreshTokenRepository::delete);
+    public Optional<String> findRefreshToken(Long memberId) {
+        String key = REFRESH_TOKEN_PREFIX + memberId;
+        String refreshToken = (String) redisTemplate.opsForValue().get(key);
+        return Optional.ofNullable(refreshToken);
     }
 
-    @Transactional(readOnly = true)
-    public Optional<TokenStorage> findRefreshToken(String refreshToken) {
-        return refreshTokenRepository.findByRefreshToken(refreshToken);
+    public void deleteRefreshToken(Long memberId) {
+        String key = REFRESH_TOKEN_PREFIX + memberId;
+        redisTemplate.delete(key);
     }
 
-    @Transactional
     public void saveNewRefreshToken(TokenStorageDto tokenStorageDto) {
-        // 기존 리프레시 토큰 삭제
-        refreshTokenRepository.findByMemberId(tokenStorageDto.getMemberId()).ifPresent(refreshTokenRepository::delete);
+        Long memberId = tokenStorageDto.getMemberId();
+        String newRefreshToken = tokenStorageDto.getRefreshToken();
 
-        // 새로운 리프레시 토큰 저장
-        TokenStorage tokenStorage = TokenStorage.builder()
-                .refreshToken(tokenStorageDto.getRefreshToken())
-                .memberId(tokenStorageDto.getMemberId())
-                .build();
-
-        refreshTokenRepository.save(tokenStorage);
+        deleteRefreshToken(memberId);
+        addRefreshToken(memberId, newRefreshToken);
     }
 }
