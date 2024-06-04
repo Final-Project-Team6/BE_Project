@@ -3,6 +3,7 @@ package com.fastcampus.aptner.post.announcement.service;
 import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.apartment.service.ApartmentCommonService;
 import com.fastcampus.aptner.post.announcement.domain.AnnouncementCategory;
+import com.fastcampus.aptner.post.announcement.domain.AnnouncementType;
 import com.fastcampus.aptner.post.announcement.dto.AnnouncementDTO;
 import com.fastcampus.aptner.post.announcement.repository.AnnouncementCategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,16 @@ public class AnnouncementCategoryServiceImpl implements AnnouncementCategoryServ
     private final ApartmentCommonService apartmentService;
 
     @Override
-    public ResponseEntity<List<AnnouncementDTO.AnnouncementCategoryRespDTO>> getAnnouncementCategoryList(Long apartmentId) {
+    public ResponseEntity<List<AnnouncementDTO.AnnouncementCategoryRespDTO>> getAnnouncementCategoryList(Long apartmentId, AnnouncementType announcementType) {
         Apartment apartment = apartmentService.getApartmentById(apartmentId);
-        List<AnnouncementCategory> list = announcementCategoryRepository.findAllByApartmentId(apartment);
+        List<AnnouncementCategory> list;
+        if (announcementType== AnnouncementType.NOTICE || announcementType == AnnouncementType.DISCLOSURE){
+            list = announcementCategoryRepository.findAllByApartmentIdAndType(apartment,announcementType);
+        }else if (announcementType == null){
+            list = announcementCategoryRepository.findAllByApartmentId(apartment);
+        }else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         if (list.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
