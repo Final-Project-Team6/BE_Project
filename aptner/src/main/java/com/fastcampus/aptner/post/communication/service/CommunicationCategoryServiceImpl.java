@@ -4,6 +4,7 @@ import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.apartment.repository.ApartmentRepository;
 import com.fastcampus.aptner.global.handler.exception.CustomAPIException;
 import com.fastcampus.aptner.post.communication.domain.CommunicationCategory;
+import com.fastcampus.aptner.post.communication.domain.CommunicationType;
 import com.fastcampus.aptner.post.communication.dto.CommunicationDTO;
 import com.fastcampus.aptner.post.communication.repository.CommunicationCategoryRepository;
 import lombok.AccessLevel;
@@ -27,9 +28,14 @@ public class CommunicationCategoryServiceImpl implements CommunicationCategorySe
 
     @Override
     @Transactional
-    public ResponseEntity<List<CommunicationDTO.CommunicationCategoryRespDTO>> getCommunicationCategoryList(Long apartmentId) {
+    public ResponseEntity<List<CommunicationDTO.CommunicationCategoryRespDTO>> getCommunicationCategoryList(Long apartmentId, CommunicationType communicationType) {
         Apartment apartment = apartmentRepository.findApartmentByApartmentId(apartmentId).orElseThrow(() -> new CustomAPIException("아파트가 존재하지 않습니다."));
-        List<CommunicationCategory> list = communicationCategoryRepository.findAllByApartmentId(apartment);
+        List<CommunicationCategory> list;
+        if (communicationType==CommunicationType.USER_COMMU||communicationType == CommunicationType.REPRESENT_COMMU){
+            list = communicationCategoryRepository.findAllByApartmentIdAndType(apartment,communicationType);
+        } else if (communicationType == null) {
+            list = communicationCategoryRepository.findAllByApartmentId(apartment);
+        }else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         List<CommunicationDTO.CommunicationCategoryRespDTO> resp = list.stream().map(CommunicationDTO.CommunicationCategoryRespDTO::new).toList();
         if(list.isEmpty())
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

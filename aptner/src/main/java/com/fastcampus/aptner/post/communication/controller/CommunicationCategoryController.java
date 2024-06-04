@@ -1,5 +1,6 @@
 package com.fastcampus.aptner.post.communication.controller;
 
+import com.fastcampus.aptner.post.communication.domain.CommunicationType;
 import com.fastcampus.aptner.post.communication.dto.CommunicationDTO;
 import com.fastcampus.aptner.post.communication.service.CommunicationCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,12 +22,14 @@ public class CommunicationCategoryController {
 
     @Operation(
             summary = "소통공간 카테고리 조회 API",
-            description = "apartmentId : 현재 사용중인 아파트 ID "
+            description = "apartmentId : 현재 사용중인 아파트 ID \n\n" +
+                    "communicationType : 소통공간 타입"
     )
     @GetMapping("/{apartmentId}")
     public ResponseEntity<List<CommunicationDTO.CommunicationCategoryRespDTO>> getCommunicationCategoryList(
-            @PathVariable Long apartmentId) {
-        return communicationCategoryService.getCommunicationCategoryList(apartmentId);
+            @PathVariable Long apartmentId,
+            @RequestParam(required = false) CommunicationType communicationType) {
+        return communicationCategoryService.getCommunicationCategoryList(apartmentId, communicationType);
     }
 
 }
