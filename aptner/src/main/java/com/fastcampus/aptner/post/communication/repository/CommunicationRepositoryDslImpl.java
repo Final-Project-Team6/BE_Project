@@ -45,7 +45,8 @@ public class CommunicationRepositoryDslImpl extends QuerydslRepositorySupport im
                         targetCategory(reqDTO.getCategoryId()),
                         targetType(reqDTO.getCommunicationType()),
                         isPublished(),
-                        aboutSecretCommunicaton(memberToken)
+                        aboutSecretCommunicaton(memberToken),
+                        onlyMyCommunication(memberToken,reqDTO.getMyCommunication())
                         )
                 .orderBy(sort(reqDTO.getOrderType(),reqDTO.getOrderBy()));
         List<Communication> communicationList = this.getQuerydsl().applyPagination(reqDTO.getPageable(),query).fetch();
@@ -55,7 +56,6 @@ public class CommunicationRepositoryDslImpl extends QuerydslRepositorySupport im
     private BooleanExpression chooseApartment(Long apartmentId){
         return communicationCategory.apartmentId.apartmentId.eq(apartmentId);
     }
-
 
     private BooleanExpression searchByKeyword(String keyword, SearchType searchType){
         if (keyword == null){
@@ -71,6 +71,9 @@ public class CommunicationRepositoryDslImpl extends QuerydslRepositorySupport im
             case TITLE_CONTENTS -> {
                 return titleContainsKeyword(keyword).or(contentsContainsKeyword(keyword));
             }
+            case NICKNAME -> {
+                return nicknameContainsKeyword(keyword);
+            }
         }
         return Expressions.asBoolean(true).isTrue();
     }
@@ -80,6 +83,9 @@ public class CommunicationRepositoryDslImpl extends QuerydslRepositorySupport im
     }
     private BooleanExpression titleContainsKeyword(String keyword){
         return communication.title.contains(keyword);
+    }
+    private BooleanExpression nicknameContainsKeyword(String keyword){
+        return communication.memberId.nickname.contains(keyword);
     }
 
 
@@ -154,5 +160,13 @@ public class CommunicationRepositoryDslImpl extends QuerydslRepositorySupport im
             return notSecretCommunicaton();
         }
         return communication.memberId.memberId.eq(memberToken.getMemberId()).or(notSecretCommunicaton());
+    }
+    private BooleanExpression onlyMyCommunication(JWTMemberInfoDTO memberToken, Boolean myCommunication) {
+        if (memberToken == null || myCommunication == null) {
+            return null;
+        }
+        if (myCommunication) {
+            return communication.memberId.memberId.eq(memberToken.getMemberId());
+        } else return null;
     }
 }

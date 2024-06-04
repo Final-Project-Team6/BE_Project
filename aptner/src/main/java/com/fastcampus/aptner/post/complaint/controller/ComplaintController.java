@@ -78,7 +78,7 @@ public class ComplaintController {
             description = "apartmentId : 현재 사용중인 아파트 ID \n\n" +
                     "pageNumber : 조회 페이지 번호\n\n" +
                     "pageSize : 페이지당 내용 개수\n\n" +
-                    "searchType : 검색어 검색 조건 => TITLE(제목), CONTENTS(내용), TITLE_CONTENTS(제목+내용);\n\n" +
+                    "searchType : 검색어 검색 조건 => TITLE(제목), CONTENTS(내용), TITLE_CONTENTS(제목+내용), NICKNAME(닉네임)\n\n" +
                     "orderType : 정렬 조건 => VIEW(조회수), COMMENT(댓글), VOTE(공감수), DATE(날짜)\n\n" +
                     "orderBy : 정렬 차순 => ASC(오름차순), DESC(내림차순)\n\n" +
                     "keyword : 검색어\n\n" +

@@ -62,12 +62,13 @@ public class CommunicationController {
             description = "apartmentId : 현재 사용중인 아파트 ID\n\n" +
                     "pageNumber : 조회 페이지 번호\n\n" +
                     "pageSize : 페이지당 내용 개수\n\n" +
-                    "searchType : 검색어 검색 조건 => TITLE(제목), CONTENTS(내용), TITLE_CONTENTS(제목+내용)\n\n" +
+                    "searchType : 검색어 검색 조건 => TITLE(제목), CONTENTS(내용), TITLE_CONTENTS(제목+내용), NICKNAME(닉네임)\n\n" +
                     "orderType : 정렬 조건 => VIEW(조회수), COMMENT(댓글), VOTE(공감수), DATE(날짜)\n\n" +
                     "orderBy : 정렬 차순 => ASC(오름차순), DESC(내림차순)\n\n" +
                     "keyword : 검색어\n\n" +
                     "communicationType : USER_COMMU(입주민 소통공간),REPRESENT_COMMU(입대의 소통공간)\n\n" +
                     "categoryId : 소통글 카테고리 ID\n\n" +
+                    "myCommunication : 내 소통글만 보이기 => true 내 소통글만 반환, false & null 조건 처리 X\n\n" +
                     "apartmentId 를 제외한 나머지 값은 필수가 아니며, 포함하지 않으면 기본조건으로 처리하거나 영향을 주지 않습니다."
     )
     @GetMapping("/search/{apartmentId}")
@@ -81,7 +82,8 @@ public class CommunicationController {
             @RequestParam(required = false, defaultValue = "DESC") OrderBy orderBy,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) CommunicationType communicationType,
-            @RequestParam(required = false) Long categoryId){
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Boolean myCommunication){
         CommunicationDTO.CommunicationSearchReqDTO reqDTO = CommunicationDTO.CommunicationSearchReqDTO.builder()
                 .apartmentId(apartmentId)
                 .pageNumber(pageNumber)
@@ -92,6 +94,7 @@ public class CommunicationController {
                 .keyword(keyword)
                 .communicationType(communicationType)
                 .categoryId(categoryId)
+                .myCommunication(myCommunication)
                 .build();
         return communicationService.searchCommunication(reqDTO,memberToken);
     }
