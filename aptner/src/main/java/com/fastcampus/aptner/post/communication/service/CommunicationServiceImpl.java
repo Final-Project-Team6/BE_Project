@@ -5,7 +5,10 @@ import com.fastcampus.aptner.global.error.RestAPIException;
 import com.fastcampus.aptner.global.handler.exception.CustomDataNotFoundException;
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
+import com.fastcampus.aptner.member.domain.RoleName;
+import com.fastcampus.aptner.member.service.FindMemberRoleService;
 import com.fastcampus.aptner.post.common.dto.PageResponseDTO;
+import com.fastcampus.aptner.post.common.enumType.PostStatus;
 import com.fastcampus.aptner.post.common.error.PostErrorCode;
 import com.fastcampus.aptner.post.communication.domain.Communication;
 import com.fastcampus.aptner.post.communication.domain.CommunicationCategory;
@@ -47,6 +50,7 @@ public class CommunicationServiceImpl implements CommunicationService {
     MemberCommonService memberCommonService;
     ApartmentCommonService apartmentCommonService;
     CommentCommonService commentCommonService;
+    FindMemberRoleService findMemberRoleService;
 
     @Override
     public ResponseEntity<HttpStatus> uploadCommunication(JWTMemberInfoDTO userToken, Long apartmentId, CommunicationDTO.CommunicationPostReqDTO dto) {
@@ -101,15 +105,20 @@ public class CommunicationServiceImpl implements CommunicationService {
     @Override
     @Transactional
     public ResponseEntity<CommunicationDTO.CommunicationRespDTO> getCommunication(Long communicationId, JWTMemberInfoDTO token) {
-        Communication communication = communicationRepository.findById(communicationId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
-        if (communication.isSecret() && !communication.getMemberId().getMemberId().equals(token.getMemberId())) {
+        Communication communication = communicationRepository.findById(communicationId).orElseThrow(() -> new RestAPIException(NO_SUCH_POST));
+        RoleName roleName = findMemberRoleService.getMemberRole(token.getMemberId(), token.getApartmentId());
+        if(communication.getStatus().equals(PostStatus.DELETED) || communication.getStatus().equals(PostStatus.FORCE_DELETED)){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        CommunicationDTO.CommunicationRespDTO resp = new CommunicationDTO.CommunicationRespDTO(communication,token);
-        List<CommentDTO.ViewComments> comments = commentCommonService.getComments(communicationId, CommentType.COMMUNICATION,token);
+        if (communication.isSecret() && !communication.getMemberId().getMemberId().equals(token.getMemberId())) {
+            if(!roleName.equals(RoleName.MANAGER))
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        CommunicationDTO.CommunicationRespDTO resp = new CommunicationDTO.CommunicationRespDTO(communication, token);
+        List<CommentDTO.ViewComments> comments = commentCommonService.getComments(communicationId, CommentType.COMMUNICATION, token);
         resp.setComments(comments);
         communication.addViewCount();
-        return new ResponseEntity<>(resp,HttpStatus.OK);
+        return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
     @AllArgsConstructor

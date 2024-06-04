@@ -132,5 +132,6 @@ public class CommunicationDTO {
         private PostStatus status;
         private CommunicationType communicationType;
         private Long categoryId;
+        private Boolean myCommunication;
     }
 }
