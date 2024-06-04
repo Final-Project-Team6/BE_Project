@@ -51,7 +51,7 @@ public class InformationServiceImpl implements InformationService {
     @Transactional
     public ResponseEntity<InformationDTO.InformationRespDTO> getInformation(Long informationId) {
         Information information = informationRepository.findById(informationId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
-        if(information.getStatus().equals(PostStatus.DELETED)){
+        if(information.getStatus().equals(PostStatus.DELETED) || information.getStatus().equals(PostStatus.FORCE_DELETED)){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         InformationDTO.InformationRespDTO resp = new InformationDTO.InformationRespDTO(information);
