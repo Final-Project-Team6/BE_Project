@@ -31,7 +31,6 @@ public class InformationRepositoryDslImpl extends QuerydslRepositorySupport impl
 
     @Override
     public Page<Information> searchInformation(InformationDTO.InformationSearchReqDTO reqDTO) {
-
         JPAQuery<Information> query = queryFactory.selectFrom(information)
                 .leftJoin(information.informationCategoryId,informationCategory)
                 .groupBy(information.informationId)
@@ -49,7 +48,6 @@ public class InformationRepositoryDslImpl extends QuerydslRepositorySupport impl
     private BooleanExpression chooseApartment(Long apartmentId){
         return informationCategory.apartmentId.apartmentId.eq(apartmentId);
     }
-
 
     private BooleanExpression searchByKeyword(String keyword, SearchType searchType){
         if (keyword == null){
@@ -76,7 +74,6 @@ public class InformationRepositoryDslImpl extends QuerydslRepositorySupport impl
         return information.title.contains(keyword);
     }
 
-
     private OrderSpecifier<?> sort(OrderType orderType, OrderBy orderBy){
         if (orderType == null){
             orderType = OrderType.DATE;
@@ -99,7 +96,6 @@ public class InformationRepositoryDslImpl extends QuerydslRepositorySupport impl
         }
         return null;
     }
-
 
     private BooleanExpression targetCategory(Long categoryId){
         if (categoryId==null){

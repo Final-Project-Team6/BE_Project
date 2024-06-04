@@ -1,5 +1,6 @@
 package com.fastcampus.aptner.post.information.controller;
 
+import com.fastcampus.aptner.post.information.domain.InformationType;
 import com.fastcampus.aptner.post.information.dto.InformationDTO;
 import com.fastcampus.aptner.post.information.service.InformationCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,11 +21,13 @@ public class InformationCategoryController {
 
    @Operation(
             summary = "정보공간 카테고리 조회 API",
-            description = "apartmentId : 현재 사용중인 아파트 ID "
+            description = "apartmentId : 현재 사용중인 아파트 ID \n\n" +
+                    "informationType : 아파트 정보 타입"
     )
     @GetMapping("/{apartmentId}")
     public ResponseEntity<List<InformationDTO.InformationCategoryRespDTO>> getInformationCategoryList(
-            @PathVariable Long apartmentId) {
-        return informationCategoryService.getInformationCategoryList(apartmentId);
+            @PathVariable Long apartmentId,
+            @RequestParam(required = false) InformationType informationType) {
+        return informationCategoryService.getInformationCategoryList(apartmentId,informationType);
     }
 }

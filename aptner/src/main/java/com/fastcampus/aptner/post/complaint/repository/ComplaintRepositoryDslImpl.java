@@ -77,6 +77,9 @@ public class ComplaintRepositoryDslImpl extends QuerydslRepositorySupport implem
             case TITLE_CONTENTS -> {
                 return titleContainsKeyword(keyword).or(contentsContainsKeyword(keyword));
             }
+            case NICKNAME -> {
+                return nicknameContainsKeyword(keyword);
+            }
         }
         return null;
     }
@@ -91,6 +94,9 @@ public class ComplaintRepositoryDslImpl extends QuerydslRepositorySupport implem
 
     private BooleanExpression titleContainsKeyword(String keyword) {
         return complaint.title.contains(keyword);
+    }
+    private BooleanExpression nicknameContainsKeyword(String keyword){
+        return complaint.memberId.nickname.contains(keyword);
     }
 
     private OrderSpecifier<?> sort(OrderType orderType, OrderBy orderBy) {
