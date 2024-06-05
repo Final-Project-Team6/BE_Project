@@ -4,6 +4,7 @@ import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.dto.HttpResponse;
 import com.fastcampus.aptner.member.dto.SubscriptionDTO;
 import com.fastcampus.aptner.member.dto.reqeust.*;
+import com.fastcampus.aptner.member.dto.response.MemberInformationResponse;
 import com.fastcampus.aptner.member.service.UpdateMemberServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -216,4 +217,16 @@ public class UpdateMemberController {
 
         return new ResponseEntity<>(new HttpResponse<>(1, "회원 이미지가 변경됐습니다.", null), HttpStatus.OK);
     }
+
+    @Operation(
+            summary = "회원 정보 조회 API",
+            description = "USER, MANAGER, ADMIN 권한 필수")
+    @GetMapping("/information")
+    public ResponseEntity<?> getMemberInformation(@AuthenticationPrincipal JWTMemberInfoDTO memberToken) {
+        MemberInformationResponse memberInformation = memberService.getMemberInformation(memberToken.getMemberId(), memberToken.getMemberId());
+
+        return new ResponseEntity<>(new HttpResponse<>(1, "회원의 개인 정보입니다.", memberInformation), HttpStatus.OK);
+    }
+
+
 }

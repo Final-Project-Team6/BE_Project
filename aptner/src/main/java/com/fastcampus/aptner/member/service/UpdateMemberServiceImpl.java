@@ -9,7 +9,7 @@ import com.fastcampus.aptner.global.handler.exception.CustomDuplicationKeyExcept
 import com.fastcampus.aptner.member.domain.*;
 import com.fastcampus.aptner.member.dto.SubscriptionDTO;
 import com.fastcampus.aptner.member.dto.reqeust.InsertMemberHomeRequest;
-import com.fastcampus.aptner.member.dto.reqeust.UpdateMemberProfileRequest;
+import com.fastcampus.aptner.member.dto.response.MemberInformationResponse;
 import com.fastcampus.aptner.member.repository.MemberHomeRepository;
 import com.fastcampus.aptner.member.repository.MemberRepository;
 import com.fastcampus.aptner.member.repository.MemberRoleRepository;
@@ -91,7 +91,7 @@ public class UpdateMemberServiceImpl implements UpdateMemberService {
     @Override
     public void insertMemberHomeByMemberIdAndApartmentId(Long memberId, InsertMemberHomeRequest request) {
         System.out.println("request.getApartmentId() = " + request.getApartmentId());
-        
+
         Apartment findApartment = apartmentRepository.findApartmentByApartmentId(request.getApartmentId())
                 .orElseThrow(() -> new CustomDataNotFoundException("아파트가 존재하지 않습니다."));
 
@@ -217,5 +217,30 @@ public class UpdateMemberServiceImpl implements UpdateMemberService {
         member.updateMemberProfileImage(profileImage);
 
         memberRepository.save(member);
+    }
+
+    @Transactional
+    @Override
+    public MemberInformationResponse getMemberInformation(Long memberId, Long apartmentId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomDataNotFoundException("회원이 존재하지 않습니다."));
+
+        Apartment apartment = apartmentRepository.findApartmentByApartmentId(apartmentId)
+                .orElseThrow(() -> new CustomDataNotFoundException("아파트가 존재하지 않습니다."));
+
+        Home findHome = homeRepository.findHomeByApartmentIdAndHomeId(apartment, memberId)
+                .orElseThrow(() -> new CustomDataNotFoundException("자택이 존재하지 않습니다."));
+
+
+        return MemberInformationResponse.builder()
+                .profileImage(member.getProfileImage())
+                .fullName(member.getFullName())
+                .username(member.getUsername())
+                .authenticationStatus(member.isAuthenticationStatus())
+                .phone(member.getPhone())
+                .nickname(member.getNickname())
+                .dong(findHome.getDong())
+                .ho((findHome.getHo()))
+                .build();
     }
 }
