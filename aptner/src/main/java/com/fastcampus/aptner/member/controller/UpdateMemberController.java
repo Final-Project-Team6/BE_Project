@@ -223,7 +223,7 @@ public class UpdateMemberController {
             description = "USER, MANAGER, ADMIN 권한 필수")
     @GetMapping("/information")
     public ResponseEntity<?> getMemberInformation(@AuthenticationPrincipal JWTMemberInfoDTO memberToken) {
-        MemberInformationResponse memberInformation = memberService.getMemberInformation(memberToken.getMemberId(), memberToken.getMemberId());
+        MemberInformationResponse memberInformation = memberService.getMemberInformation(memberToken.getMemberId(), memberToken.getApartmentId());
 
         return new ResponseEntity<>(new HttpResponse<>(1, "회원의 개인 정보입니다.", memberInformation), HttpStatus.OK);
     }
