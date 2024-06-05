@@ -66,7 +66,7 @@ public class JoinMemberController {
     }
 
     @Operation(
-            summary = "회원 아이디 중복 여부(검증) API",
+            summary = "회원 아이디 중복 여부 API",
             description = "username: 회원 아이디(필수)"
     )
     @GetMapping("/check/username")

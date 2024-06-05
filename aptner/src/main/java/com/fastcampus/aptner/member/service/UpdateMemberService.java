@@ -2,7 +2,7 @@ package com.fastcampus.aptner.member.service;
 
 import com.fastcampus.aptner.member.dto.SubscriptionDTO;
 import com.fastcampus.aptner.member.dto.reqeust.InsertMemberHomeRequest;
-import com.fastcampus.aptner.member.dto.reqeust.UpdateMemberProfileRequest;
+import com.fastcampus.aptner.member.dto.response.MemberInformationResponse;
 
 public interface UpdateMemberService {
 
@@ -18,5 +18,6 @@ public interface UpdateMemberService {
     void updateMemberSubscription(Long memberId, SubscriptionDTO subscriptionDTO);
     SubscriptionDTO getMemberSubscription(Long memberId);
     void updateMemberProfileImage(Long memberId, String profileImage);
+    MemberInformationResponse getMemberInformation(Long memberId, Long apartmentId);
 
 }

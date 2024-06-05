@@ -10,6 +10,5 @@ public interface HomeRepository extends JpaRepository<Home,Long> {
 
     Optional<Home> findHomeByApartmentId(Apartment apartmentId);
     Optional<Home> findHomeByHomeId(Long homeId);
-
-
+    Optional<Home> findHomeByApartmentIdAndHomeId(Apartment apartmentId, Long homeId);
 }
