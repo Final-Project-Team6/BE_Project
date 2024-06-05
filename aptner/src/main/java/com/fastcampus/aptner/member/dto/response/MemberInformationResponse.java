@@ -12,18 +12,14 @@ public class MemberInformationResponse {
     private Boolean authenticationStatus;
     private String phone;
     private String nickname;
-    private String dong;
-    private String ho;
 
     @Builder
-    public MemberInformationResponse(String profileImage, String fullName, String username, Boolean authenticationStatus, String phone, String nickname, String dong, String ho) {
+    public MemberInformationResponse(String profileImage, String fullName, String username, Boolean authenticationStatus, String phone, String nickname) {
         this.profileImage = profileImage;
         this.fullName = fullName;
         this.username = username;
         this.authenticationStatus = authenticationStatus;
         this.phone = phone;
         this.nickname = nickname;
-        this.dong = dong;
-        this.ho = ho;
     }
 }

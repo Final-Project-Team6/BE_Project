@@ -44,6 +44,21 @@ public class MemberHomeServiceImpl implements MemberHomeService {
 
     @Transactional
     @Override
+    public List<MemberHomeDTO> findAllHomesByMemberIdAndApartmentId(Long memberId, Long apartmentId) {
+        Member findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomDataNotFoundException("회원이 존재하지 않습니다."));
+
+        List<MemberHome> memberHomes = memberHomeRepository.findAllByMemberId(findMember)
+                .stream()
+                .filter(mh -> mh.getHomeId().getApartmentId().getApartmentId().equals(apartmentId))
+                .toList();
+
+        return memberHomes.stream().map(this::getMemberHomeDTO).collect(Collectors.toList());
+    }
+
+
+    @Transactional
+    @Override
     public MemberHomeDTO findHomeByMemberIdAndMemberHomeId(Long memberId, Long memberHomeId) {
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomDataNotFoundException("회원이 존재하지 않습니다."));
