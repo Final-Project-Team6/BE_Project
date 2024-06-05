@@ -141,4 +141,12 @@ public class Communication {
     public void addViewCount(){
         this.view++;
     }
+
+    public int getAllCommentCnt(){
+        int cnt = commentList.size();
+        for (Comment comment : commentList){
+            cnt += comment.getCommentCnt();
+        }
+        return cnt;
+    }
 }

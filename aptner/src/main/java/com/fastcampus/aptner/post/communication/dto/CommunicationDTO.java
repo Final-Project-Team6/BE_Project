@@ -78,7 +78,7 @@ public class CommunicationDTO {
             this.title = communication.getTitle();
             this.createdAt = communication.getCreatedAt();
             this.view = communication.getView();
-            this.commentCnt = communication.getCommentList().size();
+            this.commentCnt = communication.getAllCommentCnt();
             this.agreeCnt = voteRespDTO.agree();
             this.disagreeCnt = voteRespDTO.disagree();
         }
@@ -111,7 +111,7 @@ public class CommunicationDTO {
             this.contents = communication.getContents();
             this.createdAt = communication.getCreatedAt();
             this.view = communication.getView();
-            this.commentCnt = communication.getCommentList().size();
+            this.commentCnt = communication.getAllCommentCnt();
             this.agreeCnt = voteRespDTO.agree();
             this.disagreeCnt = voteRespDTO.disagree();
             this.yourVote = voteRespDTO.yourVote();
