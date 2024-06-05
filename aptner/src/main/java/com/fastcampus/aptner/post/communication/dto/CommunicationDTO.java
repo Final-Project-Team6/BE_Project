@@ -70,6 +70,7 @@ public class CommunicationDTO {
         private final int commentCnt;
         private final int agreeCnt;
         private final int disagreeCnt;
+        private boolean secret;
         public CommunicationListRespDTO(Communication communication){
             VoteDTO.VoteRespDTO voteRespDTO=communication.aboutVoteWithoutMember();
             this.communicationId = communication.getCommunicationId();
@@ -81,6 +82,7 @@ public class CommunicationDTO {
             this.commentCnt = communication.getCommentList().size();
             this.agreeCnt = voteRespDTO.agree();
             this.disagreeCnt = voteRespDTO.disagree();
+            this.secret = communication.isSecret();
         }
     }
 
@@ -102,6 +104,8 @@ public class CommunicationDTO {
         private int disagreeCnt;
         private Boolean yourVote;
         private List<CommentDTO.ViewComments> comments;
+        private boolean secret;
+
         public CommunicationRespDTO(Communication communication, JWTMemberInfoDTO token){
             VoteDTO.VoteRespDTO voteRespDTO=communication.aboutVote(token);
             this.communicationId = communication.getCommunicationId();
@@ -115,6 +119,7 @@ public class CommunicationDTO {
             this.agreeCnt = voteRespDTO.agree();
             this.disagreeCnt = voteRespDTO.disagree();
             this.yourVote = voteRespDTO.yourVote();
+            this.secret = communication.isSecret();
         }
     }
     @Builder

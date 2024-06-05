@@ -85,7 +85,7 @@ public class RefreshTokenController {
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
                 .memberId(memberId)
-                .nickname(member.getUsername())
+                .nickname(member.getNickname())
                 .build();
 
         return new ResponseEntity<>(new HttpResponse<>(1, "리프레시 토큰이 재발급 되었습니다.", loginResponse), HttpStatus.OK);
