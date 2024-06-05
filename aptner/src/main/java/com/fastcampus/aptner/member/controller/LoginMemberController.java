@@ -65,7 +65,7 @@ public class LoginMemberController {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .memberId(member.getMemberId())
-                .nickname(member.getUsername())
+                .nickname(member.getNickname())
                 .build();
 
         return new ResponseEntity<>(new HttpResponse<>(1, "로그인 성공 입니다.", loginResponse), HttpStatus.OK);
