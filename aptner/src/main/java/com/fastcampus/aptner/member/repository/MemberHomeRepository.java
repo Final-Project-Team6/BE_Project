@@ -12,5 +12,4 @@ public interface MemberHomeRepository extends JpaRepository<MemberHome, Long>, M
     Optional<MemberHome> findByMemberIdAndHomeId(Member memberId, Home homeId);
     List<MemberHome> findAllByMemberId(Member member);
     Optional<MemberHome> findByMemberIdAndMemberHomeId(Member member, Long memberHomeId);
-
 }

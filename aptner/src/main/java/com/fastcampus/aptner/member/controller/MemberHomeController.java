@@ -1,7 +1,6 @@
 package com.fastcampus.aptner.member.controller;
 
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
-import com.fastcampus.aptner.member.domain.MemberHome;
 import com.fastcampus.aptner.member.dto.HttpResponse;
 import com.fastcampus.aptner.member.dto.MemberHomeDTO;
 import com.fastcampus.aptner.member.service.MemberHomeService;
@@ -47,5 +46,16 @@ public class MemberHomeController {
                                                     @PathVariable Long memberHomeId) {
         MemberHomeDTO memberHome = memberHomeService.findHomeByMemberIdAndMemberHomeId(memberToken.getMemberId(), memberHomeId);
         return new ResponseEntity<>(new HttpResponse<>(1, "회원의 자택입니다.", memberHome), HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "회원 현재 아파트 동, 호수 조회 API",
+            description = "USER, MANAGER, ADMIN 권한 필수\n\n" +
+                    "memberHomeId: 회원 자택 고유 식별 번호(필수)"
+    )
+    @GetMapping("/home/apartment")
+    public ResponseEntity<?> findHomeByMemberHomeId(@AuthenticationPrincipal JWTMemberInfoDTO memberToken) {
+        List<MemberHomeDTO> memberHomes = memberHomeService.findAllHomesByMemberIdAndApartmentId(memberToken.getMemberId(), memberToken.getApartmentId());
+        return new ResponseEntity<>(new HttpResponse<>(1, "회원의 아파트별 자택 목록입니다.", memberHomes), HttpStatus.OK);
     }
 }

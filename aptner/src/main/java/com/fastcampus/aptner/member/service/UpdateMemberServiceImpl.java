@@ -228,10 +228,6 @@ public class UpdateMemberServiceImpl implements UpdateMemberService {
         Apartment apartment = apartmentRepository.findApartmentByApartmentId(apartmentId)
                 .orElseThrow(() -> new CustomDataNotFoundException("아파트가 존재하지 않습니다."));
 
-        Home findHome = homeRepository.findHomeByApartmentIdAndHomeId(apartment, memberId)
-                .orElseThrow(() -> new CustomDataNotFoundException("자택이 존재하지 않습니다."));
-
-
         return MemberInformationResponse.builder()
                 .profileImage(member.getProfileImage())
                 .fullName(member.getFullName())
@@ -239,8 +235,6 @@ public class UpdateMemberServiceImpl implements UpdateMemberService {
                 .authenticationStatus(member.isAuthenticationStatus())
                 .phone(member.getPhone())
                 .nickname(member.getNickname())
-                .dong(findHome.getDong())
-                .ho((findHome.getHo()))
                 .build();
     }
 }
