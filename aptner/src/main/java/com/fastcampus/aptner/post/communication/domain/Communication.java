@@ -143,9 +143,12 @@ public class Communication {
     }
 
     public int getAllCommentCnt(){
-        int cnt = commentList.size();
-        for (Comment comment : commentList){
-            cnt += comment.getCommentCnt();
+        int cnt = 0;
+        if (commentList.size()!=0) {
+            cnt += commentList.size();
+            for (Comment comment : commentList) {
+                cnt += comment.getCommentCnt();
+            }
         }
         return cnt;
     }
