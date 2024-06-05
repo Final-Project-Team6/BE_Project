@@ -81,7 +81,7 @@ public class AnnouncementDTO {
             this.title = announcement.getTitle();
             this.createdAt = announcement.getCreatedAt();
             this.view = announcement.getView();
-            this.commentCnt = announcement.getCommentList().size();
+            this.commentCnt = announcement.getAllCommentCnt();
             this.agreeCnt = voteRespDTO.agree();
             this.disagreeCnt = voteRespDTO.disagree();
         }
@@ -113,7 +113,7 @@ public class AnnouncementDTO {
             this.title = announcement.getTitle();
             this.createdAt = announcement.getCreatedAt();
             this.view = announcement.getView();
-            this.commentCnt = announcement.getCommentList().size();
+            this.commentCnt = announcement.getAllCommentCnt();
             this.agreeCnt = voteRespDTO.agree();
             this.disagreeCnt = voteRespDTO.disagree();
             this.yourVote = voteRespDTO.yourVote();

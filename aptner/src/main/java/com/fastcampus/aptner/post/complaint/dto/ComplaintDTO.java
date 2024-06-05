@@ -84,7 +84,7 @@ public class ComplaintDTO {
             this.title = complaint.getTitle();
             this.createdAt = complaint.getCreatedAt();
             this.view = complaint.getView();
-            this.commentCnt = complaint.getCommentList().size();
+            this.commentCnt = complaint.getAllCommentCnt();
             this.agreeCnt = voteRespDTO.agree();
             this.disagreeCnt = voteRespDTO.disagree();
             this.yourVote = voteRespDTO.yourVote();
@@ -117,7 +117,7 @@ public class ComplaintDTO {
             this.title = complaint.getTitle();
             this.createdAt = complaint.getCreatedAt();
             this.view = complaint.getView();
-            this.commentCnt = complaint.getCommentList().size();
+            this.commentCnt = complaint.getAllCommentCnt();
             this.agreeCnt = voteRespDTO.agree();
             this.secret = complaint.isSecret();
         }
