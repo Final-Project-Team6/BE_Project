@@ -50,8 +50,7 @@ public class MemberHomeController {
 
     @Operation(
             summary = "회원 현재 아파트 동, 호수 조회 API",
-            description = "USER, MANAGER, ADMIN 권한 필수\n\n" +
-                    "memberHomeId: 회원 자택 고유 식별 번호(필수)"
+            description = "USER, MANAGER, ADMIN 권한 필수"
     )
     @GetMapping("/home/apartment")
     public ResponseEntity<?> findHomeByMemberHomeId(@AuthenticationPrincipal JWTMemberInfoDTO memberToken) {
