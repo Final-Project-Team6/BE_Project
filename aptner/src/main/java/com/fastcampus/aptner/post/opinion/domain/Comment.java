@@ -150,4 +150,12 @@ public class Comment extends BaseTimeEntity {
             return this;
         }
     }
+
+    public int getCommentCnt(){
+        int cnt = this.children.size();
+        for (Comment comment : children){
+            cnt += comment.getCommentCnt();
+        }
+        return cnt;
+    }
 }
