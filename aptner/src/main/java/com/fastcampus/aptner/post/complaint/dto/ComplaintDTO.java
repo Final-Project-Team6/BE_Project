@@ -60,7 +60,7 @@ public class ComplaintDTO {
     @Getter
     public static class ComplaintRespDTO {
         private Long complaintId;
-        private ComplaintCategoryRespDTO complaintCategoryRespDTO;
+        private ComplaintCategoryRespDTO complaintCategory;
         private ComplaintStatus complaintStatus;
         private PostMemberResponse writer;
         private String title;
@@ -78,7 +78,7 @@ public class ComplaintDTO {
         public ComplaintRespDTO(Complaint complaint, JWTMemberInfoDTO request, List<CommentDTO.ViewComments> comments) {
             VoteDTO.VoteRespDTO voteRespDTO = complaint.aboutVote(request);
             this.complaintId = complaint.getComplaintId();
-            this.complaintCategoryRespDTO = new ComplaintDTO.ComplaintCategoryRespDTO(complaint.getComplaintCategoryId());
+            this.complaintCategory = new ComplaintDTO.ComplaintCategoryRespDTO(complaint.getComplaintCategoryId());
             this.complaintStatus = complaint.getComplaintStatus();
             this.writer = new PostMemberResponse(complaint.getMemberId());
             this.title = complaint.getTitle();
@@ -97,7 +97,7 @@ public class ComplaintDTO {
     @Getter
     public static class ComplaintListRespDTO {
         private Long complaintId;
-        private ComplaintCategoryRespDTO complaintCategoryRespDTO;
+        private ComplaintCategoryRespDTO complaintCategory;
         private ComplaintStatus complaintStatus;
         private PostMemberResponse writer;
         private String title;
@@ -111,7 +111,7 @@ public class ComplaintDTO {
         public ComplaintListRespDTO(Complaint complaint) {
             VoteDTO.VoteRespDTO voteRespDTO = complaint.aboutVoteWithoutMember();
             this.complaintId = complaint.getComplaintId();
-            this.complaintCategoryRespDTO = new ComplaintDTO.ComplaintCategoryRespDTO(complaint.getComplaintCategoryId());
+            this.complaintCategory = new ComplaintDTO.ComplaintCategoryRespDTO(complaint.getComplaintCategoryId());
             this.complaintStatus = complaint.getComplaintStatus();
             this.writer = new PostMemberResponse(complaint.getMemberId());
             this.title = complaint.getTitle();
