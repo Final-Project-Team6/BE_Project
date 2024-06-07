@@ -20,22 +20,22 @@ public class Apartment {
     @Column(name = "apartment_id")
     private Long apartmentId;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String name;
 
     @Column(length = 100)
     private String engName;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String sido;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String gugun;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String road;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String zipcode;
 
     @Column
