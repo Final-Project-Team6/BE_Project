@@ -4,6 +4,7 @@ import com.fastcampus.aptner.apartment.domain.Apartment;
 import com.fastcampus.aptner.apartment.domain.Home;
 import com.fastcampus.aptner.apartment.repository.ApartmentRepository;
 import com.fastcampus.aptner.apartment.repository.HomeRepository;
+import com.fastcampus.aptner.global.handler.exception.CustomAPIException;
 import com.fastcampus.aptner.global.handler.exception.CustomDataNotFoundException;
 import com.fastcampus.aptner.global.handler.exception.CustomDuplicationKeyException;
 import com.fastcampus.aptner.member.domain.*;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.fastcampus.aptner.member.domain.QMemberRole.memberRole;
@@ -37,6 +39,9 @@ public class UpdateMemberServiceImpl implements UpdateMemberService {
 
     private final JPAQueryFactory jpaQueryFactory;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private static final List<String> IMAGE_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "tiff");
+
 
     @Transactional
     @Override
@@ -214,9 +219,26 @@ public class UpdateMemberServiceImpl implements UpdateMemberService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomDataNotFoundException("회원이 존재하지 않습니다."));
 
-        member.updateMemberProfileImage(profileImage);
+        if (profileImage == null || profileImage.isEmpty()) {
+            throw new CustomAPIException("회원 이미지가 비어있습니다.");
+        }
 
+        if (profileImage.length() >= 255) {
+            throw new CustomAPIException("이미지 이름은 최대 255 글자입니다.");
+        }
+
+        String lowerCaseFilename = profileImage.toLowerCase();
+
+        boolean flag = IMAGE_EXTENSIONS.stream()
+                .anyMatch(extension -> lowerCaseFilename.endsWith("." + extension));
+
+        if (!flag) {
+            throw new CustomAPIException("jpg, jpeg, png, gif, bmp, webp, svg, tiff 확장자만 가능합니다.");
+        }
+
+        member.updateMemberProfileImage(profileImage);
         memberRepository.save(member);
+
     }
 
     @Transactional
