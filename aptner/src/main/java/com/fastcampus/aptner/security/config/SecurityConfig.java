@@ -79,10 +79,10 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // Preflight 요청은 허용
-                                .requestMatchers("/api/member/join", "/api/member/login", "/api/member/logout", "/api/file", "/api/member/check/**").permitAll()
+                                .requestMatchers("/api/member/join", "/api/member/login", "/api/member/logout", "/api/file", "/api/member/check/**", "/api/refresh-token/**").permitAll()
                                 .requestMatchers(GET,"/api/post/**").permitAll()
                                 .requestMatchers(GET,"/api/apartment/**").permitAll()
-                                .requestMatchers("/api/member/**", "/api/apartment/**", "/api/refresh-token/**", "/api/post/**").hasAnyRole("USER", "MANAGER", "ADMIN")
+                                .requestMatchers("/api/member/**", "/api/apartment/**", "/api/post/**").hasAnyRole("USER", "MANAGER", "ADMIN")
                                 .requestMatchers("/api/admin/**").hasAnyRole("MANAGER","ADMIN")
                                 .requestMatchers("/api/post/communication/admin/**", "/api/post/communication/category/admin/**").hasAnyRole("MANAGER","ADMIN")
                                 .requestMatchers("/api/post/information/admin/**", "/api/post/information/category/admin/**" ).hasAnyRole("MANAGER","ADMIN")
