@@ -15,4 +15,5 @@ public class LoginMemberResponse {
 
     private Long memberId;
     private String nickname;
+    private String profileImage;
 }
