@@ -1,5 +1,6 @@
 package com.fastcampus.aptner.post.complaint.repository;
 
+import com.fastcampus.aptner.global.error.RestAPIException;
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.post.common.enumType.OrderBy;
 import com.fastcampus.aptner.post.common.enumType.OrderType;
@@ -24,6 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.fastcampus.aptner.global.error.CommonErrorCode.MUST_AUTHORIZE;
 import static com.fastcampus.aptner.member.domain.QMember.member;
 import static com.fastcampus.aptner.post.complaint.domain.QComplaint.complaint;
 import static com.fastcampus.aptner.post.complaint.domain.QComplaintCategory.complaintCategory;
@@ -170,13 +172,13 @@ public class ComplaintRepositoryDslImpl extends QuerydslRepositorySupport implem
     }
 
     private BooleanExpression onlyMyComplaint(JWTMemberInfoDTO memberToken, Boolean myComplaint) {
-        if (memberToken == null) {
-            return null;
-        }
         if (myComplaint == null) {
             return null;
         }
         if (myComplaint) {
+            if (memberToken == null){
+                throw new RestAPIException(MUST_AUTHORIZE);
+            }
             return complaint.memberId.memberId.eq(memberToken.getMemberId());
         } else return null;
     }
