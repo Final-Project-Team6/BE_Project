@@ -34,23 +34,25 @@ public class FindApartmentController {
             summary = "아파트 단순 전체 조회 API\n\n"
     )
     @GetMapping("/")
-    public ResponseEntity<?> findAllApartment(){
+    public ResponseEntity<?> findAllApartment() {
         return apartmentService.findAllApartment();
     }
+
     @Operation(
             summary = "아파트 이름으로 검색 API\n\n"
     )
     @GetMapping("/search")
-    public ResponseEntity<?> searchApartment(@RequestParam String keyword){
+    public ResponseEntity<?> searchApartment(@RequestParam String keyword) {
         return apartmentService.searchApartment(keyword);
     }
+
     @Operation(
             summary = "아파트 ID로 단건 조회 API\n\n"
     )
     @GetMapping("/{apartmentId}")
-    public ResponseEntity<?> findApartmentById(@PathVariable Long apartmentId){
+    public ResponseEntity<?> findApartmentById(@PathVariable Long apartmentId) {
         Apartment apartment = apartmentService.findApartmentById(apartmentId);
-        return new ResponseEntity<>(new FindApartmentResponse(apartment),HttpStatus.OK);
+        return new ResponseEntity<>(new FindApartmentResponse(apartment), HttpStatus.OK);
     }
 
 }
