@@ -79,7 +79,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
                                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll() // Preflight 요청은 허용
-                                .requestMatchers("/api/member/join", "/api/member/login", "/api/member/logout", "/api/member/find/**", "/api/member/check/**", "/api/refresh-token/**").permitAll()
+                                .requestMatchers("/api/member/join", "/api/member/login", "/api/member/logout", "/api/member/find/**", "/api/member/check/**", "/api/token/**").permitAll()
                                 .requestMatchers(GET,"/api/post/**").permitAll()
                                 .requestMatchers(GET,"/api/apartment/**").permitAll()
                                 .requestMatchers("/api/member/**", "/api/apartment/**", "/api/post/**", "/api/file").hasAnyRole("USER", "MANAGER", "ADMIN")
