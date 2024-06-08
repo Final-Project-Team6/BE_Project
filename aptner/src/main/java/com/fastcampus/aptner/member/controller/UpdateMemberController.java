@@ -84,7 +84,7 @@ public class UpdateMemberController {
                                                   @RequestBody @Valid UpdatePasswordRequest passwordRequest,
                                                   BindingResult bindingResult) {
 
-        System.out.println(request.getMemberId());
+
         memberService.updatePasswordById(request.getMemberId(), passwordRequest.getPassword());
 
         return new ResponseEntity<>(new HttpResponse<>(1, "회원 휴대전화번호를 변경했습니다.", null), HttpStatus.OK);
@@ -101,7 +101,6 @@ public class UpdateMemberController {
                                               @RequestBody @Valid UpdateMemberRoleRequest roleRequest,
                                               BindingResult bindingResult) {
 
-        System.out.println(request.getMemberId());
         memberService.updateMemberRoleByMemberIdAndApartmentId(request.getMemberId(), request.getApartmentId(), roleRequest.getRoleName());
 
         return new ResponseEntity<>(new HttpResponse<>(1, "회원 권한을 변경했습니다.", null), HttpStatus.OK);
@@ -119,8 +118,6 @@ public class UpdateMemberController {
                                               @RequestBody @Valid InsertMemberHomeRequest homeRequest,
                                               BindingResult bindingResult) {
 
-        System.out.println(request.getMemberId());
-        System.out.println("homeRequest.getApartmentId() = " + homeRequest.getApartmentId());
         memberService.insertMemberHomeByMemberIdAndApartmentId(request.getMemberId(), homeRequest);
 
         return new ResponseEntity<>(new HttpResponse<>(1, "회원 자택을 추가했습니다.", null), HttpStatus.OK);
@@ -136,7 +133,6 @@ public class UpdateMemberController {
     public ResponseEntity<?> deleteMemberHome(@AuthenticationPrincipal JWTMemberInfoDTO request,
                                               @PathVariable(name = "homeId") Long homeId) {
 
-        System.out.println(request.getMemberId());
         memberService.deleteMemberHomeByMemberIdAndHomeId(request.getMemberId(), homeId);
 
         return new ResponseEntity<>(new HttpResponse<>(1, "회원 자택을 삭제했습니다.", null), HttpStatus.OK);
@@ -156,7 +152,6 @@ public class UpdateMemberController {
                                               @RequestParam(name = "dong") String dong,
                                               @RequestParam(name = "ho") String ho) {
 
-        System.out.println(request.getMemberId());
         memberService.updateMemberHomeDongHo(request.getMemberId(), homeId, dong, ho);
 
         return new ResponseEntity<>(new HttpResponse<>(1, "회원 자택을 수정했습니다.", null), HttpStatus.OK);
@@ -172,7 +167,6 @@ public class UpdateMemberController {
     public ResponseEntity<?> updateMemberStatus(@AuthenticationPrincipal JWTMemberInfoDTO request,
                                                 @RequestBody UpdateMemberStatusRequest status) {
 
-        System.out.println(request.getMemberId());
         memberService.updateMemberStatus(request.getMemberId(), status.getStatus());
 
         return new ResponseEntity<>(new HttpResponse<>(1, "회원 상태를 변경했습니다.", null), HttpStatus.OK);
