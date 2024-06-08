@@ -3,11 +3,13 @@ package com.fastcampus.aptner.apartment.controller;
 import com.fastcampus.aptner.apartment.service.UpdateApartmentService;
 import com.fastcampus.aptner.member.dto.HttpResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "아파트 수정하기", description = "아파트 수정하기")
 @RequiredArgsConstructor
 @RequestMapping("/api/apartment")
 @RestController
