@@ -72,13 +72,15 @@ public class CommentController {
     @Operation(
             summary = "내 댓글 조회 API",
             description = "pageNumber : 조회 페이지 번호\n\n" +
-                    "pageSize : 페이지당 내용 개수"
+                    "pageSize : 페이지당 내용 개수\n\n" +
+                    "commentType : 조회하려는 게시판 타입"
     )
     @GetMapping("/")
     public ResponseEntity<?> getMyCommentList(
             @AuthenticationPrincipal JWTMemberInfoDTO memberToken,
             @RequestParam(required = false, defaultValue = "1") int pageNumber,
-            @RequestParam(required = false, defaultValue = "10") int pageSize) {
-        return commentService.getMyCommentList(memberToken, pageNumber, pageSize);
+            @RequestParam(required = false, defaultValue = "10") int pageSize,
+            @RequestParam(required = false) CommentType commentType) {
+        return commentService.getMyCommentList(memberToken, pageNumber, pageSize,commentType);
     }
 }

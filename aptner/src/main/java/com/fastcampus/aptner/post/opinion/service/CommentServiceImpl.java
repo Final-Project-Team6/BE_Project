@@ -55,10 +55,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public ResponseEntity<?> getMyCommentList(JWTMemberInfoDTO request, Integer pageNumber, Integer pageSize) {
+    public ResponseEntity<?> getMyCommentList(JWTMemberInfoDTO request, Integer pageNumber, Integer pageSize,CommentType commentType) {
         if (request == null) throw new RestAPIException(MUST_AUTHORIZE);
         PageRequest pageable = PageRequest.of(pageNumber - 1, pageSize);
-        Page<Comment> commentList = commentRepository.getMyComments(request.getMemberId(), pageable);
+        Page<Comment> commentList = commentRepository.getMyComments(request.getMemberId(), pageable,commentType);
         if (commentList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

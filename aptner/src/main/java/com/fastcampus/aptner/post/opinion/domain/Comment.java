@@ -1,6 +1,8 @@
 package com.fastcampus.aptner.post.opinion.domain;
 
+import com.fastcampus.aptner.global.error.RestAPIException;
 import com.fastcampus.aptner.global.handler.common.BaseTimeEntity;
+import com.fastcampus.aptner.global.handler.exception.CustomAPIException;
 import com.fastcampus.aptner.jwt.util.JWTMemberInfoDTO;
 import com.fastcampus.aptner.member.domain.Member;
 import com.fastcampus.aptner.post.announcement.domain.Announcement;
@@ -18,6 +20,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.COMMENT_CONVERT_FAILED;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -68,7 +72,7 @@ public class Comment extends BaseTimeEntity {
     private PostStatus status;
 
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
     private Comment parentId;
 
@@ -116,31 +120,35 @@ public class Comment extends BaseTimeEntity {
     }
 
     public CommentDTO.Post getPost() {
-        Comment first = getFirst();
-        CommentDTO.Post post = null;
-        if (first.communicationId != null) {
-            post = CommentDTO.Post.builder()
-                    .postId(first.communicationId.getCommunicationId())
-                    .postTitle(first.communicationId.getTitle())
-                    .boardType(BoardType.COMMUNICATION)
-                    .build();
+        try {
+            Comment first = getFirst();
+            CommentDTO.Post post = null;
+            if (first.communicationId != null) {
+                post = CommentDTO.Post.builder()
+                        .postId(first.communicationId.getCommunicationId())
+                        .postTitle(first.communicationId.getTitle())
+                        .boardType(BoardType.COMMUNICATION)
+                        .build();
 
-        } else if (first.complaintId != null) {
-            post = CommentDTO.Post.builder()
-                    .postId(first.complaintId.getComplaintId())
-                    .postTitle(first.complaintId.getTitle())
-                    .boardType(BoardType.COMPLAINT)
-                    .build();
-        } else if (first.announcementId != null) {
-            post = CommentDTO.Post.builder()
-                    .postId(first.announcementId.getAnnouncementId())
-                    .postTitle(first.announcementId.getTitle())
-                    .boardType(BoardType.ANNOUNCEMENT)
-                    .build();
-        } else {
-            throw new RuntimeException();
+            } else if (first.complaintId != null) {
+                post = CommentDTO.Post.builder()
+                        .postId(first.complaintId.getComplaintId())
+                        .postTitle(first.complaintId.getTitle())
+                        .boardType(BoardType.COMPLAINT)
+                        .build();
+            } else if (first.announcementId != null) {
+                post = CommentDTO.Post.builder()
+                        .postId(first.announcementId.getAnnouncementId())
+                        .postTitle(first.announcementId.getTitle())
+                        .boardType(BoardType.ANNOUNCEMENT)
+                        .build();
+            } else {
+                throw new RestAPIException(COMMENT_CONVERT_FAILED);
+            }
+            return post;
+        }catch (Exception e){
+            throw new CustomAPIException(e.getMessage());
         }
-        return post;
     }
 
     public Comment getFirst() {
