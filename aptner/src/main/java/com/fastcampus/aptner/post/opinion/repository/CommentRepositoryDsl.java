@@ -10,5 +10,5 @@ import java.util.List;
 public interface CommentRepositoryDsl {
     List<Comment> getComments(Long postId, CommentType commentType);
 
-    Page<Comment> getMyComments(Long memberId, Pageable pageable);
+    Page<Comment> getMyComments(Long memberId, Pageable pageable,CommentType commentType);
 }

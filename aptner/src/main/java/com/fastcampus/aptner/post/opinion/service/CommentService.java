@@ -17,6 +17,6 @@ public interface CommentService {
 
     ResponseEntity<HttpStatus> deleteComment(JWTMemberInfoDTO token, Long commentId);
 
-    ResponseEntity<?> getMyCommentList(JWTMemberInfoDTO request, Integer pageNumber, Integer pageSize);
+    ResponseEntity<?> getMyCommentList(JWTMemberInfoDTO request, Integer pageNumber, Integer pageSize,CommentType commentType);
 
 }

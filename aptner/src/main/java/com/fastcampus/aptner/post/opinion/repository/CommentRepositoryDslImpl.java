@@ -1,8 +1,10 @@
 package com.fastcampus.aptner.post.opinion.repository;
 
 import com.fastcampus.aptner.global.error.RestAPIException;
+import com.fastcampus.aptner.global.handler.exception.CustomAPIException;
 import com.fastcampus.aptner.post.opinion.domain.Comment;
 import com.fastcampus.aptner.post.opinion.domain.CommentType;
+import com.fastcampus.aptner.post.opinion.domain.QComment;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -46,13 +48,22 @@ public class CommentRepositoryDslImpl extends QuerydslRepositorySupport implemen
     }
 
     @Override
-    public Page<Comment> getMyComments(Long memberId, Pageable pageable) {
-        JPAQuery<Comment> query = queryFactory.selectFrom(comment)
-                .groupBy(comment.commentId)
-                .where(myComment(memberId))
-                .orderBy(sortByDay());
-        List<Comment> informationList = this.getQuerydsl().applyPagination(pageable, query).fetch();
-        return new PageImpl<>(informationList, pageable, query.fetchCount());
+    public Page<Comment> getMyComments(Long memberId, Pageable pageable,CommentType commentType) {
+
+        try {
+            QComment qParentComment = new QComment("parentComment");
+            JPAQuery<Comment> query = queryFactory.selectFrom(comment)
+                    .groupBy(comment.commentId)
+                    .leftJoin(comment.parentId, qParentComment)
+                    .where(myComment(memberId),setTargetBoardForMyComment(commentType))
+                    .orderBy(sortByDay());
+
+            List<Comment> informationList = this.getQuerydsl().applyPagination(pageable, query).fetch();
+            return new PageImpl<>(informationList, pageable, query.fetchCount());
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
     private BooleanExpression setWithoutParent() {
@@ -76,12 +87,77 @@ public class CommentRepositoryDslImpl extends QuerydslRepositorySupport implemen
                 }
             }
         } catch (Exception e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
             throw new RestAPIException(INVALID_PARAMETER);
         }
         return null;
     }
 
+    private BooleanExpression setTargetBoardForMyComment(CommentType commentType){
+        if (commentType == REPLY){
+            throw new RestAPIException(INVALID_PARAMETER);
+        }
+        if (commentType == null){
+            return  null;
+        }
+        try {
+            switch (commentType){
+                case ANNOUNCEMENT -> {
+                    return comment.announcementId.isNotNull().or(getBoardChildren(commentType));
+                }
+                case COMPLAINT -> {
+                    return comment.complaintId.isNotNull().or(getBoardChildren(commentType));
+                }
+                case COMMUNICATION -> {
+                    return comment.communicationId.isNotNull().or(getBoardChildren(commentType));
+                }
+            }
+        }catch (Exception e) {
+            throw new CustomAPIException(e.getMessage());
+        }
+        return null;
+    }
+
+    // todo 무한 댓글인 경우 에 대해 해결필요.
+//    private BooleanExpression getBoardChildren(CommentType commentType){
+//        QComment qComment = comment;
+//        switch (commentType){
+//            case ANNOUNCEMENT -> {
+//                while (qComment.parentId!=null){
+//                    qComment = qComment.parentId;
+//                }
+//                return qComment.announcementId.isNotNull();
+//            }
+//            case COMPLAINT -> {
+//                while (qComment.parentId!=null){
+//                    qComment = qComment.parentId;
+//                }
+//                return qComment.complaintId.isNotNull();
+//            }
+//            case COMMUNICATION -> {
+//                while (qComment.parentId!=null){
+//                    qComment = qComment.parentId;
+//                }
+//                return qComment.communicationId.isNotNull();
+//            }
+//        }
+//        return null;
+//    }
+
+    private BooleanExpression getBoardChildren(CommentType commentType){
+        switch (commentType){
+            case ANNOUNCEMENT -> {
+                return comment.parentId.announcementId.isNotNull();
+            }
+            case COMPLAINT -> {
+                return comment.parentId.complaintId.isNotNull();
+            }
+            case COMMUNICATION -> {
+
+                return comment.parentId.communicationId.isNotNull();
+            }
+        }
+        return null;
+    }
     private OrderSpecifier<?> sortByDay() {
         return new OrderSpecifier<>(Order.ASC, comment.createdAt);
     }
