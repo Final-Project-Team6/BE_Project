@@ -111,6 +111,7 @@ public class AnnouncementDTO {
             this.announcementCategory = new AnnouncementCategoryRespDTO(announcement.getAnnouncementCategoryId());
             this.writer = new PostMemberResponse(announcement.getMemberId());
             this.title = announcement.getTitle();
+            this.contents = announcement.getContents();
             this.createdAt = announcement.getCreatedAt();
             this.view = announcement.getView();
             this.commentCnt = announcement.getAllCommentCnt();
