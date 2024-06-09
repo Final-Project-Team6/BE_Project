@@ -82,6 +82,7 @@ public class ComplaintDTO {
             this.complaintStatus = complaint.getComplaintStatus();
             this.writer = new PostMemberResponse(complaint.getMemberId());
             this.title = complaint.getTitle();
+            this.contents = complaint.getContents();
             this.createdAt = complaint.getCreatedAt();
             this.view = complaint.getView();
             this.commentCnt = complaint.getAllCommentCnt();
