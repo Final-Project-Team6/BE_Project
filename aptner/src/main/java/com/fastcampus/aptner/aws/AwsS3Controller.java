@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Tag(name = "AWS", description = "AWS S3 관련 서비스")
 @RestController
 @RequiredArgsConstructor
@@ -35,8 +37,8 @@ public class AwsS3Controller {
     )
     public ResponseEntity<?> uploadFile(
             @RequestParam("category") String category,
-            @RequestPart(value = "file") MultipartFile multipartFile) {
-        return awsS3Service.uploadFileV1(category, multipartFile);
+            @RequestPart(value = "file") List<MultipartFile> multiFileList) {
+        return awsS3Service.uploadFileV1(category, multiFileList);
     }
 
 }

@@ -106,13 +106,25 @@ public class CommunicationServiceImpl implements CommunicationService {
     @Transactional
     public ResponseEntity<CommunicationDTO.CommunicationRespDTO> getCommunication(Long communicationId, JWTMemberInfoDTO token) {
         Communication communication = communicationRepository.findById(communicationId).orElseThrow(() -> new RestAPIException(NO_SUCH_POST));
-        RoleName roleName = findMemberRoleService.getMemberRole(token.getMemberId(), token.getApartmentId());
-        if(communication.getStatus().equals(PostStatus.DELETED) || communication.getStatus().equals(PostStatus.FORCE_DELETED)){
+        if (communication.getStatus().equals(PostStatus.DELETED) || communication.getStatus().equals(PostStatus.FORCE_DELETED)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        if (communication.isSecret() && !communication.getMemberId().getMemberId().equals(token.getMemberId())) {
-            if(!roleName.equals(RoleName.MANAGER))
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        RoleName roleName;
+        if (token.getMemberId() != null) {
+            roleName = findMemberRoleService.getMemberRole(token.getMemberId(), token.getApartmentId());
+            if (communication.isSecret() && !roleName.equals(RoleName.MANAGER)) {
+                if (roleName.equals(RoleName.USER)) {
+                    if (!communication.getMemberId().getMemberId().equals(token.getMemberId())) {
+                        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                    }
+                } else if (roleName.equals(RoleName.ADMIN)) {
+                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                } else if (token.getRoleName() == null) {
+                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                }
+            }
+        } else if (communication.isSecret()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         CommunicationDTO.CommunicationRespDTO resp = new CommunicationDTO.CommunicationRespDTO(communication, token);
         List<CommentDTO.ViewComments> comments = commentCommonService.getComments(communicationId, CommentType.COMMUNICATION, token);

@@ -34,13 +34,10 @@
 | <a href="https://github.com/LimdaeIl"><img src="https://avatars.githubusercontent.com/u/131642334?v=4" alt="profile" width="140" height="140"></a> | <a href="https://github.com/cutegyuseok"><img src="https://avatars.githubusercontent.com/u/103543611?v=4" alt="profile" width="140" height="140"></a> | <a href="https://github.com/NaSJ93"><img src="https://avatars.githubusercontent.com/u/145634600?v=4" alt="profile" width="140" height="140"></a> | <a href="https://github.com/subinsad"><img src="https://avatars.githubusercontent.com/u/92204014?v=4" alt="profile" width="140" height="140"></a> | <a href="https://github.com/dlwnghd"><img src="https://avatars.githubusercontent.com/u/61799492?v=4" width="140" height="140"></a> |
 | <div align="center"><a href="https://github.com/LimdaeIl" target="_blank"><img src="https://img.shields.io/badge/LimdaeIl-181717?style=for-the-social&logo=github&logoColor=white"/></a></div> | <div align="center"><a href="https://github.com/cutegyuseok" target="_blank"><img src="https://img.shields.io/badge/cutegyuseok-181717?style=for-the-social&logo=github&logoColor=white"/></a></div> | <div align="center"><a href="https://github.com/NaSJ93" target="_blank"><img src="https://img.shields.io/badge/NaSJ93-181717?style=for-the-social&logo=github&logoColor=white"/></a></div> | <div align="center"><a href="https://github.com/subinsad" target="_blank"><img src="https://img.shields.io/badge/subinsad-181717?style=for-the-social&logo=github&logoColor=white"/></a></div> | <div align="center"><a href="https://github.com/dlwnghd" target="_blank"><img src="https://img.shields.io/badge/dlwnghd-181717?style=for-the-social&logo=github&logoColor=white"/></a></div> |
 
-| PM(L): 이나현 | PM: 오로라 | PM: 김윤희 | UXUI(L): 유채연 | UXUI: 권은비 |
-| ------------- | ---------- | ---------- | --------------- | ------------ |
-|               |            |            |                 |              |
-|               |            |            |                 |              |
-
-
-
+| PM(L): 이나현                                                | PM: 오로라 | PM: 김윤희 | UXUI(L): 유채연 | UXUI: 권은비 |
+| ------------------------------------------------------------ | ---------- | ---------- | --------------- | ------------ |
+| <a href="https://www.linkedin.com/in/nahyunlee-yeriel/"><img src="https://cdn-icons-png.flaticon.com/512/3736/3736502.png" alt="profile" width="140" height="140"></a> |            |            |                 |              |
+| <div align="center"><a href="https://www.linkedin.com/in/nahyunlee-yeriel/"><img src="https://img.shields.io/badge/이_나_현-%230077B5.svg?style=for-the-socail&logo=linkedin&logoColor=white"/></a></div> |            |            |                 |              |
 
 <br/>
 
