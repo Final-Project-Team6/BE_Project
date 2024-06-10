@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Slf4j
@@ -28,23 +30,27 @@ public class AwsS3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
-    public ResponseEntity<?> uploadFileV1(String category, MultipartFile multipartFile) {
-        if (multipartFile.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> uploadFileV1(String category, List<MultipartFile> multiFileList) {
+        List<String> urlList = new ArrayList<>();
+        for (MultipartFile file : multiFileList){
+            if (file.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            String fileName = CommonUtils.buildFileName(category, file.getOriginalFilename());
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentType(file.getContentType());
+            objectMetadata.setContentLength(file.getSize());
+
+            try (InputStream inputStream = file.getInputStream()) {
+                amazonS3.putObject(new PutObjectRequest(bucketName, fileName, inputStream, objectMetadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
+            } catch (IOException e) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            urlList.add(amazonS3.getUrl(bucketName, fileName).toString());
         }
-
-        String fileName = CommonUtils.buildFileName(category, multipartFile.getOriginalFilename());
-        ObjectMetadata objectMetadata = new ObjectMetadata();
-        objectMetadata.setContentType(multipartFile.getContentType());
-
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            amazonS3.putObject(new PutObjectRequest(bucketName, fileName, inputStream, objectMetadata)
-                    .withCannedAcl(CannedAccessControlList.PublicRead));
-        } catch (IOException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(amazonS3.getUrl(bucketName, fileName).toString(), HttpStatus.OK);
+        return new ResponseEntity<>(urlList, HttpStatus.OK);
     }
 
     public static class CommonUtils {
