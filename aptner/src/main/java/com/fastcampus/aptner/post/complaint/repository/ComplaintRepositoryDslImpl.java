@@ -168,6 +168,9 @@ public class ComplaintRepositoryDslImpl extends QuerydslRepositorySupport implem
         if (memberToken == null) {
             return notSecretComplaint();
         }
+        if (memberToken.getRoleName().equals("MANAGER") || memberToken.getRoleName().equals("ADMIN")){
+            return everyComplaintForAdmin();
+        }
         return complaint.memberId.memberId.eq(memberToken.getMemberId()).or(notSecretComplaint());
     }
 
@@ -193,6 +196,10 @@ public class ComplaintRepositoryDslImpl extends QuerydslRepositorySupport implem
         }
         LocalDateTime targetDate = period.atStartOfDay();
         return complaint.createdAt.after(targetDate);
+    }
+
+    private BooleanExpression everyComplaintForAdmin(){
+        return null;
     }
 
 }
