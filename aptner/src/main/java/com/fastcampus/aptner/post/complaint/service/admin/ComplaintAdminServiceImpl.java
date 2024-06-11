@@ -14,8 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
-import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_CATEGORY;
-import static com.fastcampus.aptner.post.common.error.PostErrorCode.NO_SUCH_POST;
+import static com.fastcampus.aptner.post.common.error.PostErrorCode.*;
 
 @Service
 @Slf4j
@@ -27,9 +26,16 @@ public class ComplaintAdminServiceImpl implements ComplaintAdminService {
     @Override
     @Transactional
     public ResponseEntity<HttpStatus> updateComplaintStatus(JWTMemberInfoDTO token, Long complaintId, ComplaintStatus complaintStatus) {
-        //todo 권한 확인
+        
         Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(()->new RestAPIException(NO_SUCH_POST));
-        complaint.changeComplaintStatus(complaintStatus);
-        return new ResponseEntity<>(HttpStatus.OK);
+        if (complaint.getComplaintCategoryId().getApartmentId().getApartmentId() != token.getApartmentId()){
+            throw new RestAPIException(NOT_ALLOWED_APARTMENT);
+        }
+        if (token.getRoleName().equals("MANAGER") || token.getRoleName().equals("ADMIN")){
+            complaint.changeComplaintStatus(complaintStatus);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 }
