@@ -110,7 +110,7 @@ public class CommunicationServiceImpl implements CommunicationService {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         RoleName roleName;
-        if (token.getMemberId() != null) {
+        if (token != null) {
             roleName = findMemberRoleService.getMemberRole(token.getMemberId(), token.getApartmentId());
             if (communication.isSecret() && !roleName.equals(RoleName.MANAGER)) {
                 if (roleName.equals(RoleName.USER)) {
