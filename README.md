@@ -1,8 +1,12 @@
 # 반포자이 - 아파트너 고도화 <a href="https://fe-project-tau.vercel.app/seoul-signiel"><img src="https://github.com/Final-Project-Team6/BE_Project/assets/131642334/17b9e1be-a56b-4afd-b2ca-67fbfd366b7a" align="left" width="100"></a>
 
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fdepromeet%2Fstreet-drop-server&count_bg=%2328DBE6&title_bg=%232D3540&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
-[![codecov](https://codecov.io/gh/depromeet/street-drop-server/branch/dev/graph/badge.svg?token=7EHWI73ZQU)](https://codecov.io/gh/depromeet/street-drop-server)
-[![Github Action](https://github.com/depromeet/street-drop-server/actions/workflows/coverage.yml/badge.svg)](https://github.com/depromeet/street-drop-server/actions)
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FFinal-Project-Team6%2FBE_Project&count_bg=%233DB7C8&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
+[![GitHub issues](https://img.shields.io/github/issues/Final-Project-Team6/BE_Project.svg)](https://GitHub.com/Final-Project-Team6/BE_Project/issues/)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr-closed/Final-Project-Team6/BE_Project.svg)](https://github.com/Final-Project-Team6/BE_Project/pulls?q=is%3Apr+is%3Aclosed)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2.5-green.svg?logo=spring)](https://spring.io/projects/spring-boot)
+[![MySQL](https://img.shields.io/badge/MySQL-8.2.0-blue.svg?logo=mysql)](https://www.mysql.com/)
+[![AWS](https://img.shields.io/badge/AWS-Amazon_Web_Services-orange.svg?logo=amazon-aws)](https://aws.amazon.com/)
+
 
 <br/>
 
@@ -34,12 +38,15 @@
 | <a href="https://github.com/LimdaeIl"><img src="https://avatars.githubusercontent.com/u/131642334?v=4" alt="profile" width="140" height="140"></a> | <a href="https://github.com/cutegyuseok"><img src="https://avatars.githubusercontent.com/u/103543611?v=4" alt="profile" width="140" height="140"></a> | <a href="https://github.com/NaSJ93"><img src="https://avatars.githubusercontent.com/u/145634600?v=4" alt="profile" width="140" height="140"></a> | <a href="https://github.com/subinsad"><img src="https://avatars.githubusercontent.com/u/92204014?v=4" alt="profile" width="140" height="140"></a> | <a href="https://github.com/dlwnghd"><img src="https://avatars.githubusercontent.com/u/61799492?v=4" width="140" height="140"></a> |
 | <div align="center"><a href="https://github.com/LimdaeIl" target="_blank"><img src="https://img.shields.io/badge/LimdaeIl-181717?style=for-the-social&logo=github&logoColor=white"/></a></div> | <div align="center"><a href="https://github.com/cutegyuseok" target="_blank"><img src="https://img.shields.io/badge/cutegyuseok-181717?style=for-the-social&logo=github&logoColor=white"/></a></div> | <div align="center"><a href="https://github.com/NaSJ93" target="_blank"><img src="https://img.shields.io/badge/NaSJ93-181717?style=for-the-social&logo=github&logoColor=white"/></a></div> | <div align="center"><a href="https://github.com/subinsad" target="_blank"><img src="https://img.shields.io/badge/subinsad-181717?style=for-the-social&logo=github&logoColor=white"/></a></div> | <div align="center"><a href="https://github.com/dlwnghd" target="_blank"><img src="https://img.shields.io/badge/dlwnghd-181717?style=for-the-social&logo=github&logoColor=white"/></a></div> |
 
-| PM(L): 이나현                                                | PM: 오로라 | PM: 김윤희 | UXUI(L): 유채연 | UXUI: 권은비 |
-| ------------------------------------------------------------ | ---------- | ---------- | --------------- | ------------ |
-| <a href="https://www.linkedin.com/in/nahyunlee-yeriel/"><img src="https://cdn-icons-png.flaticon.com/512/3736/3736502.png" alt="profile" width="140" height="140"></a> |            |            |                 |              |
-| <div align="center"><a href="https://www.linkedin.com/in/nahyunlee-yeriel/"><img src="https://img.shields.io/badge/이_나_현-%230077B5.svg?style=for-the-socail&logo=linkedin&logoColor=white"/></a></div> |            |            |                 |              |
+| PM(L): 이나현                                                | PM: 오로라                                                   | PM: 김윤희                                                   | UXUI(L): 유채연                                              | UXUI: 권은비                                                 |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| <a href="https://www.linkedin.com/in/nahyunlee-yeriel/"><img src="https://cdn-icons-png.flaticon.com/512/3736/3736502.png" alt="profile" width="140" height="140"> | <a href="https://notefolio.net/OGU59"><img src="https://github.com/Final-Project-Team6/BE_Project/assets/131642334/00fe414d-f3fa-4c9e-a7ac-edf6cc837774" alt="profile" width="140" height="140"> | <a href="https://notefolio.net/OGU59"><img src="https://github.com/Final-Project-Team6/BE_Project/assets/131642334/af7d2109-00a5-449e-ae9e-28a1fb13be79" alt="profile" width="140" height="140"> | <a href="https://notefolio.net/OGU59"><img src="https://github.com/Final-Project-Team6/BE_Project/assets/131642334/37167b01-8645-47e6-9e97-01b98503db6e" alt="profile" width="140" height="140"> | <a href="https://notefolio.net/mango101"><img src="https://github.com/Final-Project-Team6/BE_Project/assets/131642334/39a84c41-2f9f-46e0-a445-a30ff51a2d61" alt="profile" width="140" height="140"> |
+| <div align="center"><a href="https://www.linkedin.com/in/nahyunlee-yeriel/"><img src="https://img.shields.io/badge/이_나_현-%230077B5.svg?style=for-the-socail&logo=linkedin&logoColor=white"/></a></div> |                                                              |                                                              | <div align="center"><a href="https://notefolio.net/OGU59"><img src="https://img.shields.io/badge/유_채_연-%23F7F7F7?style=for-the-badge&logo=notion&logoColor=000000"/></a></div> | <div align="center"><a href="https://notefolio.net/mango101"><img src="https://img.shields.io/badge/권_은_비-%23F7F7F7?style=for-the-badge&logo=notion&logoColor=000000"/></a></div> |
 
 <br/>
+
+
+
 
 
 ## 🚎 프로젝트 아키텍처
